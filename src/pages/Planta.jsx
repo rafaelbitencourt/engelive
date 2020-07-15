@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import useForm from "../hooks/useForm";
 import { getPlanta, savePlanta } from '../api/api.js';
 import {
@@ -135,6 +135,12 @@ export default () => {
 
                     </Grid>
                     <div className={classes.buttons}>
+                        <Button 
+                            className={classes.button} 
+                            color="default"
+                            component={Link} 
+                            disabled={!idplanta}
+                            to={`/projeto/${idprojeto}/planta/${idplanta}/materiais`}>Materiais da planta</Button>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
                         <Button
                             type="submit"
