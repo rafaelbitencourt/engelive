@@ -88,7 +88,6 @@ const ImageMapper = (props) => {
 			(props.height || img.clientHeight) + "px";
 		ctx = canvas.getContext("2d");
 		ctx.fillStyle = props.fillColor;
-		//ctx.strokeStyle = props.strokeColor;
 
 		if (props.onLoad) props.onLoad();
 
