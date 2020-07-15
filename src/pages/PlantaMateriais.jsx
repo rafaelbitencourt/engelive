@@ -113,7 +113,7 @@ export default () => {
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}
-                minScale={0.2}
+                minScale={0.3}
                 maxScale={2}
                 // translationBounds={{
                 //     xMin: -1000,
