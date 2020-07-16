@@ -22,19 +22,7 @@ const ImageMapper = (props) => {
     var img = {};
     var container = {};
 
-    useEffect(() => {
-        updateCacheMap();
-    }, [props.map]);
-
-    useEffect(() => {
-        initCanvas();
-    }, [map]);
-
-    const updateCacheMap = () => {
-        setMap(JSON.parse(JSON.stringify(props.map)));
-    };
-
-	const drawrect = (coords, fillColor, lineWidth, strokeColor) => {
+    const drawrect = (coords, fillColor, lineWidth, strokeColor) => {
 		let [left, top, right, bot] = coords;
 		ctx.fillStyle = fillColor;
 		ctx.lineWidth = lineWidth;
@@ -122,7 +110,9 @@ const ImageMapper = (props) => {
                         area.lineWidth || props.lineWidth,
                         area.strokeColor || props.strokeColor
                     );
-                    break;
+					break;
+				default:
+					break;
             }
 		}
 		if (props.onMouseEnter) props.onMouseEnter(area, index, event);
@@ -171,7 +161,7 @@ const ImageMapper = (props) => {
 	}
 
 	const renderPrefilledAreas = () => {
-		map.areas.map(area => {
+		map.areas.forEach(area => {
 			if (!area.preFillColor) return;
 			switch (area.shape) {
                 case "circle":
@@ -197,7 +187,9 @@ const ImageMapper = (props) => {
                         area.lineWidth || props.lineWidth,
                         area.strokeColor || props.strokeColor
                     );
-                    break;
+					break;
+				default:
+					break;
             }
 		});
 	}
@@ -241,10 +233,19 @@ const ImageMapper = (props) => {
 					onMouseMove={(event) => mouseMove(extendedArea, index, event)}
 					onClick={(event) => click(extendedArea, index, event)}
 					href={area.href}
+					alt=''
 				/>
 			);
 		});
 	}
+
+	useEffect(() => {
+        setMap(JSON.parse(JSON.stringify(props.map)));
+    }, [props.map]);
+
+    useEffect(() => {
+        initCanvas();
+    }, [map]);
 
 	return (
         <div style={styles.container} ref={node => (container = node)}>
