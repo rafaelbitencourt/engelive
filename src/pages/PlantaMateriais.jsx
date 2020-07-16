@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { getPlanta, getPlantasMateriais, savePlantasMateriais } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
@@ -22,14 +22,14 @@ export default () => {
     });
     const [plantaMateriais, setPlantaMateriais] = useState([]);
 
-    const carregarPlantaMateriais = () => {
+    const carregarPlantaMateriais = useCallback(() => {
         getPlantasMateriais(idplanta)
             .then(data => {
                 setPlantaMateriais(data);
             }).catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao recuperar os materiais.');
             });
-    }
+    }, [idplanta]);
 
     const handleClickImagem = (evt) => {
         setPlantaMateriais(plantaMateriais.concat({
@@ -81,7 +81,7 @@ export default () => {
             }).catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao recuperar os dados da planta.');
             });
-    }, [idplanta, setImagem]);
+    }, [idplanta, setImagem, carregarPlantaMateriais]);
 
     useEffect(() => {
         const areas = [];

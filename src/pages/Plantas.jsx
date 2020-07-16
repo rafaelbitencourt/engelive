@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { listPlantasPorProjeto, deletePlanta } from '../api/api.js';
 import ConfirmDialog from '../components/ConfirmDialog';
@@ -32,12 +32,12 @@ export default () => {
     const { idprojeto } = useParams();
     let history = useHistory();
     
-    const atualizarLista = () => {
+    const atualizarLista = useCallback(() => {
         listPlantasPorProjeto(idprojeto)
             .then(data => {
                 setPlantas(data);
             });
-    };
+    }, [idprojeto]);
 
     const excluirPlanta = () => {
         deletePlanta(idPlantaExclusao)
@@ -52,7 +52,7 @@ export default () => {
 
     useEffect(() => {
         atualizarLista();
-    }, []);
+    }, [atualizarLista]);
 
     return (
         <div>
