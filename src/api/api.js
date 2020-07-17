@@ -66,3 +66,7 @@ export const savePlantasMateriais = (idplanta, data) => {
     return axios.post(urlApi+'plantas_materiais',  params)
         .then(({ data }) => data)
 }
+
+export const listMateriais = () => axios
+    .get(urlApi+'materiais')
+    .then(({ data }) => data)

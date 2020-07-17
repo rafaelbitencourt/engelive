@@ -1,26 +1,46 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { getPlanta, getPlantasMateriais, savePlantasMateriais } from '../api/api.js';
+import { listMateriais, getPlanta, getPlantasMateriais, savePlantasMateriais } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
-import { Button } from '@material-ui/core';
+import {
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    DialogContentText,
+    TextField
+} from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import SuccessDialog from '../components/SuccessDialog';
 
+interface MateriaisType {
+    id: int;
+    idtipo: int;
+    nome: string;
+    descricao: string;
+}
+
 export default () => {
-    const [sucessOpen, setSucessOpen] = useState(false);
+    let history = useHistory();
     const { idplanta } = useParams();
+
+    const [sucessOpen, setSucessOpen] = useState(false);
+    const [cadastroOpen, setCadastroOpen] = useState(false);
+
     const [imagem, setImagem] = useState(null);
     const [interacao, setInteracao] = useState({
         scale: 1,
         translation: { x: 0, y: 0 }
     });
-    let history = useHistory();
-
     const [map, setMap] = useState({
         name: "my-map",
         areas: []
     });
     const [plantaMateriais, setPlantaMateriais] = useState([]);
+    const [materiais, setMateriais] = useState([]);
+    const [material, setMaterial] = useState(null);
 
     const carregarPlantaMateriais = useCallback(() => {
         getPlantasMateriais(idplanta)
@@ -32,12 +52,14 @@ export default () => {
     }, [idplanta]);
 
     const handleClickImagem = (evt) => {
-        setPlantaMateriais(plantaMateriais.concat({
-            idplanta: idplanta,
-            idmaterial: 2,
-            coordenadaX: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
-            coordenadaY: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
-        }));
+        setCadastroOpen(true);
+        // setPlantaMateriais(plantaMateriais.concat({
+        //     idplanta: idplanta,
+        //     idmaterial: 2,
+        //     coordenadaX: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
+        //     coordenadaY: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
+        // }));
+
     }
 
     const load = (area) => {
@@ -70,6 +92,15 @@ export default () => {
                 alert(resp.message || 'Ocorreu um erro ao salvar os materiais.');
             });
     }
+
+    useEffect(() => {
+        listMateriais()
+            .then(data => {
+                setMateriais(data);
+            }).catch(resp => {
+                alert(resp.message || 'Ocorreu um erro ao recuperar os materiais.');
+            });
+    }, [idplanta]);
 
     useEffect(() => {
         getPlanta(idplanta)
@@ -115,12 +146,12 @@ export default () => {
                 onChange={(value) => setInteracao(value)}
                 minScale={0.3}
                 maxScale={2}
-                // translationBounds={{
-                //     xMin: -1000,
-                //     xMax: 1000,
-                //     yMin: -500,
-                //     yMax: 500
-                // }}
+            // translationBounds={{
+            //     xMin: -1000,
+            //     xMax: 1000,
+            //     yMin: -500,
+            //     yMax: 500
+            // }}
             >
                 {
                     ({ translation, scale }) => {
@@ -148,6 +179,53 @@ export default () => {
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />
+            <Dialog
+                fullWidth
+                open={cadastroOpen}
+                onClose={() => setCadastroOpen(false)}
+                aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Inserir material</DialogTitle>
+                <DialogContent>
+                    <Autocomplete
+                        value={material}
+                        onChange={(event, newValue) => setMaterial(newValue)}
+                        options={materiais}
+                        autoHighlight
+                        getOptionLabel={(option) => option.nome}
+                        renderOption={(option) => option.nome}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Material"
+                                variant="outlined"
+                                inputProps={{
+                                    ...params.inputProps,
+                                    autoComplete: 'new-password', // disable autocomplete and autofill
+                                }}
+                            />
+                        )}
+                    />
+                    <TextField
+                        label="Descrição"
+                        variant="outlined"
+                        value={material ? material.descricao : ' '}
+                        multiline={true}
+                        rows={5}
+                        fullWidth
+                        disabled
+                        style={{ marginTop: 10 }}
+                        inputProps={{ style: { color: 'black'}}}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setCadastroOpen(false)} color="default">
+                        Cancelar
+                </Button>
+                    <Button onClick={() => setCadastroOpen(false)} variant="contained" color="primary">
+                        Inserir
+                </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
