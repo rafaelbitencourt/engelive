@@ -9,11 +9,11 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    DialogContentText,
     TextField
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SuccessDialog from '../components/SuccessDialog';
+import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
 
 export default () => {
     let history = useHistory();
@@ -31,6 +31,8 @@ export default () => {
         name: "my-map",
         areas: []
     });
+    const [alteracoesPendentes, setAlteracoesPendentes] = useState(false);
+    usePreventWindowUnload(alteracoesPendentes);
     const [plantaMateriais, setPlantaMateriais] = useState([]);
     const [plantaMaterial, setPlantaMaterial] = useState(null);
     const [materiais, setMateriais] = useState([]);
@@ -57,34 +59,42 @@ export default () => {
     }
 
     const handleSubmit = (event) => {
-        
+
         event.preventDefault();
         setCadastroOpen(false);
 
-        const indexPlantaMateriaisEditar = 
+        const indexPlantaMateriaisEditar =
             plantaMateriais.findIndex(item => item.coordenadaX === plantaMaterial.coordenadaX && item.coordenadaY === plantaMaterial.coordenadaY);
 
         plantaMaterial.idmaterial = material.id;
 
         var plantaMaterialAux = plantaMateriais.concat(plantaMaterial);
 
-        if (indexPlantaMateriaisEditar !== -1){
-            plantaMaterialAux.splice(indexPlantaMateriaisEditar,1);
+        if (indexPlantaMateriaisEditar !== -1) {
+            plantaMaterialAux.splice(indexPlantaMateriaisEditar, 1);
         }
-        
+
         setPlantaMateriais(plantaMaterialAux);
+
+        if (!alteracoesPendentes) {
+            setAlteracoesPendentes(true);
+        }
     }
 
     const handleClickRemover = () => {
         setCadastroOpen(false);
 
-        const indexPlantaMateriaisRemover = 
+        const indexPlantaMateriaisRemover =
             plantaMateriais.findIndex(item => item.coordenadaX === plantaMaterial.coordenadaX && item.coordenadaY === plantaMaterial.coordenadaY);
 
-        if (indexPlantaMateriaisRemover !== -1){
+        if (indexPlantaMateriaisRemover !== -1) {
             var plantaMaterialAux = [...plantaMateriais];
-            plantaMaterialAux.splice(indexPlantaMateriaisRemover,1);
+            plantaMaterialAux.splice(indexPlantaMateriaisRemover, 1);
             setPlantaMateriais(plantaMaterialAux);
+
+            if (!alteracoesPendentes) {
+                setAlteracoesPendentes(true);
+            }
         }
     }
 
@@ -93,7 +103,7 @@ export default () => {
     }
 
     const clicked = (area) => {
-        const plantaMateriaisEditar = 
+        const plantaMateriaisEditar =
             plantaMateriais.find(item => item.coordenadaX === area.coords[0] && item.coordenadaY === area.coords[1]);
 
         if (plantaMateriaisEditar) {
@@ -121,6 +131,7 @@ export default () => {
         savePlantasMateriais(idplanta, plantaMateriais)
             .then(() => {
                 setSucessOpen(true);
+                setAlteracoesPendentes(false);
             })
             .catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao salvar os materiais.');
@@ -174,7 +185,7 @@ export default () => {
     return (
         <div>
             <Button onClick={() => history.goBack()}>Voltar</Button>
-            <Button variant="contained" color='primary' onClick={salvar}>Salvar</Button>
+            <Button disabled={!alteracoesPendentes} variant="contained" color='primary' onClick={salvar}>Salvar</Button>
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}
@@ -219,7 +230,7 @@ export default () => {
                 onClose={() => setCadastroOpen(false)}
                 aria-labelledby="form-dialog-title">
                 <form onSubmit={(event) => handleSubmit(event)}>
-                    <DialogTitle id="form-dialog-title">Inserir material</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{(plantaMaterial && plantaMaterial.idmaterial) ? "Alterar material" : "Inserir material"}</DialogTitle>
                     <DialogContent>
                         <Autocomplete
                             value={material}
@@ -261,7 +272,7 @@ export default () => {
                             Cancelar
                         </Button>
                         <Button type="submit" variant="contained" color="primary">
-                            Inserir
+                            {(plantaMaterial && plantaMaterial.idmaterial) ? "Alterar" : "Inserir"}
                         </Button>
                     </DialogActions>
                 </form>
