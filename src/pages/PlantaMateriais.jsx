@@ -15,13 +15,6 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import SuccessDialog from '../components/SuccessDialog';
 
-interface MateriaisType {
-    id: int;
-    idtipo: int;
-    nome: string;
-    descricao: string;
-}
-
 export default () => {
     let history = useHistory();
     const { idplanta } = useParams();
@@ -39,6 +32,7 @@ export default () => {
         areas: []
     });
     const [plantaMateriais, setPlantaMateriais] = useState([]);
+    const [plantaMaterial, setPlantaMaterial] = useState(null);
     const [materiais, setMateriais] = useState([]);
     const [material, setMaterial] = useState(null);
 
@@ -52,14 +46,46 @@ export default () => {
     }, [idplanta]);
 
     const handleClickImagem = (evt) => {
+        setPlantaMaterial({
+            idplanta: idplanta,
+            idmaterial: null,
+            coordenadaX: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
+            coordenadaY: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
+        });
+        setMaterial(null);
         setCadastroOpen(true);
-        // setPlantaMateriais(plantaMateriais.concat({
-        //     idplanta: idplanta,
-        //     idmaterial: 2,
-        //     coordenadaX: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
-        //     coordenadaY: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
-        // }));
+    }
 
+    const handleSubmit = (event) => {
+        
+        event.preventDefault();
+        setCadastroOpen(false);
+
+        const indexPlantaMateriaisEditar = 
+            plantaMateriais.findIndex(item => item.coordenadaX === plantaMaterial.coordenadaX && item.coordenadaY === plantaMaterial.coordenadaY);
+
+        plantaMaterial.idmaterial = material.id;
+
+        var plantaMaterialAux = plantaMateriais.concat(plantaMaterial);
+
+        if (indexPlantaMateriaisEditar !== -1){
+            plantaMaterialAux.splice(indexPlantaMateriaisEditar,1);
+        }
+        
+        setPlantaMateriais(plantaMaterialAux);
+    }
+
+    const handleClickRemover = () => {
+        setCadastroOpen(false);
+
+        const indexPlantaMateriaisRemover = 
+            plantaMateriais.findIndex(item => item.coordenadaX === plantaMaterial.coordenadaX && item.coordenadaY === plantaMaterial.coordenadaY);
+
+        if (indexPlantaMateriaisRemover !== -1){
+            var plantaMaterialAux = [...plantaMateriais];
+            plantaMaterialAux.splice(indexPlantaMateriaisRemover,1);
+            setPlantaMateriais(plantaMaterialAux);
+        }
     }
 
     const load = (area) => {
@@ -67,7 +93,15 @@ export default () => {
     }
 
     const clicked = (area) => {
+        const plantaMateriaisEditar = 
+            plantaMateriais.find(item => item.coordenadaX === area.coords[0] && item.coordenadaY === area.coords[1]);
 
+        if (plantaMateriaisEditar) {
+            setMaterial(materiais.find(item => item.id === plantaMateriaisEditar.idmaterial));
+
+            setPlantaMaterial(plantaMateriaisEditar);
+            setCadastroOpen(true);
+        }
     }
     const enterArea = (area) => {
 
@@ -126,8 +160,8 @@ export default () => {
                     item.coordenadaY,
                     10
                 ],
-                preFillColor: "blue",
-                fillColor: "green"
+                preFillColor: "rgba(255, 255, 255, 0.1)",
+                lineWidth: 2
             });
         });
 
@@ -184,47 +218,53 @@ export default () => {
                 open={cadastroOpen}
                 onClose={() => setCadastroOpen(false)}
                 aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Inserir material</DialogTitle>
-                <DialogContent>
-                    <Autocomplete
-                        value={material}
-                        onChange={(event, newValue) => setMaterial(newValue)}
-                        options={materiais}
-                        autoHighlight
-                        getOptionLabel={(option) => option.nome}
-                        renderOption={(option) => option.nome}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Material"
-                                variant="outlined"
-                                inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: 'new-password', // disable autocomplete and autofill
-                                }}
-                            />
-                        )}
-                    />
-                    <TextField
-                        label="Descrição"
-                        variant="outlined"
-                        value={material ? material.descricao : ' '}
-                        multiline={true}
-                        rows={5}
-                        fullWidth
-                        disabled
-                        style={{ marginTop: 10 }}
-                        inputProps={{ style: { color: 'black'}}}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setCadastroOpen(false)} color="default">
-                        Cancelar
-                </Button>
-                    <Button onClick={() => setCadastroOpen(false)} variant="contained" color="primary">
-                        Inserir
-                </Button>
-                </DialogActions>
+                <form onSubmit={(event) => handleSubmit(event)}>
+                    <DialogTitle id="form-dialog-title">Inserir material</DialogTitle>
+                    <DialogContent>
+                        <Autocomplete
+                            value={material}
+                            onChange={(event, newValue) => setMaterial(newValue)}
+                            options={materiais}
+                            autoHighlight
+                            getOptionLabel={(option) => option.nome}
+                            renderOption={(option) => option.nome}
+                            renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    label="Material"
+                                    variant="outlined"
+                                    required
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        autoComplete: 'new-password', // disable autocomplete and autofill
+                                    }}
+                                />
+                            )}
+                        />
+                        <TextField
+                            label="Descrição"
+                            variant="outlined"
+                            value={material ? material.descricao : ' '}
+                            multiline={true}
+                            rows={5}
+                            fullWidth
+                            disabled
+                            style={{ marginTop: 10 }}
+                            inputProps={{ style: { color: 'black' } }}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button disabled={!(plantaMaterial && plantaMaterial.idmaterial)} onClick={handleClickRemover} variant="contained" color="default">
+                            Remover
+                        </Button>
+                        <Button onClick={() => setCadastroOpen(false)} color="default">
+                            Cancelar
+                        </Button>
+                        <Button type="submit" variant="contained" color="primary">
+                            Inserir
+                        </Button>
+                    </DialogActions>
+                </form>
             </Dialog>
         </div>
     );
