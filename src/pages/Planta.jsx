@@ -12,7 +12,7 @@ import {
     CardMedia
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import SuccessDialog from '../components/SuccessDialog';
+import { SuccessDialog, WarningDialog, ErrorDialog } from '../components/Dialog';
 import ImageUploader from 'react-images-upload';
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +48,9 @@ const useStyles = makeStyles((theme) => ({
 
 export default () => {
     const [sucessOpen, setSucessOpen] = useState(false);
+    const [warningOpen, setWarningOpen] = useState(false);
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [mensagemErro, setMensagemErro] = useState("");
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
 
@@ -60,15 +63,20 @@ export default () => {
     }
 
     const cbSubmit = () => {
-        savePlanta(inputs)
-            .then(data => {
-                if (!idplanta)
-                    history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
-                setSucessOpen(true);
-            })
-            .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao salvar a planta.');
-            });
+        if(!inputs.id && !inputs.imagem) {
+            setWarningOpen(true);
+        } else {
+            savePlanta(inputs)
+                .then(data => {
+                    if (!idplanta)
+                        history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
+                    setSucessOpen(true);
+                })
+                .catch(({response}) => {
+                    setMensagemErro(response.data.message || 'Ocorreu um erro ao salvar a planta.')
+                    setErrorOpen(true);
+                });
+        }
     };
 
     const { inputs, setInputs, handleInputChange, handleSubmit } = useForm(initialValues, cbSubmit);
@@ -80,8 +88,10 @@ export default () => {
                     setInputs(data);
                     if (data.imagem)
                         setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
-                }).catch(resp => {
-                    alert(resp.message || 'Ocorreu um erro ao recuperar os dados da planta.');
+                })
+                .catch(({response}) => {
+                    setMensagemErro(response.data.message || 'Ocorreu um erro ao recuperar os dados da planta.')
+                    setErrorOpen(true);
                 });
     }, [idplanta, setInputs]);
 
@@ -123,12 +133,16 @@ export default () => {
                                 <Grid item xs={12}>
                                     <ImageUploader
                                         withIcon={false}
-                                        buttonText='Choose images'
+                                        label="Máximo: 200Mb - Extensões: jpg | jpeg | png"
+                                        buttonText='Selecionar planta'
                                         name="imagem"
                                         onChange={onDropImagem}
-                                        imgExtension={['.jpg', '.gif', '.png', '.gif']}
-                                        maxFileSize={5242880}
-                                        withPreview={true}
+                                        imgExtension={['.jpg', '.jpeg', '.png']}
+                                        fileTypeError="não é uma extensão de arquivo suportada"
+                                        maxFileSize={200000000}
+                                        fileSizeError="excede o tamanho limite"
+                                        withPreview
+                                        singleImage
                                     />
                                 </Grid>
                             )}
@@ -155,6 +169,16 @@ export default () => {
                 mensagem="Planta salva com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
+            />
+            <WarningDialog
+                mensagem="Selecione a planta."
+                open={warningOpen}
+                setOpen={setWarningOpen}
+            />
+            <ErrorDialog
+                mensagem={mensagemErro}
+                open={errorOpen}
+                setOpen={setErrorOpen}
             />
         </React.Fragment>
 

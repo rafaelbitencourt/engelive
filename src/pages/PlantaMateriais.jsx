@@ -12,7 +12,7 @@ import {
     TextField
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import SuccessDialog from '../components/SuccessDialog';
+import { SuccessDialog } from '../components/Dialog';
 import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
 
 export default () => {
@@ -200,11 +200,11 @@ export default () => {
             >
                 {
                     ({ translation, scale }) => {
-                        return <div style={{ height: "70%", maxHeight: "70%", width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
+                        return <div style={{ height: 745/*"70%"*/, maxHeight: "70%", width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
                             <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
                                 <ImageMapper
                                     src={`data:image/jpeg;base64,${imagem}`}
-                                    height={700}
+                                    // height={700}
                                     map={map}
                                     onLoad={load}
                                     onClick={area => clicked(area)}

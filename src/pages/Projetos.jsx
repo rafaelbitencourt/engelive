@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { listProjetos, deleteProjeto } from '../api/api.js';
-import ConfirmDialog from '../components/ConfirmDialog';
-import SuccessDialog from '../components/SuccessDialog';
+import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
 import {
