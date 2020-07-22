@@ -14,15 +14,19 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { SuccessDialog } from '../components/Dialog';
 import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
+import { useWindowSize } from "@react-hook/window-size/";
+import sizeOf from "image-size";
 
 export default () => {
     let history = useHistory();
     const { idplanta } = useParams();
+    const [windowWidth, windowHeight] = useWindowSize();
 
     const [sucessOpen, setSucessOpen] = useState(false);
     const [cadastroOpen, setCadastroOpen] = useState(false);
 
     const [imagem, setImagem] = useState(null);
+    const [imagemSize, setImagemSize] = useState({});
     const [interacao, setInteracao] = useState({
         scale: 1,
         translation: { x: 0, y: 0 }
@@ -138,6 +142,20 @@ export default () => {
             });
     }
 
+    const centralizar = () => {
+        const translationX = (windowWidth - (imagemSize.width * interacao.scale)) / 2;
+        const translationY = (windowHeight - 110 - (imagemSize.height * interacao.scale)) / 2;
+
+        setInteracao({
+            scale: interacao.scale,
+            translation: { x: translationX, y: translationY }
+        });
+    }
+
+    useEffect(() => {
+        centralizar();
+    }, [imagemSize]);
+
     useEffect(() => {
         listMateriais()
             .then(data => {
@@ -151,7 +169,9 @@ export default () => {
         getPlanta(idplanta)
             .then(data => {
                 if (data.imagem) {
-                    setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
+                    const bufferPlanta = Buffer.from(data.imagem, 'binary');
+                    setImagem(bufferPlanta.toString('base64'));
+                    setImagemSize(sizeOf(bufferPlanta));
                     carregarPlantaMateriais();
                 }
             }).catch(resp => {
@@ -186,6 +206,7 @@ export default () => {
         <div>
             <Button onClick={() => history.goBack()}>Voltar</Button>
             <Button disabled={!alteracoesPendentes} variant="contained" color='primary' onClick={salvar}>Salvar</Button>
+            <Button variant="contained" color='primary' onClick={centralizar}>Centralizar</Button>
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}
@@ -200,11 +221,10 @@ export default () => {
             >
                 {
                     ({ translation, scale }) => {
-                        return <div style={{ height: 745/*"70%"*/, maxHeight: "70%", width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
+                        return <div style={{ height: windowHeight-110, width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
                             <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
                                 <ImageMapper
                                     src={`data:image/jpeg;base64,${imagem}`}
-                                    // height={700}
                                     map={map}
                                     onLoad={load}
                                     onClick={area => clicked(area)}

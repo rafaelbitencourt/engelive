@@ -275,7 +275,7 @@ ImageMapper.defaultProps = {
 		areas: [],
 		name: "image-map-" + Math.random()
 	},
-	strokeColor: "rgba(0, 0, 0, 0.5)"
+	strokeColor: "rgba(0, 0, 200, 0.8)"
 };
 
 export default ImageMapper;
