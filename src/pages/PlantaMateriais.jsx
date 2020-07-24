@@ -5,6 +5,7 @@ import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
+    Tooltip,
     Button,
     Dialog,
     DialogActions,
@@ -12,7 +13,7 @@ import {
     DialogTitle,
     TextField
 } from '@material-ui/core';
-import { 
+import {
     FilterCenterFocus,
     ZoomOutMap,
     ZoomOut,
@@ -153,18 +154,18 @@ export default () => {
     }
 
     const zoom = (aumentar) => {
-        var newScale = interacao.scale + (aumentar ?  0.1 : -0.1);
+        var newScale = interacao.scale + (aumentar ? 0.1 : -0.1);
         newScale = Math.min(newScale, maxScale);
         newScale = Math.max(newScale, minScale);
 
         const translationX = interacao.translation.x - ((newScale - interacao.scale) * imagemSize.width / 2);
         const translationY = interacao.translation.y - ((newScale - interacao.scale) * imagemSize.height / 2);
 
-        setInteracao({ 
-            scale: newScale, 
-            translation: { 
-                x: translationX, 
-                y: translationY 
+        setInteracao({
+            scale: newScale,
+            translation: {
+                x: translationX,
+                y: translationY
             }
         });
     };
@@ -180,11 +181,11 @@ export default () => {
         const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
         const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
 
-        setInteracao({ 
-            scale: scale, 
-            translation: { 
-                x: translationX, 
-                y: translationY 
+        setInteracao({
+            scale: scale,
+            translation: {
+                x: translationX,
+                y: translationY
             }
         });
     };
@@ -243,18 +244,26 @@ export default () => {
         <div>
             <Button onClick={() => history.goBack()}>Voltar</Button>
             <Button disabled={!alteracoesPendentes} variant="contained" color='primary' onClick={salvar}>Salvar</Button>
-            <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => centralizar()}>
-                <FilterCenterFocus />
-            </IconButton>
-            <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => centralizar(true)}>
-                <ZoomOutMap />
-            </IconButton>
-            <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => zoom(false)}>
-                <ZoomOut />
-            </IconButton>
-            <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => zoom(true)}>
-                <ZoomIn />
-            </IconButton>
+            <Tooltip title="Centralizar">
+                <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => centralizar()}>
+                    <FilterCenterFocus />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Ajustar">
+                <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => centralizar(true)}>
+                    <ZoomOutMap />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Zoom -">
+                <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => zoom(false)}>
+                    <ZoomOut />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Zoom +">
+                <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => zoom(true)}>
+                    <ZoomIn />
+                </IconButton>
+            </Tooltip>
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}
@@ -263,7 +272,7 @@ export default () => {
             >
                 {
                     ({ translation, scale }) => {
-                        return <div style={{ height: windowHeight-110, width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
+                        return <div style={{ height: windowHeight - 110, width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
                             <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
                                 <ImageMapper
                                     src={`data:image/jpeg;base64,${imagem}`}
