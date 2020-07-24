@@ -142,18 +142,28 @@ export default () => {
             });
     }
 
-    const centralizar = () => {
-        const translationX = (windowWidth - (imagemSize.width * interacao.scale)) / 2;
-        const translationY = (windowHeight - 110 - (imagemSize.height * interacao.scale)) / 2;
+    const centralizar = (ajustar) => {
+        var scale = interacao.scale;
+        if (ajustar) {
+            const scaleWidth = windowWidth / imagemSize.width;
+            const scaleHeight = (windowHeight - 110) / imagemSize.height;
+            scale = Math.min(scaleWidth, scaleHeight, 2);
+            scale = Math.max(scale, 0.05);
+        }
+        const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
+        const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
 
-        setInteracao({
-            scale: interacao.scale,
-            translation: { x: translationX, y: translationY }
+        setInteracao({ 
+            scale: scale, 
+            translation: { 
+                x: translationX, 
+                y: translationY 
+            }
         });
-    }
+    };
 
     useEffect(() => {
-        centralizar();
+        centralizar(true);
     }, [imagemSize]);
 
     useEffect(() => {
@@ -206,11 +216,12 @@ export default () => {
         <div>
             <Button onClick={() => history.goBack()}>Voltar</Button>
             <Button disabled={!alteracoesPendentes} variant="contained" color='primary' onClick={salvar}>Salvar</Button>
-            <Button variant="contained" color='primary' onClick={centralizar}>Centralizar</Button>
+            <Button variant="contained" color='primary' onClick={() => centralizar()}>Centralizar</Button>
+            <Button variant="contained" color='primary' onClick={() => centralizar(true)}>Ajustar</Button>
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}
-                minScale={0.3}
+                minScale={0.05}
                 maxScale={2}
             // translationBounds={{
             //     xMin: -1000,
