@@ -4,6 +4,7 @@ import { listMateriais, getPlanta, getPlantasMateriais, savePlantasMateriais } f
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
+    IconButton,
     Button,
     Dialog,
     DialogActions,
@@ -11,6 +12,13 @@ import {
     DialogTitle,
     TextField
 } from '@material-ui/core';
+import { 
+    FilterCenterFocus,
+    ZoomOutMap,
+    ZoomOut,
+    ZoomIn
+} from '@material-ui/icons';
+
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { SuccessDialog } from '../components/Dialog';
 import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
@@ -21,6 +29,8 @@ export default () => {
     let history = useHistory();
     const { idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
+    const minScale = 0.05;
+    const maxScale = 2;
 
     const [sucessOpen, setSucessOpen] = useState(false);
     const [cadastroOpen, setCadastroOpen] = useState(false);
@@ -142,13 +152,30 @@ export default () => {
             });
     }
 
+    const zoom = (aumentar) => {
+        var newScale = interacao.scale + (aumentar ?  0.1 : -0.1);
+        newScale = Math.min(newScale, maxScale);
+        newScale = Math.max(newScale, minScale);
+
+        const translationX = interacao.translation.x - ((newScale - interacao.scale) * imagemSize.width / 2);
+        const translationY = interacao.translation.y - ((newScale - interacao.scale) * imagemSize.height / 2);
+
+        setInteracao({ 
+            scale: newScale, 
+            translation: { 
+                x: translationX, 
+                y: translationY 
+            }
+        });
+    };
+
     const centralizar = (ajustar) => {
         var scale = interacao.scale;
         if (ajustar) {
             const scaleWidth = windowWidth / imagemSize.width;
             const scaleHeight = (windowHeight - 110) / imagemSize.height;
-            scale = Math.min(scaleWidth, scaleHeight, 2);
-            scale = Math.max(scale, 0.05);
+            scale = Math.min(scaleWidth, scaleHeight, maxScale);
+            scale = Math.max(scale, minScale);
         }
         const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
         const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
@@ -216,19 +243,23 @@ export default () => {
         <div>
             <Button onClick={() => history.goBack()}>Voltar</Button>
             <Button disabled={!alteracoesPendentes} variant="contained" color='primary' onClick={salvar}>Salvar</Button>
-            <Button variant="contained" color='primary' onClick={() => centralizar()}>Centralizar</Button>
-            <Button variant="contained" color='primary' onClick={() => centralizar(true)}>Ajustar</Button>
+            <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => centralizar()}>
+                <FilterCenterFocus />
+            </IconButton>
+            <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => centralizar(true)}>
+                <ZoomOutMap />
+            </IconButton>
+            <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => zoom(false)}>
+                <ZoomOut />
+            </IconButton>
+            <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => zoom(true)}>
+                <ZoomIn />
+            </IconButton>
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}
-                minScale={0.05}
-                maxScale={2}
-            // translationBounds={{
-            //     xMin: -1000,
-            //     xMax: 1000,
-            //     yMin: -500,
-            //     yMax: 500
-            // }}
+                minScale={minScale}
+                maxScale={maxScale}
             >
                 {
                     ({ translation, scale }) => {
