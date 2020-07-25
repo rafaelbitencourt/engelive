@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 
+import { Tooltip } from '@material-ui/core';
+
 //Reescrito de https://github.com/coldiary/react-image-mapper/blob/master/src/ImageMapper.js (14/07/2020)
 
 const ImageMapper = (props) => {
-
-    let absPos = { position: "absolute", top: 0, left: 0 };
+	let absPos = { position: "absolute", top: 0, left: 0 };
     const styles = {
         container: { position: "relative" },
         canvas: { ...absPos, pointerEvents: "none", zIndex: 2 },
@@ -223,24 +224,31 @@ const ImageMapper = (props) => {
 			const scaledCoords = scaleCoords(area.coords);
 			const center = computeCenter(area);
 			const extendedArea = { ...area, scaledCoords, center };
+			
 			return (
-				<area
-					key={area._id || index}
-					shape={area.shape}
-					coords={scaledCoords.join(",")}
-                    onMouseEnter={(event) => hoverOn(extendedArea, index, event)}
-					onMouseLeave={(event) => hoverOff(extendedArea, index, event)}
-					onMouseMove={(event) => mouseMove(extendedArea, index, event)}
-					onClick={(event) => click(extendedArea, index, event)}
-					href={area.href}
-					alt=''
-				/>
+				<Tooltip 
+					title={area.label}
+					placement="top"
+				>
+					<area
+						key={area._id || index}
+						shape={area.shape}
+						coords={scaledCoords.join(",")}
+						onMouseEnter={(event) => hoverOn(extendedArea, index, event)}
+						onMouseLeave={(event) => hoverOff(extendedArea, index, event)}
+						onMouseMove={(event) => mouseMove(extendedArea, index, event)}
+						onClick={(event) => click(extendedArea, index, event)}
+						href={area.href}
+						alt=''
+						style={{ position: 'absolute', display: 'block', top: `${extendedArea.center[1]}px`, left: `${extendedArea.center[0]}px` }}
+					/>
+				</Tooltip>
 			);
 		});
 	}
 
 	useEffect(() => {
-        setMap(JSON.parse(JSON.stringify(props.map)));
+		setMap(JSON.parse(JSON.stringify(props.map)));
     }, [props.map]);
 
     useEffect(() => {

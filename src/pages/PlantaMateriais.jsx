@@ -221,8 +221,9 @@ export default () => {
         const areas = [];
 
         plantaMateriais.forEach(function (item) {
+            var material = materiais.find(mat => mat.id === item.idmaterial);
             areas.push({
-                name: 'marcador',
+                label: material ? material.nome : 'Material não cadastrado.',
                 shape: "circle",
                 coords: [
                     item.coordenadaX,
@@ -238,7 +239,7 @@ export default () => {
             name: "my-map",
             areas: areas
         });
-    }, [plantaMateriais]);
+    }, [plantaMateriais, materiais]);
 
     return (
         <div>
