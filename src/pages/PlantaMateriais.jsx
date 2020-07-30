@@ -11,13 +11,16 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    TextField
+    TextField,
+    Box
 } from '@material-ui/core';
 import {
+    Backspace,
     FilterCenterFocus,
     ZoomOutMap,
     ZoomOut,
-    ZoomIn
+    ZoomIn,
+    Done
 } from '@material-ui/icons';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -243,28 +246,40 @@ export default () => {
 
     return (
         <div>
-            <Button onClick={() => history.goBack()}>Voltar</Button>
-            <Button disabled={!alteracoesPendentes} variant="contained" color='primary' onClick={salvar}>Salvar</Button>
-            <Tooltip title="Centralizar">
-                <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => centralizar()}>
-                    <FilterCenterFocus />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title="Ajustar">
-                <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => centralizar(true)}>
-                    <ZoomOutMap />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title="Zoom -">
-                <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => zoom(false)}>
-                    <ZoomOut />
-                </IconButton>
-            </Tooltip>
-            <Tooltip title="Zoom +">
-                <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => zoom(true)}>
-                    <ZoomIn />
-                </IconButton>
-            </Tooltip>
+            <Box display="flex">
+                <Tooltip title="Voltar">
+                    <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => history.goBack()}>
+                        <Backspace />
+                    </IconButton>
+                </Tooltip>
+                <Box flexGrow={1} display="flex" justifyContent="center">
+                    <Tooltip title="Centralizar">
+                        <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => centralizar()}>
+                            <FilterCenterFocus />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Ajustar">
+                        <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => centralizar(true)}>
+                            <ZoomOutMap />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Zoom -">
+                        <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => zoom(false)}>
+                            <ZoomOut />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Zoom +">
+                        <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => zoom(true)}>
+                            <ZoomIn />
+                        </IconButton>
+                    </Tooltip>
+                </Box>
+                <Tooltip title="Salvar">
+                    <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
+                        <Done />
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <MapInteraction
                 value={interacao}
                 onChange={(value) => setInteracao(value)}

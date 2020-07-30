@@ -229,6 +229,7 @@ const ImageMapper = (props) => {
 				<Tooltip 
 					title={area.label}
 					placement="top"
+					key={"tooltip"+(area._id || index)}
 				>
 					<area
 						key={area._id || index}
