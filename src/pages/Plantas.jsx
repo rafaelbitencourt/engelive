@@ -13,13 +13,17 @@ import {
     ListItemText,
     Avatar,
     IconButton,
-    Typography
+    Typography,
+    Box,
+    Tooltip
 } from '@material-ui/core';
 
 import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
-    Edit as EditIcon
+    Edit as EditIcon,
+    Backspace,
+    AddCircle
 } from '@material-ui/icons';
 
 export default () => {
@@ -30,7 +34,7 @@ export default () => {
 
     const { idprojeto } = useParams();
     let history = useHistory();
-    
+
     const atualizarLista = useCallback(() => {
         listPlantasPorProjeto(idprojeto)
             .then(data => {
@@ -55,11 +59,23 @@ export default () => {
 
     return (
         <div>
-            <Typography component="h1" variant="h4" align="center">
-                Plantas
-            </Typography>
-            <Button onClick={() => history.goBack()}>Voltar</Button>
-            <Button variant="contained" color="primary" component={Link} to={`/projeto/${idprojeto}/planta`}>Novo</Button>
+            <Box display="flex" padding="2px">
+                <Tooltip title="Voltar">
+                    <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
+                        <Backspace />
+                    </IconButton>
+                </Tooltip>
+                <Box flexGrow={1} display="flex" justifyContent="center">
+                    <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
+                        Plantas
+                    </Typography>
+                </Box>
+                <Tooltip title="Novo">
+                    <IconButton variant="contained" color="primary" component={Link} to={`/projeto/${idprojeto}/planta`}>
+                        <AddCircle fontSize="large"/>
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <List>
                 {plantas.map(planta => (
                     <ListItem button key={planta.id} component={Link} to={`/projeto/${idprojeto}/planta/${planta.id}/materiais`}>
@@ -92,9 +108,9 @@ export default () => {
                 setOpen={setConfirmOpen}
                 onConfirm={excluirPlanta}
             />
-            <SuccessDialog 
+            <SuccessDialog
                 mensagem="Planta excluída com sucesso."
-                open={sucessOpen} 
+                open={sucessOpen}
                 setOpen={setSucessOpen}
             />
         </div>

@@ -20,7 +20,7 @@ import {
     ZoomOutMap,
     ZoomOut,
     ZoomIn,
-    Done
+    CheckCircle
 } from '@material-ui/icons';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -246,9 +246,9 @@ export default () => {
 
     return (
         <div>
-            <Box display="flex">
+            <Box display="flex" padding="2px">
                 <Tooltip title="Voltar">
-                    <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => history.goBack()}>
+                    <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => history.goBack()}>
                         <Backspace />
                     </IconButton>
                 </Tooltip>
@@ -276,7 +276,7 @@ export default () => {
                 </Box>
                 <Tooltip title="Salvar">
                     <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
-                        <Done />
+                        <CheckCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>

@@ -12,13 +12,16 @@ import {
     ListItemText,
     Avatar,
     IconButton,
-    Typography
+    Typography,
+    Box,
+    Tooltip
 } from '@material-ui/core';
 
 import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
-    Edit as EditIcon
+    Edit as EditIcon,
+    AddCircle
 } from '@material-ui/icons';
 
 export default () => {
@@ -51,10 +54,18 @@ export default () => {
 
     return (
         <div>
-            <Typography component="h1" variant="h4" align="center">
-                PROJETOS
-            </Typography>
-            <Button variant="contained" color="primary" component={Link} to="/projeto">Novo</Button>
+            <Box display="flex" padding="2px">
+                <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
+                    <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
+                        Projetos
+                    </Typography>
+                </Box>
+                <Tooltip title="Novo">
+                    <IconButton variant="contained" color="primary" component={Link} to="/projeto">
+                        <AddCircle fontSize="large"/>
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <List>
                 {projetos.map(projeto => (
                     <ListItem button key={projeto.id} component={Link} to={`/projeto/${projeto.id}/plantas`}>
