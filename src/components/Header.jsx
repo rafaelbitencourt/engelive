@@ -1,16 +1,5 @@
-// import React from 'react';
-
-// function Header() {
-//     return (
-//         <header className="App-header">
-//             <h1>EngeLive</h1>
-//         </header>
-//     );
-// }
-
-// export default Header;
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -41,7 +30,9 @@ export default function Header() {
           <Typography variant="h6" className={classes.title}>
             EngeLive
           </Typography>
-          <Button color="inherit">Entrar</Button>
+
+          <Button component={Link} color="inherit" to={'/login'}>Entrar</Button>
+          <Button component={Link} color="inherit" to={'/register'}>Cadastre-se</Button>
         </Toolbar>
       </AppBar>
     </div>

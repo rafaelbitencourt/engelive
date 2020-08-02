@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.css';
+import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import Header from './components/Header.jsx';
@@ -19,6 +20,7 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import PrivateRoute from './components/PrivateRoute'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,16 +40,14 @@ function App() {
         <Header />
         <main>
           <Switch>
-            <Route path="/projeto/:idprojeto/planta/:idplanta/materiais" component={PlantaMateriais} />
-            <Route path="/projeto/:idprojeto/planta/:idplanta?" component={Planta} />
-            <Route path="/projeto/:idprojeto/plantas" component={Plantas} />
-            <Route path="/projeto/:idprojeto?" component={Projeto} />
-            <Route path="/projetos" component={Projetos} />
+            <PrivateRoute path="/projeto/:idprojeto/planta/:idplanta/materiais" component={PlantaMateriais} />
+            <PrivateRoute path="/projeto/:idprojeto/planta/:idplanta?" component={Planta} />
+            <PrivateRoute path="/projeto/:idprojeto/plantas" component={Plantas} />
+            <PrivateRoute path="/projeto/:idprojeto?" component={Projeto} />
+            <PrivateRoute path="/projetos" component={Projetos} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />            
-            <Route path="/">
-              <Redirect to='/projetos' />
-            </Route>
+            <Route path="/" component={Home}/>
           </Switch>
         </main>
         <Footer />
