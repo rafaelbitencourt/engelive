@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 
 import AuthService from '../services/auth.service';
+import Header from '../components/Header.jsx';
 
 export default ({ component: Component, ...rest }) => (
     <Route {...rest} render={props => {
@@ -10,6 +11,9 @@ export default ({ component: Component, ...rest }) => (
             return <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
         }
 
-        return <Component {...props} />
+        return <React.Fragment>
+            <Header showMenu showUserLogout usuario={currentUser} />
+            <Component {...props} />
+        </React.Fragment>
     }} />
 )

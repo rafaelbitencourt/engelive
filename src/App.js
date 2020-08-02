@@ -3,7 +3,6 @@ import './App.css';
 import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
-import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import Projetos from './pages/Projetos.jsx';
 import Projeto from './pages/Projeto.jsx';
@@ -17,8 +16,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Redirect
+  Route
 } from "react-router-dom";
 import PrivateRoute from './components/PrivateRoute'
 
@@ -37,7 +35,6 @@ function App() {
     <Router >
       <div className={classes.root}>
         <CssBaseline />
-        <Header />
         <main>
           <Switch>
             <PrivateRoute path="/projeto/:idprojeto/planta/:idplanta/materiais" component={PlantaMateriais} />

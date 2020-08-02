@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import useForm from "../hooks/useForm";
 import AuthService from '../services/auth.service';
+import Header from '../components/Header.jsx';
 import {
     TextField,
     Button,
-    CssBaseline,
     Paper,
     Typography,
     Grid
@@ -66,11 +66,11 @@ export default () => {
             });
     };
 
-    const { inputs, setInputs, handleInputChange, handleSubmit } = useForm(initialValues, cbSubmit);
+    const { inputs, handleInputChange, handleSubmit } = useForm(initialValues, cbSubmit);
 
     return (
         <React.Fragment>
-            <CssBaseline />
+            <Header/>
             <form
                 className={classes.layout}
                 onSubmit={handleSubmit}
