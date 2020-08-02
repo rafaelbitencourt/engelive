@@ -1,9 +1,10 @@
 import axios from 'axios';
+import authHeader from '../services/auth-header';
 
-const urlApi = "http://localhost:3001/";
+const urlApi = "http://note-rafael:3001/";
 
 export const listProjetos = () => axios
-    .get(urlApi+'projetos')
+    .get(urlApi+'projetos', { headers: authHeader() })
     .then(({ data }) => data)
 
 export const getProjeto = (id) => axios

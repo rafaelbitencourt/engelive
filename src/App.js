@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css';
+import Register from './pages/Register.jsx';
+import Login from './pages/Login.jsx';
 import Header from './components/Header.jsx';
 import Footer from './components/Footer.jsx';
 import Projetos from './pages/Projetos.jsx';
@@ -41,6 +43,8 @@ function App() {
             <Route path="/projeto/:idprojeto/plantas" component={Plantas} />
             <Route path="/projeto/:idprojeto?" component={Projeto} />
             <Route path="/projetos" component={Projetos} />
+            <Route path="/register" component={Register} />
+            <Route path="/login" component={Login} />            
             <Route path="/">
               <Redirect to='/projetos' />
             </Route>
