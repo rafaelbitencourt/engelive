@@ -8,21 +8,21 @@ export const listProjetos = () => axios
     .then(({ data }) => data)
 
 export const getProjeto = (id) => axios
-    .get(urlApi+'projetos/'+id)
+    .get(urlApi+'projetos/'+id, { headers: authHeader() })
     .then(({ data }) => data)
 
 export const saveProjeto = (data) => {
     if(data.id) {
-        return axios.put(urlApi+'projetos/'+data.id, data)
+        return axios.put(urlApi+'projetos/'+data.id, data, { headers: authHeader() })
             .then(({ data }) => data)
     } else {
-        return axios.post(urlApi+'projetos', data)
+        return axios.post(urlApi+'projetos', data, { headers: authHeader() })
             .then(({ data }) => data)
     }
 }
 
 export const deleteProjeto = (id) => axios
-    .delete(urlApi+'projetos/'+id)
+    .delete(urlApi+'projetos/'+id, { headers: authHeader() })
 
 export const listPlantasPorProjeto = (id) => axios
     .get(urlApi+'projeto/'+id+'/plantas')
