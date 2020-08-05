@@ -25,29 +25,27 @@ export const deleteProjeto = (id) => axios
     .delete(urlApi+'projetos/'+id, { headers: authHeader() })
 
 export const listPlantasPorProjeto = (id) => axios
-    .get(urlApi+'projeto/'+id+'/plantas')
+    .get(urlApi+'projeto/'+id+'/plantas', { headers: authHeader() })
     .then(({ data }) => data)    
 
 export const getPlanta = (id) => axios
-    .get(urlApi+'plantas/'+id)
+    .get(urlApi+'plantas/'+id, { headers: authHeader() })
     .then(({ data }) => data)
 
 export const savePlanta = (data) => {
     if(data.id) {
         delete data.imagem;
-        return axios.put(urlApi+'plantas/'+data.id, data)
+        return axios.put(urlApi+'plantas/'+data.id, data, { headers: authHeader() })
             .then(({ data }) => data)
     } else {
         const formData = new FormData();
         formData.append('idprojeto', data.idprojeto);
         formData.append('descricao', data.descricao);
         formData.append('imagem', data.imagem);
-        const config = {
-            headers: {
-                'content-type': 'multipart/form-data'
-            }
-        }
-        return axios.post(urlApi+'plantas', formData, config)
+        const headers = authHeader();
+        headers["content-type"] = 'multipart/form-data';
+
+        return axios.post(urlApi+'plantas', formData, { headers: headers })
             .then(({ data }) => data)
     }
 }
