@@ -51,10 +51,10 @@ export const savePlanta = (data) => {
 }
 
 export const deletePlanta = (id) => axios
-    .delete(urlApi+'plantas/'+id)
+    .delete(urlApi+'plantas/'+id, { headers: authHeader() })
 
 export const getPlantasMateriais = (idplanta) => axios
-    .get(urlApi+'plantas_materiais/'+idplanta)
+    .get(urlApi+'plantas_materiais/'+idplanta, { headers: authHeader() })
     .then(({ data }) => data)
 
 export const savePlantasMateriais = (idplanta, data) => {
@@ -62,10 +62,10 @@ export const savePlantasMateriais = (idplanta, data) => {
         idplanta: idplanta,
         materiais: data || []
     }
-    return axios.post(urlApi+'plantas_materiais',  params)
+    return axios.post(urlApi+'plantas_materiais',  params, { headers: authHeader() })
         .then(({ data }) => data)
 }
 
 export const listMateriais = () => axios
-    .get(urlApi+'materiais')
+    .get(urlApi+'materiais', { headers: authHeader() })
     .then(({ data }) => data)
