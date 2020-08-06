@@ -69,3 +69,6 @@ export const savePlantasMateriais = (idplanta, data) => {
 export const listMateriais = () => axios
     .get(urlApi+'materiais', { headers: authHeader() })
     .then(({ data }) => data)
+
+export const deleteMaterial = (id) => axios
+    .delete(urlApi+'materiais/'+id, { headers: authHeader() })

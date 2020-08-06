@@ -87,7 +87,10 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
             }}>
             <ListItemText primary='Projetos' />
           </ListItem>
-          <ListItem button key='Materiais'>
+          <ListItem button key='Materiais' onClick={() => {
+              history.push("/materiais");
+              setDrawerOpen(false);
+            }}>
             <ListItemText primary='Materiais' />
           </ListItem>
           <ListItem button key='Colaboradores'>
