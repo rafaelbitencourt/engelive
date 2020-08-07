@@ -11,10 +11,16 @@ import {
   Drawer,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  ListItemIcon
 } from '@material-ui/core';
 
-import MenuIcon from '@material-ui/icons/Menu';
+import {
+  Menu as MenuIcon,
+  Description,
+  Category,
+  People
+ } from '@material-ui/icons';
 
 import AuthService from '../services/auth.service';
 import { ConfirmDialog } from '../components/Dialog';
@@ -85,15 +91,18 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
               history.push("/projetos");
               setDrawerOpen(false);
             }}>
+            <ListItemIcon><Description /></ListItemIcon>
             <ListItemText primary='Projetos' />
           </ListItem>
           <ListItem button key='Materiais' onClick={() => {
               history.push("/materiais");
               setDrawerOpen(false);
             }}>
+            <ListItemIcon><Category /></ListItemIcon>
             <ListItemText primary='Materiais' />
           </ListItem>
           <ListItem button key='Colaboradores'>
+            <ListItemIcon><People /></ListItemIcon>
             <ListItemText primary='Colaboradores' />
           </ListItem>
         </List>
