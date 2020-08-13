@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { listMateriais, getPlanta, getPlantasMateriais, savePlantasMateriais } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
@@ -29,22 +29,75 @@ import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
 
+const minScale = 0.05;
+const maxScale = 2;
+const zoom = (aumentar, interacao, imagemSize) => {
+    var newScale = interacao.scale + (aumentar ? 0.1 : -0.1);
+    newScale = Math.min(newScale, maxScale);
+    newScale = Math.max(newScale, minScale);
+
+    const translationX = interacao.translation.x - ((newScale - interacao.scale) * imagemSize.width / 2);
+    const translationY = interacao.translation.y - ((newScale - interacao.scale) * imagemSize.height / 2);
+
+    return {
+        scale: newScale,
+        translation: {
+            x: translationX,
+            y: translationY
+        }
+    };
+};
+const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) => {
+    var scale = interacao.scale;
+    if (ajustar) {
+        const scaleWidth = windowWidth / imagemSize.width;
+        const scaleHeight = (windowHeight - 110) / imagemSize.height;
+        scale = Math.min(scaleWidth, scaleHeight, maxScale);
+        scale = Math.max(scale, minScale);
+    }
+    const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
+    const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
+
+    return {
+        scale: scale,
+        translation: {
+            x: translationX,
+            y: translationY
+        }
+    };
+};
+
 export default () => {
     let history = useHistory();
     const { idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
-    const minScale = 0.05;
-    const maxScale = 2;
 
     const [sucessOpen, setSucessOpen] = useState(false);
     const [cadastroOpen, setCadastroOpen] = useState(false);
 
     const [imagem, setImagem] = useState(null);
     const [imagemSize, setImagemSize] = useState({});
-    const [interacao, setInteracao] = useState({
+
+    const reducer = (state, dados) => {
+        switch (dados.acao) {
+            case 'menosZoom':
+                return zoom(false, state, imagemSize);
+            case 'maisZoom':
+                return zoom(true, state, imagemSize);
+            case 'centralizar':
+                return centralizar(false, state, imagemSize, windowWidth, windowHeight);
+            case 'ajustar':
+                return centralizar(true, state, imagemSize, windowWidth, windowHeight);
+            default:
+                return dados;
+        }
+    };
+
+    const [interacao, setInteracao] = useReducer(reducer, {
         scale: 1,
         translation: { x: 0, y: 0 }
     });
+
     const [map, setMap] = useState({
         name: "my-map",
         areas: []
@@ -156,45 +209,8 @@ export default () => {
             });
     }
 
-    const zoom = (aumentar) => {
-        var newScale = interacao.scale + (aumentar ? 0.1 : -0.1);
-        newScale = Math.min(newScale, maxScale);
-        newScale = Math.max(newScale, minScale);
-
-        const translationX = interacao.translation.x - ((newScale - interacao.scale) * imagemSize.width / 2);
-        const translationY = interacao.translation.y - ((newScale - interacao.scale) * imagemSize.height / 2);
-
-        setInteracao({
-            scale: newScale,
-            translation: {
-                x: translationX,
-                y: translationY
-            }
-        });
-    };
-
-    const centralizar = (ajustar) => {
-        var scale = interacao.scale;
-        if (ajustar) {
-            const scaleWidth = windowWidth / imagemSize.width;
-            const scaleHeight = (windowHeight - 110) / imagemSize.height;
-            scale = Math.min(scaleWidth, scaleHeight, maxScale);
-            scale = Math.max(scale, minScale);
-        }
-        const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
-        const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
-
-        setInteracao({
-            scale: scale,
-            translation: {
-                x: translationX,
-                y: translationY
-            }
-        });
-    };
-
     useEffect(() => {
-        centralizar(true);
+        setInteracao({ acao: 'ajustar' });
     }, [imagemSize]);
 
     useEffect(() => {
@@ -254,30 +270,32 @@ export default () => {
                 </Tooltip>
                 <Box flexGrow={1} display="flex" justifyContent="center">
                     <Tooltip title="Centralizar">
-                        <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => centralizar()}>
+                        <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
                             <FilterCenterFocus />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Ajustar">
-                        <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => centralizar(true)}>
+                        <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => setInteracao({ acao: 'ajustar' })}>
                             <ZoomOutMap />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Zoom -">
-                        <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => zoom(false)}>
+                        <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => setInteracao({ acao: 'menosZoom' })}>
                             <ZoomOut />
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="Zoom +">
-                        <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => zoom(true)}>
+                        <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => setInteracao({ acao: 'maisZoom' })}>
                             <ZoomIn />
                         </IconButton>
                     </Tooltip>
                 </Box>
                 <Tooltip title="Salvar">
-                    <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
-                        <CheckCircle fontSize="large"/>
-                    </IconButton>
+                    <span>
+                        <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
+                            <CheckCircle fontSize="large" />
+                        </IconButton>
+                    </span>
                 </Tooltip>
             </Box>
             <MapInteraction
