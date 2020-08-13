@@ -76,7 +76,7 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
           {showLoginRegister &&
             <React.Fragment>
               <Button component={Link} color="inherit" to={'/login'}>Entrar</Button>
-              <Button component={Link} color="inherit" to={'/register'}>Cadastre-se</Button>
+              <Button component={Link} color="inherit" to={'/register'}>Criar conta</Button>
             </React.Fragment>
           }
         </Toolbar>
