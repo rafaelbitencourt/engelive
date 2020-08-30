@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import useForm from "../hooks/useForm";
+import { useForm } from "react-hook-form";
 import { getProjeto, saveProjeto } from '../api/api.js';
 import {
     TextField,
@@ -50,13 +50,9 @@ export default () => {
 
     const { idprojeto } = useParams();
     let history = useHistory();
-    const initialValues = {
-        nome: '',
-        previsao: ''
-    }
 
-    const cbSubmit = () => {
-        saveProjeto(inputs)
+    const cbSubmit = (inputs) => {
+        saveProjeto(inputs.projeto)
             .then(data => {
                 if (!idprojeto)
                     history.replace('/projeto/' + data.id);
@@ -67,24 +63,24 @@ export default () => {
             });
     };
 
-    const { inputs, setInputs, handleInputChange, handleSubmit } = useForm(initialValues, cbSubmit);
+    const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
         if (idprojeto)
             getProjeto(idprojeto)
                 .then(data => {
-                    setInputs(data);
+                    setValue('projeto', data);
                 }).catch(resp => {
                     alert(resp.message || 'Ocorreu um erro ao recuperar os dados do projeto.');
                 });
-    }, [idprojeto, setInputs]);
+    }, [idprojeto, setValue]);
 
     return (
         <React.Fragment>
             <CssBaseline />
             <form
                 className={classes.layout}
-                onSubmit={handleSubmit}
+                onSubmit={e => e.preventDefault()}
                 autoComplete="off">
 
                 <Paper className={classes.paper}>
@@ -94,34 +90,42 @@ export default () => {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 label="Nome"
-                                name="nome"
-                                onChange={handleInputChange}
-                                value={inputs.nome}
+                                placeholder="Nome do projeto"
+                                name="projeto.nome"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                                 fullWidth
+                                error={errors.projeto && errors.projeto.nome ? true : false}
+                                helperText={errors.projeto && errors.projeto.nome ? errors.projeto.nome.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })}                                
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 label="Previsão"
                                 type="date"
-                                name="previsao"
-                                onChange={handleInputChange}
-                                value={inputs.previsao}
+                                name="projeto.previsao"
                                 InputLabelProps={{
                                     shrink: true
                                 }}
                                 fullWidth
+                                error={errors.projeto && errors.projeto.previsao ? true : false}
+                                helperText={errors.projeto && errors.projeto.previsao ? errors.projeto.previsao.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })}
                             />
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button 
-                            className={classes.button} 
+                        <Button
+                            className={classes.button}
                             color="default"
-                            component={Link} 
+                            component={Link}
                             disabled={!idprojeto}
                             to={`/projeto/${idprojeto}/plantas`}>Plantas do projeto</Button>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
@@ -130,6 +134,7 @@ export default () => {
                             variant="contained"
                             color="primary"
                             className={classes.button}
+                            onClick={handleSubmit(cbSubmit)}
                         >Salvar</Button>
                     </div>
                 </Paper>

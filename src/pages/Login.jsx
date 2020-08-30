@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import useForm from "../hooks/useForm";
+import { useForm } from "react-hook-form";
 import AuthService from '../services/auth.service';
 import Header from '../components/Header.jsx';
 import {
@@ -50,13 +50,11 @@ export default () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
 
-    let history = useHistory();
-    const initialValues = {
-        usuario: '',
-        senha: ''
-    }
+    const { register, errors, handleSubmit } = useForm({});
 
-    const cbSubmit = () => {
+    let history = useHistory();
+
+    const cbSubmit = (inputs) => {
         AuthService.login(inputs.usuario, inputs.senha)
             .then(
                 () => {
@@ -76,14 +74,12 @@ export default () => {
             );
     };
 
-    const { inputs, handleInputChange, handleSubmit } = useForm(initialValues, cbSubmit);
-
     return (
         <React.Fragment>
             <Header/>
             <form
                 className={classes.layout}
-                onSubmit={handleSubmit}
+                onSubmit={handleSubmit(cbSubmit)}
                 autoComplete="off">
 
                 <Paper className={classes.paper}>
@@ -93,23 +89,27 @@ export default () => {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 label="Usuário"
                                 name="usuario"
-                                onChange={handleInputChange}
-                                value={inputs.usuario}
                                 fullWidth
+                                error={errors.usuario ? true : false}
+                                helperText={errors.usuario ? errors.usuario.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 label="Senha"
                                 name="senha"
                                 type="password"
-                                onChange={handleInputChange}
-                                value={inputs.senha}
                                 fullWidth
+                                error={errors.senha ? true : false}
+                                helperText={errors.senha ? errors.senha.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })}
                             />
                         </Grid>
                     </Grid>
