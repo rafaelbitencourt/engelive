@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
-import useForm from "../hooks/useForm";
+import { useForm } from "react-hook-form";
 import { getPlanta, savePlanta } from '../api/api.js';
 import {
     TextField,
@@ -56,17 +56,12 @@ export default () => {
 
     const { idprojeto, idplanta } = useParams();
     let history = useHistory();
-    const initialValues = {
-        idprojeto: idprojeto,
-        descricao: '',
-        imagem: null
-    }
 
-    const cbSubmit = () => {
-        if(!inputs.id && !inputs.imagem) {
+    const cbSubmit = (inputs) => {
+        if(!inputs.planta.id && !inputs.planta.imagem) {
             setWarningOpen(true);
         } else {
-            savePlanta(inputs)
+            savePlanta({ ...inputs.planta, idprojeto: idprojeto})
                 .then(data => {
                     if (!idplanta)
                         history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
@@ -79,13 +74,13 @@ export default () => {
         }
     };
 
-    const { inputs, setInputs, handleInputChange, handleSubmit } = useForm(initialValues, cbSubmit);
+    const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
         if (idplanta)
             getPlanta(idplanta)
                 .then(data => {
-                    setInputs(data);
+                    setValue('planta', data);
                     if (data.imagem)
                         setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
                 })
@@ -93,10 +88,10 @@ export default () => {
                     setMensagemErro(response.data.message || 'Ocorreu um erro ao recuperar os dados da planta.')
                     setErrorOpen(true);
                 });
-    }, [idplanta, setInputs]);
+    }, [idplanta, setValue]);
 
     const onDropImagem = (imagens) => {
-        setInputs({ ...inputs, imagem: imagens[0] });
+        setValue('planta.imagem', imagens[0]);
     }
 
     return (
@@ -104,7 +99,7 @@ export default () => {
             <CssBaseline />
             <form
                 className={classes.layout}
-                onSubmit={handleSubmit}
+                onSubmit={e => e.preventDefault()}
                 autoComplete="off">
 
                 <Paper className={classes.paper}>
@@ -114,12 +109,18 @@ export default () => {
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
-                                required
                                 label="Descrição"
-                                name="descricao"
-                                onChange={handleInputChange}
-                                value={inputs.descricao}
+                                placeholder="Descrição da planta"
+                                name="planta.descricao"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
                                 fullWidth
+                                error={errors.planta && errors.planta.descricao ? true : false}
+                                helperText={errors.planta && errors.planta.descricao ? errors.planta.descricao.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })} 
                             />
                         </Grid>
                         {idplanta ? (
@@ -161,6 +162,7 @@ export default () => {
                             variant="contained"
                             color="primary"
                             className={classes.button}
+                            onClick={handleSubmit(cbSubmit)}
                         >Salvar</Button>
                     </div>
                 </Paper>
