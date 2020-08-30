@@ -9,7 +9,8 @@ import {
     Paper,
     Typography,
     Grid,
-    CardMedia
+    CardMedia,
+    LinearProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { SuccessDialog, WarningDialog, ErrorDialog } from '../components/Dialog';
@@ -58,16 +59,16 @@ export default () => {
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
-        if(!inputs.planta.id && !inputs.planta.imagem) {
+        if (!inputs.planta.id && !inputs.planta.imagem) {
             setWarningOpen(true);
         } else {
-            savePlanta({ ...inputs.planta, idprojeto: idprojeto})
+            savePlanta({ ...inputs.planta, idprojeto: idprojeto })
                 .then(data => {
                     if (!idplanta)
                         history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
                     setSucessOpen(true);
                 })
-                .catch(({response}) => {
+                .catch(({ response }) => {
                     setMensagemErro(response.data.message || 'Ocorreu um erro ao salvar a planta.')
                     setErrorOpen(true);
                 });
@@ -84,8 +85,8 @@ export default () => {
                     if (data.imagem)
                         setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
                 })
-                .catch(({response}) => {
-                    setMensagemErro(response.data.message || 'Ocorreu um erro ao recuperar os dados da planta.')
+                .catch(({ response }) => {
+                    setMensagemErro(response.data.message || 'Ocorreu um erro ao recuperar os dados da planta.');
                     setErrorOpen(true);
                 });
     }, [idplanta, setValue]);
@@ -120,15 +121,19 @@ export default () => {
                                 helperText={errors.planta && errors.planta.descricao ? errors.planta.descricao.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
-                                })} 
+                                })}
                             />
                         </Grid>
                         {idplanta ? (
                             <Grid item xs={12}>
-                                <CardMedia
-                                    alt="Planta"
-                                    component="img"
-                                    src={`data:image/jpeg;base64,${imagem}`}/>
+                                {!imagem ? (
+                                    <LinearProgress />
+                                ) : (
+                                        <CardMedia
+                                            alt="Planta"
+                                            component="img"
+                                            src={`data:image/jpeg;base64,${imagem}`} />
+                                    )}
                             </Grid>
                         ) : (
                                 <Grid item xs={12}>
@@ -150,10 +155,10 @@ export default () => {
 
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button 
-                            className={classes.button} 
+                        <Button
+                            className={classes.button}
                             color="default"
-                            component={Link} 
+                            component={Link}
                             disabled={!idplanta}
                             to={`/projeto/${idprojeto}/planta/${idplanta}/materiais`}>Materiais da planta</Button>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
