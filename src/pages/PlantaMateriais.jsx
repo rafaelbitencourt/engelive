@@ -24,7 +24,7 @@ import {
 } from '@material-ui/icons';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { SuccessDialog } from '../components/Dialog';
+import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
@@ -72,6 +72,7 @@ export default () => {
     const { idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
 
+    const [confirmOpen, setConfirmOpen] = useState(false);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [cadastroOpen, setCadastroOpen] = useState(false);
 
@@ -198,6 +199,14 @@ export default () => {
 
     }
 
+    const voltar = (sairSemSalvar) => {
+        if(sairSemSalvar || !alteracoesPendentes) {
+            history.goBack()
+        } else {
+            setConfirmOpen(true);
+        }
+    }
+
     const salvar = () => {
         savePlantasMateriais(idplanta, plantaMateriais)
             .then(() => {
@@ -264,7 +273,7 @@ export default () => {
         <div>
             <Box display="flex" padding="2px">
                 <Tooltip title="Voltar">
-                    <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => history.goBack()}>
+                    <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => voltar(false)}>
                         <Backspace />
                     </IconButton>
                 </Tooltip>
@@ -328,6 +337,13 @@ export default () => {
                 mensagem="Materiais da planta salvos com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
+            />
+            <ConfirmDialog
+                titulo="Sair sem salvar?"
+                mensagem="Há alterações não salvas. Sair sem salvar?"
+                open={confirmOpen}
+                setOpen={setConfirmOpen}
+                onConfirm={() => voltar(true)}
             />
             <Dialog
                 fullWidth
