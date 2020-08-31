@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { listMateriais, deleteMaterial } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
@@ -20,6 +21,7 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
+    Backspace,
     AddCircle
 } from '@material-ui/icons';
 
@@ -28,6 +30,8 @@ export default () => {
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idMaterialExclusao, setIdMaterialExclusao] = useState(null);
+
+    let history = useHistory();
 
     useEffect(() => {
         atualizarLista();
@@ -54,14 +58,19 @@ export default () => {
     return (
         <div>
             <Box display="flex" padding="2px">
+                <Tooltip title="Voltar">
+                    <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
+                        <Backspace />
+                    </IconButton>
+                </Tooltip>
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
-                    <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
+                    <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
                         Materiais
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
                     <IconButton variant="contained" color="primary" component={Link} to="/material">
-                        <AddCircle fontSize="large"/>
+                        <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
@@ -75,7 +84,7 @@ export default () => {
                         </ListItemAvatar>
                         <ListItemText
                             primary={material.nome}
-                            // secondary={projeto.previsao}
+                        // secondary={projeto.previsao}
                         />
                         <ListItemSecondaryAction>
                             <IconButton edge="start" aria-label="edit" component={Link} to={`/material/${material.id}`} >
@@ -98,9 +107,9 @@ export default () => {
                 setOpen={setConfirmOpen}
                 onConfirm={excluirMaterial}
             />
-            <SuccessDialog 
+            <SuccessDialog
                 mensagem="Material excluído com sucesso."
-                open={sucessOpen} 
+                open={sucessOpen}
                 setOpen={setSucessOpen}
             />
         </div>
