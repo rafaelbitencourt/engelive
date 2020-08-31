@@ -10,6 +10,7 @@ import Plantas from './pages/Plantas.jsx';
 import Planta from './pages/Planta.jsx';
 import PlantaMateriais from './pages/PlantaMateriais.jsx';
 import Materiais from './pages/Materiais.jsx';
+import Material from './pages/Material.jsx';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -44,6 +45,7 @@ function App() {
             <PrivateRoute path="/projeto/:idprojeto?" component={Projeto} />
             <PrivateRoute path="/projetos" component={Projetos} />
             <PrivateRoute path="/materiais" component={Materiais} />
+            <PrivateRoute path="/material/:idmaterial?" component={Material} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />            
             <Route path="/" component={Home}/>
