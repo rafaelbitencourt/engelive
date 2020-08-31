@@ -11,7 +11,7 @@ import {
     Grid
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog } from '../components/Dialog';
+import { SuccessDialog, ErrorDialog } from '../components/Dialog';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -45,6 +45,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default () => {
+    const [errorOpen, setErrorOpen] = useState(false);
+    const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
     const classes = useStyles();
 
@@ -53,14 +55,24 @@ export default () => {
 
     const cbSubmit = (inputs) => {
         saveProjeto(inputs.projeto)
-            .then(data => {
-                if (!idprojeto)
-                    history.replace('/projeto/' + data.id);
-                setSucessOpen(true);
-            })
-            .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao salvar o projeto.');
-            });
+            .then(
+                (data) => {
+                    if (!idprojeto)
+                        history.replace('/projeto/' + data.id);
+                    setSucessOpen(true);
+                },
+                (error) => {
+                    const resMessage =
+                        (error.response &&
+                            error.response.data &&
+                            error.response.data.message) ||
+                        error.message ||
+                        error.toString();
+
+                    setMensagemErro(resMessage);
+                    setErrorOpen(true);
+                }
+            );
     };
 
     const { register, errors, handleSubmit, setValue } = useForm();
@@ -68,11 +80,22 @@ export default () => {
     useEffect(() => {
         if (idprojeto)
             getProjeto(idprojeto)
-                .then(data => {
-                    setValue('projeto', data);
-                }).catch(resp => {
-                    alert(resp.message || 'Ocorreu um erro ao recuperar os dados do projeto.');
-                });
+                .then(
+                    (data) => {
+                        setValue('projeto', data);
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+
+                        setMensagemErro(resMessage);
+                        setErrorOpen(true);
+                    }
+                );
     }, [idprojeto, setValue]);
 
     return (
@@ -101,7 +124,7 @@ export default () => {
                                 helperText={errors.projeto && errors.projeto.nome ? errors.projeto.nome.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
-                                })}                                
+                                })}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -143,6 +166,11 @@ export default () => {
                 mensagem="Projeto salvo com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
+            />
+            <ErrorDialog
+                mensagem={mensagemErro}
+                open={errorOpen}
+                setOpen={setErrorOpen}
             />
         </React.Fragment>
 

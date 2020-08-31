@@ -63,15 +63,24 @@ export default () => {
             setWarningOpen(true);
         } else {
             savePlanta({ ...inputs.planta, idprojeto: idprojeto })
-                .then(data => {
-                    if (!idplanta)
+                .then(
+                    (data) => {
+                        if (!idplanta)
                         history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
                     setSucessOpen(true);
-                })
-                .catch(({ response }) => {
-                    setMensagemErro(response.data.message || 'Ocorreu um erro ao salvar a planta.')
-                    setErrorOpen(true);
-                });
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+    
+                        setMensagemErro(resMessage);
+                        setErrorOpen(true);
+                    }
+                );
         }
     };
 
@@ -80,15 +89,24 @@ export default () => {
     useEffect(() => {
         if (idplanta)
             getPlanta(idplanta)
-                .then(data => {
-                    setValue('planta', data);
+                .then(
+                    (data) => {
+                        setValue('planta', data);
                     if (data.imagem)
                         setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
-                })
-                .catch(({ response }) => {
-                    setMensagemErro(response.data.message || 'Ocorreu um erro ao recuperar os dados da planta.');
-                    setErrorOpen(true);
-                });
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+    
+                        setMensagemErro(resMessage);
+                        setErrorOpen(true);
+                    }
+                );
     }, [idplanta, setValue]);
 
     const onDropImagem = (imagens) => {
