@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const API_URL = "http://note-rafael:3001/auth/";
+// const API_URL = "http://localhost:3001/auth/";
+const API_URL = "http://engeliveapi.herokuapp.com/auth/";
 
 class AuthService {
     login(usuario, senha) {
