@@ -123,8 +123,8 @@ export default () => {
         setPlantaMaterial({
             idplanta: idplanta,
             idmaterial: null,
-            coordenadaX: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
-            coordenadaY: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
+            coordenadax: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
+            coordenaday: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
         });
         setMaterial(null);
         setCadastroOpen(true);
@@ -136,7 +136,7 @@ export default () => {
         setCadastroOpen(false);
 
         const indexPlantaMateriaisEditar =
-            plantaMateriais.findIndex(item => item.coordenadaX === plantaMaterial.coordenadaX && item.coordenadaY === plantaMaterial.coordenadaY);
+            plantaMateriais.findIndex(item => item.coordenadax === plantaMaterial.coordenadax && item.coordenaday === plantaMaterial.coordenaday);
 
         plantaMaterial.idmaterial = material.id;
 
@@ -157,7 +157,7 @@ export default () => {
         setCadastroOpen(false);
 
         const indexPlantaMateriaisRemover =
-            plantaMateriais.findIndex(item => item.coordenadaX === plantaMaterial.coordenadaX && item.coordenadaY === plantaMaterial.coordenadaY);
+            plantaMateriais.findIndex(item => item.coordenadax === plantaMaterial.coordenadax && item.coordenaday === plantaMaterial.coordenaday);
 
         if (indexPlantaMateriaisRemover !== -1) {
             var plantaMaterialAux = [...plantaMateriais];
@@ -176,7 +176,7 @@ export default () => {
 
     const clicked = (area) => {
         const plantaMateriaisEditar =
-            plantaMateriais.find(item => item.coordenadaX === area.coords[0] && item.coordenadaY === area.coords[1]);
+            plantaMateriais.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
 
         if (plantaMateriaisEditar) {
             setMaterial(materiais.find(item => item.id === plantaMateriaisEditar.idmaterial));
@@ -254,8 +254,8 @@ export default () => {
                 label: material ? material.nome : 'Material não cadastrado.',
                 shape: "circle",
                 coords: [
-                    item.coordenadaX,
-                    item.coordenadaY,
+                    item.coordenadax,
+                    item.coordenaday,
                     10
                 ],
                 preFillColor: "rgba(255, 255, 255, 0.1)",
