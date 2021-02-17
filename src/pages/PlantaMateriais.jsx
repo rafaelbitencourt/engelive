@@ -14,8 +14,7 @@ import {
     TextField,
     Box,
     Grid,
-    CardMedia,
-    LinearProgress
+    CardMedia
 } from '@material-ui/core';
 import {
     Backspace,
@@ -260,10 +259,10 @@ export default () => {
                 coords: [
                     item.coordenadax,
                     item.coordenaday,
-                    10
+                    20
                 ],
                 preFillColor: "rgba(255, 255, 255, 0.1)",
-                lineWidth: 2
+                lineWidth: 3
             });
         });
 
@@ -384,24 +383,24 @@ export default () => {
                                 />
                             )}
                         />
-                        <TextField
-                            label="Descrição"
-                            variant="outlined"
-                            value={material ? material.descricao : ' '}
-                            multiline={true}
-                            rows={5}
-                            fullWidth
-                            disabled
-                            style={{ marginTop: 10 }}
-                            inputProps={{ style: { color: 'black' } }}
-                        />
                         <Grid item xs={12}>
                                 {imagemMaterial ? (
                                     <CardMedia
                                         alt="Material"
                                         component="img"
                                         src={`data:image/jpeg;base64,${imagemMaterial}`} />
-                                    ) : (React.Fragment)}
+                                    ) : (
+                                    <TextField
+                                        label="Descrição"
+                                        variant="outlined"
+                                        value={material ? material.descricao : ' '}
+                                        multiline={true}
+                                        rows={5}
+                                        fullWidth
+                                        disabled
+                                        style={{ marginTop: 10 }}
+                                        inputProps={{ style: { color: 'black' } }}
+                                    />)}
                         </Grid>
                     </DialogContent>
                     <DialogActions>
