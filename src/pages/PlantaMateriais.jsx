@@ -276,6 +276,8 @@ export default () => {
     useEffect(() => {
         if (material && material.imagem)
             setImagemMaterial(Buffer.from(material.imagem, 'binary').toString('base64'));
+        else
+            setImagemMaterial(null);
     }, [material, setImagemMaterial]);
 
     return (
