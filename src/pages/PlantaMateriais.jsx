@@ -119,7 +119,7 @@ export default () => {
             .then(data => {
                 setPlantaMateriais(data);
             }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os materiais.');
+                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
             });
     }, [idplanta]);
 
@@ -218,7 +218,7 @@ export default () => {
                 setAlteracoesPendentes(false);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao salvar os materiais.');
+                alert(resp.message || 'Ocorreu um erro ao salvar os detalhes.');
             });
     }
 
@@ -231,7 +231,7 @@ export default () => {
             .then(data => {
                 setMateriais(data);
             }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os materiais.');
+                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
             });
     }, [idplanta]);
 
@@ -255,7 +255,7 @@ export default () => {
         plantaMateriais.forEach(function (item) {
             var material = materiais.find(mat => mat.id === item.idmaterial);
             areas.push({
-                label: material ? material.nome : 'Material não cadastrado.',
+                label: material ? material.nome : 'Detalhe não cadastrado.',
                 shape: "circle",
                 coords: [
                     item.coordenadax,
@@ -345,7 +345,7 @@ export default () => {
                 }
             </MapInteraction>
             <SuccessDialog
-                mensagem="Materiais da planta salvos com sucesso."
+                mensagem="Detalhes da planta salvos com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />
@@ -362,7 +362,7 @@ export default () => {
                 onClose={() => setCadastroOpen(false)}
                 aria-labelledby="form-dialog-title">
                 <form onSubmit={(event) => handleSubmit(event)}>
-                    <DialogTitle id="form-dialog-title">{(plantaMaterial && plantaMaterial.idmaterial) ? "Alterar material" : "Inserir material"}</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{(plantaMaterial && plantaMaterial.idmaterial) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
                     <DialogContent>
                         <Autocomplete
                             value={material}
@@ -374,7 +374,7 @@ export default () => {
                             renderInput={(params) => (
                                 <TextField
                                     {...params}
-                                    label="Material"
+                                    label="Detalhe"
                                     variant="outlined"
                                     required
                                     inputProps={{

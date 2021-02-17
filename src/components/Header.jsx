@@ -99,7 +99,7 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
               setDrawerOpen(false);
             }}>
             <ListItemIcon><Category /></ListItemIcon>
-            <ListItemText primary='Materiais' />
+            <ListItemText primary='Detalhes' />
           </ListItem>
           <ListItem button key='Colaboradores'>
             <ListItemIcon><People /></ListItemIcon>
