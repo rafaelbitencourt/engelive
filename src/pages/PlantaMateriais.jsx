@@ -12,7 +12,10 @@ import {
     DialogContent,
     DialogTitle,
     TextField,
-    Box
+    Box,
+    Grid,
+    CardMedia,
+    LinearProgress
 } from '@material-ui/core';
 import {
     Backspace,
@@ -78,6 +81,7 @@ export default () => {
 
     const [imagem, setImagem] = useState(null);
     const [imagemSize, setImagemSize] = useState({});
+    const [imagemMaterial, setImagemMaterial] = useState(null);
 
     const reducer = (state, dados) => {
         switch (dados.acao) {
@@ -269,6 +273,11 @@ export default () => {
         });
     }, [plantaMateriais, materiais]);
 
+    useEffect(() => {
+        if (material && material.imagem)
+            setImagemMaterial(Buffer.from(material.imagem, 'binary').toString('base64'));
+    }, [material, setImagemMaterial]);
+
     return (
         <div>
             <Box display="flex" padding="2px">
@@ -384,6 +393,14 @@ export default () => {
                             style={{ marginTop: 10 }}
                             inputProps={{ style: { color: 'black' } }}
                         />
+                        <Grid item xs={12}>
+                                {imagemMaterial ? (
+                                    <CardMedia
+                                        alt="Material"
+                                        component="img"
+                                        src={`data:image/jpeg;base64,${imagemMaterial}`} />
+                                    ) : (React.Fragment)}
+                        </Grid>
                     </DialogContent>
                     <DialogActions>
                         <Button disabled={!(plantaMaterial && plantaMaterial.idmaterial)} onClick={handleClickRemover} variant="contained" color="default">
