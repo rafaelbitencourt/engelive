@@ -123,13 +123,13 @@ export default () => {
 
                 <Paper className={classes.paper}>
                     <Typography component="h1" variant="h4" align="center">
-                        Material
+                        Detalhes
                     </Typography>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
                                 label="Nome"
-                                placeholder="Nome do material"
+                                placeholder="Nome do detalhe"
                                 name="material.nome"
                                 InputLabelProps={{
                                     shrink: true,
@@ -145,7 +145,7 @@ export default () => {
                         <Grid item xs={12}>
                             <TextField
                                 label="Descrição"
-                                placeholder="Descrição do material"
+                                placeholder="Descrição do detalhe"
                                 name="material.descricao"
                                 InputLabelProps={{
                                     shrink: true,
@@ -202,7 +202,7 @@ export default () => {
                 </Paper>
             </form>
             <SuccessDialog
-                mensagem="Material salvo com sucesso."
+                mensagem="Detalhe salvo com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />

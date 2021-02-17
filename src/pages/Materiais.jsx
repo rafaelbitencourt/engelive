@@ -51,7 +51,7 @@ export default () => {
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir o material.');
+                alert(resp.message || 'Ocorreu um erro ao excluir o detalhe.');
             });
     };
 
@@ -65,7 +65,7 @@ export default () => {
                 </Tooltip>
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
-                        Materiais
+                        Detalhes
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
@@ -101,14 +101,14 @@ export default () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir material?"
-                mensagem="Tem certeza de que deseja excluir o material?"
+                titulo="Excluir?"
+                mensagem="Tem certeza de que deseja excluir o detalhe?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
                 onConfirm={excluirMaterial}
             />
             <SuccessDialog
-                mensagem="Material excluído com sucesso."
+                mensagem="detalhe excluído com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />
