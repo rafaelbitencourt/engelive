@@ -8,10 +8,13 @@ import {
     CssBaseline,
     Paper,
     Typography,
-    Grid
+    Grid,
+    CardMedia,
+    LinearProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, ErrorDialog } from '../components/Dialog';
+import { SuccessDialog, WarningDialog, ErrorDialog } from '../components/Dialog';
+import ImageUploader from 'react-images-upload';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -48,31 +51,37 @@ export default () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
+    const [warningOpen, setWarningOpen] = useState(false);
+    const [imagem, setImagem] = useState(null);
     const classes = useStyles();
 
     const { idmaterial } = useParams();
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
-        saveMaterial({ ...inputs.material, idtipo: 1 })
-            .then(
-                (data) => {
-                    if (!idmaterial)
-                        history.replace('/material/' + data.id);
-                    setSucessOpen(true);
-                },
-                (error) => {
-                    const resMessage =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
+        if (!inputs.material.id && !inputs.material.imagem) {
+            setWarningOpen(true);
+        } else {
+            saveMaterial({ ...inputs.material, idtipo: 1 })
+                .then(
+                    (data) => {
+                        if (!idmaterial)
+                            history.replace('/material/' + data.id);
+                        setSucessOpen(true);
+                    },
+                    (error) => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
 
-                    setMensagemErro(resMessage);
-                    setErrorOpen(true);
-                }
-            );
+                        setMensagemErro(resMessage);
+                        setErrorOpen(true);
+                    }
+                );
+        }
     };
 
     const { register, errors, handleSubmit, setValue } = useForm();
@@ -83,6 +92,8 @@ export default () => {
                 .then(
                     (data) => {
                         setValue('material', data);
+                        if (data.imagem)
+                            setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
                     },
                     (error) => {
                         const resMessage =
@@ -97,6 +108,10 @@ export default () => {
                     }
                 );
     }, [idmaterial, setValue]);
+
+    const onDropImagem = (imagens) => {
+        setValue('material.imagem', imagens[0]);
+    }
 
     return (
         <React.Fragment>
@@ -145,6 +160,34 @@ export default () => {
                                 })}
                             />
                         </Grid>
+                        {idmaterial ? (
+                            <Grid item xs={12}>
+                                {!imagem ? (
+                                    <LinearProgress />
+                                ) : (
+                                        <CardMedia
+                                            alt="Material"
+                                            component="img"
+                                            src={`data:image/jpeg;base64,${imagem}`} />
+                                    )}
+                            </Grid>
+                        ) : (
+                                <Grid item xs={12}>
+                                    <ImageUploader
+                                        withIcon={false}
+                                        label="Máximo: 200Mb - Extensões: jpg | jpeg | png"
+                                        buttonText='Selecionar imagem'
+                                        name="imagem"
+                                        onChange={onDropImagem}
+                                        imgExtension={['.jpg', '.jpeg', '.png']}
+                                        fileTypeError="não é uma extensão de arquivo suportada"
+                                        maxFileSize={200000000}
+                                        fileSizeError="excede o tamanho limite"
+                                        withPreview
+                                        singleImage
+                                    />
+                                </Grid>
+                            )}
                     </Grid>
                     <div className={classes.buttons}>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
@@ -162,6 +205,11 @@ export default () => {
                 mensagem="Material salvo com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
+            />
+            <WarningDialog
+                mensagem="Selecione uma imagem."
+                open={warningOpen}
+                setOpen={setWarningOpen}
             />
             <ErrorDialog
                 mensagem={mensagemErro}

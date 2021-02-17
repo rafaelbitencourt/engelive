@@ -76,10 +76,19 @@ export const deleteMaterial = (id) => axios
 
 export const saveMaterial = (data) => {
     if (data.id) {
+        delete data.imagem;
         return axios.put(urlApi + 'materiais/' + data.id, data, { headers: authHeader() })
             .then(({ data }) => data)
     } else {
-        return axios.post(urlApi + 'materiais', data, { headers: authHeader() })
+        const formData = new FormData();
+        formData.append('nome', data.nome);
+        formData.append('descricao', data.descricao);
+        formData.append('idtipo', data.idtipo);        
+        formData.append('imagem', data.imagem);
+        const headers = authHeader();
+        headers["content-type"] = 'multipart/form-data';
+
+        return axios.post(urlApi + 'materiais', formData, { headers: headers })
             .then(({ data }) => data)
     }
 }
