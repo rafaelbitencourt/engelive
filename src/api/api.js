@@ -1,8 +1,8 @@
 import axios from 'axios';
 import authHeader from '../services/auth-header';
 
-// const urlApi = "http://localhost:3001/";
-const urlApi = "https://engeliveapi.herokuapp.com/";
+const urlApi = "http://localhost:3001/";
+// const urlApi = "https://engeliveapi.herokuapp.com/";
 
 export const listProjetos = () => axios
     .get(urlApi + 'projetos', { headers: authHeader() })
@@ -95,4 +95,25 @@ export const saveMaterial = (data) => {
 
 export const getMaterial = (id) => axios
     .get(urlApi + 'materiais/' + id, { headers: authHeader() })
+    .then(({ data }) => data)
+
+export const listTiposProjetos = () => axios
+    .get(urlApi + 'tipos_projetos', { headers: authHeader() })
+    .then(({ data }) => data)
+
+export const deleteTipoProjeto = (id) => axios
+    .delete(urlApi + 'tipos_projetos/' + id, { headers: authHeader() })
+
+export const saveTipoProjeto = (data) => {
+    if (data.id) {
+        return axios.put(urlApi + 'tipos_projetos/' + data.id, data, { headers: authHeader() })
+            .then(({ data }) => data)
+    } else {
+        return axios.post(urlApi + 'tipos_projetos', data, { headers: authHeader() })
+            .then(({ data }) => data)
+    }
+}
+
+export const getTipoProjeto = (id) => axios
+    .get(urlApi + 'tipos_projetos/' + id, { headers: authHeader() })
     .then(({ data }) => data)
