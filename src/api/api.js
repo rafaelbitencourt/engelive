@@ -117,3 +117,10 @@ export const saveTipoProjeto = (data) => {
 export const getTipoProjeto = (id) => axios
     .get(urlApi + 'tipos_projetos/' + id, { headers: authHeader() })
     .then(({ data }) => data)
+
+export const listProjetosTiposPorProjeto = (id) => axios
+    .get(urlApi + 'projeto/' + id + '/tipos', { headers: authHeader() })
+    .then(({ data }) => data)
+
+export const deleteProjetoTipo = (id) => axios
+    .delete(urlApi + 'projetos_tipos/' + id, { headers: authHeader() })

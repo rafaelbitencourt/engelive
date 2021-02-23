@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { listProjetos, deleteProjeto } from '../api/api.js';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { listProjetosTiposPorProjeto, deleteProjetoTipo } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
@@ -20,69 +21,77 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
+    Backspace,
     AddCircle
 } from '@material-ui/icons';
 
 export default () => {
-    const [projetos, setProjetos] = useState([]);
+    const [projetosTipos, setProjetosTipos] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
+    const [idProjetoTipoExclusao, setIdProjetoTipoExclusao] = useState(null);
 
-    useEffect(() => {
-        atualizarLista();
-    }, []);
+    const { idprojeto } = useParams();
+    let history = useHistory();
 
-    const atualizarLista = () => {
-        listProjetos()
+    const atualizarLista = useCallback(() => {
+        listProjetosTiposPorProjeto(idprojeto)
             .then(data => {
-                setProjetos(data);
+                setProjetosTipos(data);
             });
-    };
+    }, [idprojeto]);
 
-    const excluirProjeto = () => {
-        deleteProjeto(idProjetoExclusao)
+    const excluirProjetoTipo = () => {
+        deleteProjetoTipo(idProjetoTipoExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir o projeto.');
+                alert(resp.message || 'Ocorreu um erro ao excluir o tipo.');
             });
     };
+
+    useEffect(() => {
+        atualizarLista();
+    }, [atualizarLista]);
 
     return (
         <div>
             <Box display="flex" padding="2px">
-                <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
+                <Tooltip title="Voltar">
+                    <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
+                        <Backspace />
+                    </IconButton>
+                </Tooltip>
+                <Box flexGrow={1} display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
-                        Projetos
+                        Projetos tipos
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/projeto">
+                    <IconButton variant="contained" color="primary" component={Link} to={`/projeto/${idprojeto}/planta`}>
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {projetos.map(projeto => (
-                    <ListItem button key={projeto.id} component={Link} to={`/projeto/${projeto.id}/tipos`}>
+                {projetosTipos.map(projetoTipo => (
+                    <ListItem button key={projetoTipo.id} component={Link} to={`/projeto/${idprojeto}/tipo/${projetoTipo.id}/plantas`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={projeto.nome}
-                            secondary={projeto.previsao}
+                            primary={projetoTipo.descricao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/projeto/${projeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/projeto/${idprojeto}/tipo/${projetoTipo.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdProjetoExclusao(projeto.id);
+                                setIdProjetoTipoExclusao(projetoTipo.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -92,15 +101,15 @@ export default () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir projeto?"
+                titulo="Excluir tipo projeto?"
                 mensagem="Tem certeza de que deseja excluir o projeto?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirProjeto}
+                onConfirm={excluirProjetoTipo}
             />
-            <SuccessDialog 
+            <SuccessDialog
                 mensagem="Projeto excluído com sucesso."
-                open={sucessOpen} 
+                open={sucessOpen}
                 setOpen={setSucessOpen}
             />
         </div>
