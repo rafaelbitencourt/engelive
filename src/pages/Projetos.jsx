@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { listProjetosTiposPorProjeto, deleteProjetoTipo } from '../api/api.js';
+import { listProjetosPorObra, deleteProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
@@ -26,29 +26,29 @@ import {
 } from '@material-ui/icons';
 
 export default () => {
-    const [projetosTipos, setProjetosTipos] = useState([]);
+    const [projetos, setProjetos] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idProjetoTipoExclusao, setIdProjetoTipoExclusao] = useState(null);
+    const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
 
-    const { idprojeto } = useParams();
+    const { idobra } = useParams();
     let history = useHistory();
 
     const atualizarLista = useCallback(() => {
-        listProjetosTiposPorProjeto(idprojeto)
+        listProjetosPorObra(idobra)
             .then(data => {
-                setProjetosTipos(data);
+                setProjetos(data);
             });
-    }, [idprojeto]);
+    }, [idobra]);
 
-    const excluirProjetoTipo = () => {
-        deleteProjetoTipo(idProjetoTipoExclusao)
+    const excluirProjeto = () => {
+        deleteProjeto(idProjetoExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir o tipo.');
+                alert(resp.message || 'Ocorreu um erro ao excluir o projeto.');
             });
     };
 
@@ -66,32 +66,32 @@ export default () => {
                 </Tooltip>
                 <Box flexGrow={1} display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
-                        Projetos tipos
+                        Projetos
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to={`/projeto/${idprojeto}/planta`}>
+                    <IconButton variant="contained" color="primary" component={Link} to={`/obra/${idobra}/projeto`}>
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {projetosTipos.map(projetoTipo => (
-                    <ListItem button key={projetoTipo.id} component={Link} to={`/projeto/${idprojeto}/tipo/${projetoTipo.id}/plantas`}>
+                {projetos.map(projeto => (
+                    <ListItem button key={projeto.id} component={Link} to={`/obra/${idobra}/projeto/${projeto.id}/plantas`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={projetoTipo.descricao}
+                            primary={projeto.descricao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/projeto/${idprojeto}/tipo/${projetoTipo.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${projeto.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdProjetoTipoExclusao(projetoTipo.id);
+                                setIdProjetoExclusao(projeto.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -101,11 +101,11 @@ export default () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir tipo projeto?"
+                titulo="Excluir projeto?"
                 mensagem="Tem certeza de que deseja excluir o projeto?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirProjetoTipo}
+                onConfirm={excluirProjeto}
             />
             <SuccessDialog
                 mensagem="Projeto excluído com sucesso."

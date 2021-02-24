@@ -6,7 +6,7 @@ import Login from './pages/Login.jsx';
 import Footer from './components/Footer.jsx';
 import Obras from './pages/Obras.jsx';
 import Obra from './pages/Obra.jsx';
-import ProjetosTipos from './pages/ProjetosTipos.jsx';
+import Projetos from './pages/Projetos.jsx';
 import Plantas from './pages/Plantas.jsx';
 import Planta from './pages/Planta.jsx';
 import PlantaMateriais from './pages/PlantaMateriais.jsx';
@@ -45,7 +45,7 @@ function App() {
             <PrivateRoute path="/obra/:idobra/planta/:idplanta/materiais" component={PlantaMateriais} />
             <PrivateRoute path="/obra/:idobra/planta/:idplanta?" component={Planta} />
             <PrivateRoute path="/obra/:idobra/plantas" component={Plantas} />
-            <PrivateRoute path="/obra/:idobra/projetos" component={ProjetosTipos} />
+            <PrivateRoute path="/obra/:idobra/projetos" component={Projetos} />
             <PrivateRoute path="/obra/:idobra?" component={Obra} />
             <PrivateRoute path="/obras" component={Obras} />
             <PrivateRoute path="/materiais" component={Materiais} />

@@ -118,9 +118,9 @@ export const getTipoProjeto = (id) => axios
     .get(urlApi + 'tipos_projetos/' + id, { headers: authHeader() })
     .then(({ data }) => data)
 
-export const listProjetosTiposPorProjeto = (id) => axios
-    .get(urlApi + 'projeto/' + id + '/tipos', { headers: authHeader() })
+export const listProjetosPorObra = (id) => axios
+    .get(urlApi + 'obra/' + id + '/projetos', { headers: authHeader() })
     .then(({ data }) => data)
 
-export const deleteProjetoTipo = (id) => axios
-    .delete(urlApi + 'projetos_tipos/' + id, { headers: authHeader() })
+export const deleteProjeto = (id) => axios
+    .delete(urlApi + 'projetos/' + id, { headers: authHeader() })
