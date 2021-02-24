@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { listProjetos, deleteProjeto } from '../api/api.js';
+import { listObras, deleteObra } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
@@ -24,30 +24,30 @@ import {
 } from '@material-ui/icons';
 
 export default () => {
-    const [projetos, setProjetos] = useState([]);
+    const [obras, setObras] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
+    const [idObraExclusao, setIdObraExclusao] = useState(null);
 
     useEffect(() => {
         atualizarLista();
     }, []);
 
     const atualizarLista = () => {
-        listProjetos()
+        listObras()
             .then(data => {
-                setProjetos(data);
+                setObras(data);
             });
     };
 
-    const excluirProjeto = () => {
-        deleteProjeto(idProjetoExclusao)
+    const excluirObra = () => {
+        deleteObra(idObraExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir o projeto.');
+                alert(resp.message || 'Ocorreu um erro ao excluir a obra.');
             });
     };
 
@@ -56,33 +56,33 @@ export default () => {
             <Box display="flex" padding="2px">
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
-                        Projetos
+                        Obras
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/projeto">
+                    <IconButton variant="contained" color="primary" component={Link} to="/obra">
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {projetos.map(projeto => (
-                    <ListItem button key={projeto.id} component={Link} to={`/projeto/${projeto.id}/tipos`}>
+                {obras.map(obra => (
+                    <ListItem button key={obra.id} component={Link} to={`/obra/${obra.id}/projetos`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={projeto.nome}
-                            secondary={projeto.previsao}
+                            primary={obra.nome}
+                            secondary={obra.previsao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/projeto/${projeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${obra.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdProjetoExclusao(projeto.id);
+                                setIdObraExclusao(obra.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -92,14 +92,14 @@ export default () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir projeto?"
-                mensagem="Tem certeza de que deseja excluir o projeto?"
+                titulo="Excluir obra?"
+                mensagem="Tem certeza de que deseja excluir a obra?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirProjeto}
+                onConfirm={excluirObra}
             />
             <SuccessDialog 
-                mensagem="Projeto excluído com sucesso."
+                mensagem="Obra excluída com sucesso."
                 open={sucessOpen} 
                 setOpen={setSucessOpen}
             />

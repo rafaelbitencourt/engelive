@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { getProjeto, saveProjeto } from '../api/api.js';
+import { getObra, saveObra } from '../api/api.js';
 import {
     TextField,
     Button,
@@ -50,15 +50,15 @@ export default () => {
     const [sucessOpen, setSucessOpen] = useState(false);
     const classes = useStyles();
 
-    const { idprojeto } = useParams();
+    const { idobra } = useParams();
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
-        saveProjeto(inputs.projeto)
+        saveObra(inputs.obra)
             .then(
                 (data) => {
-                    if (!idprojeto)
-                        history.replace('/projeto/' + data.id);
+                    if (!idobra)
+                        history.replace('/obra/' + data.id);
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -78,11 +78,11 @@ export default () => {
     const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
-        if (idprojeto)
-            getProjeto(idprojeto)
+        if (idobra)
+            getObra(idobra)
                 .then(
                     (data) => {
-                        setValue('projeto', data);
+                        setValue('obra', data);
                     },
                     (error) => {
                         const resMessage =
@@ -96,7 +96,7 @@ export default () => {
                         setErrorOpen(true);
                     }
                 );
-    }, [idprojeto, setValue]);
+    }, [idobra, setValue]);
 
     return (
         <React.Fragment>
@@ -108,20 +108,20 @@ export default () => {
 
                 <Paper className={classes.paper}>
                     <Typography component="h1" variant="h4" align="center">
-                        Projeto
+                        Obra
                     </Typography>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
                                 label="Nome"
-                                placeholder="Nome do projeto"
-                                name="projeto.nome"
+                                placeholder="Nome da obra"
+                                name="obra.nome"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 fullWidth
-                                error={errors.projeto && errors.projeto.nome ? true : false}
-                                helperText={errors.projeto && errors.projeto.nome ? errors.projeto.nome.message : null}
+                                error={errors.obra && errors.obra.nome ? true : false}
+                                helperText={errors.obra && errors.obra.nome ? errors.obra.nome.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
                                 })}
@@ -131,13 +131,13 @@ export default () => {
                             <TextField
                                 label="Previsão"
                                 type="date"
-                                name="projeto.previsao"
+                                name="obra.previsao"
                                 InputLabelProps={{
                                     shrink: true
                                 }}
                                 fullWidth
-                                error={errors.projeto && errors.projeto.previsao ? true : false}
-                                helperText={errors.projeto && errors.projeto.previsao ? errors.projeto.previsao.message : null}
+                                error={errors.obra && errors.obra.previsao ? true : false}
+                                helperText={errors.obra && errors.obra.previsao ? errors.obra.previsao.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
                                 })}
@@ -149,8 +149,8 @@ export default () => {
                             className={classes.button}
                             color="default"
                             component={Link}
-                            disabled={!idprojeto}
-                            to={`/projeto/${idprojeto}/plantas`}>Plantas do projeto</Button>
+                            disabled={!idobra}
+                            to={`/obra/${idobra}/projetos`}>Projetos da obra</Button>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
                         <Button
                             type="submit"

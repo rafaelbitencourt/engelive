@@ -4,8 +4,8 @@ import Home from './pages/Home.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx';
 import Footer from './components/Footer.jsx';
-import Projetos from './pages/Projetos.jsx';
-import Projeto from './pages/Projeto.jsx';
+import Obras from './pages/Obras.jsx';
+import Obra from './pages/Obra.jsx';
 import ProjetosTipos from './pages/ProjetosTipos.jsx';
 import Plantas from './pages/Plantas.jsx';
 import Planta from './pages/Planta.jsx';
@@ -42,12 +42,12 @@ function App() {
         <CssBaseline />
         <main>
           <Switch>
-            <PrivateRoute path="/projeto/:idprojeto/planta/:idplanta/materiais" component={PlantaMateriais} />
-            <PrivateRoute path="/projeto/:idprojeto/planta/:idplanta?" component={Planta} />
-            <PrivateRoute path="/projeto/:idprojeto/plantas" component={Plantas} />
-            <PrivateRoute path="/projeto/:idprojeto/tipos" component={ProjetosTipos} />
-            <PrivateRoute path="/projeto/:idprojeto?" component={Projeto} />
-            <PrivateRoute path="/projetos" component={Projetos} />
+            <PrivateRoute path="/obra/:idobra/planta/:idplanta/materiais" component={PlantaMateriais} />
+            <PrivateRoute path="/obra/:idobra/planta/:idplanta?" component={Planta} />
+            <PrivateRoute path="/obra/:idobra/plantas" component={Plantas} />
+            <PrivateRoute path="/obra/:idobra/projetos" component={ProjetosTipos} />
+            <PrivateRoute path="/obra/:idobra?" component={Obra} />
+            <PrivateRoute path="/obras" component={Obras} />
             <PrivateRoute path="/materiais" component={Materiais} />
             <PrivateRoute path="/material/:idmaterial?" component={Material} />
             <PrivateRoute path="/tipos_projetos" component={TiposProjetos} />

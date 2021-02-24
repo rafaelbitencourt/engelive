@@ -4,26 +4,26 @@ import authHeader from '../services/auth-header';
 const urlApi = "http://localhost:3001/";
 // const urlApi = "https://engeliveapi.herokuapp.com/";
 
-export const listProjetos = () => axios
-    .get(urlApi + 'projetos', { headers: authHeader() })
+export const listObras = () => axios
+    .get(urlApi + 'obras', { headers: authHeader() })
     .then(({ data }) => data)
 
-export const getProjeto = (id) => axios
-    .get(urlApi + 'projetos/' + id, { headers: authHeader() })
+export const getObra = (id) => axios
+    .get(urlApi + 'obras/' + id, { headers: authHeader() })
     .then(({ data }) => data)
 
-export const saveProjeto = (data) => {
+export const saveObra = (data) => {
     if (data.id) {
-        return axios.put(urlApi + 'projetos/' + data.id, data, { headers: authHeader() })
+        return axios.put(urlApi + 'obras/' + data.id, data, { headers: authHeader() })
             .then(({ data }) => data)
     } else {
-        return axios.post(urlApi + 'projetos', data, { headers: authHeader() })
+        return axios.post(urlApi + 'obras', data, { headers: authHeader() })
             .then(({ data }) => data)
     }
 }
 
-export const deleteProjeto = (id) => axios
-    .delete(urlApi + 'projetos/' + id, { headers: authHeader() })
+export const deleteObra = (id) => axios
+    .delete(urlApi + 'obras/' + id, { headers: authHeader() })
 
 export const listPlantasPorProjeto = (id) => axios
     .get(urlApi + 'projeto/' + id + '/plantas', { headers: authHeader() })
