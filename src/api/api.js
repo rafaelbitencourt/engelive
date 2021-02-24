@@ -124,3 +124,17 @@ export const listProjetosPorObra = (id) => axios
 
 export const deleteProjeto = (id) => axios
     .delete(urlApi + 'projetos/' + id, { headers: authHeader() })
+
+export const getProjeto = (id) => axios
+    .get(urlApi + 'projetos/' + id, { headers: authHeader() })
+    .then(({ data }) => data)
+
+export const saveProjeto = (data) => {
+    if (data.id) {
+        return axios.put(urlApi + 'projetos/' + data.id, data, { headers: authHeader() })
+            .then(({ data }) => data)
+    } else {
+        return axios.post(urlApi + 'projetos', data, { headers: authHeader() })
+            .then(({ data }) => data)
+    }
+}
