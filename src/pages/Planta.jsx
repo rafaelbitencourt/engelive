@@ -55,7 +55,7 @@ export default () => {
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
 
-    const { idprojeto, idplanta } = useParams();
+    const { idobra, idprojeto, idplanta } = useParams();
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
@@ -66,7 +66,7 @@ export default () => {
                 .then(
                     (data) => {
                         if (!idplanta)
-                        history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
+                        history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/planta/' + data.id);
                     setSucessOpen(true);
                     },
                     (error) => {
@@ -178,7 +178,7 @@ export default () => {
                             color="default"
                             component={Link}
                             disabled={!idplanta}
-                            to={`/projeto/${idprojeto}/planta/${idplanta}/materiais`}>Detalhes da planta</Button>
+                            to={`/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>Detalhes da planta</Button>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
                         <Button
                             type="submit"

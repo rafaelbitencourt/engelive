@@ -58,7 +58,7 @@ export default () => {
         AuthService.login(inputs.usuario, inputs.senha)
             .then(
                 () => {
-                    history.replace('/projetos');
+                    history.replace('/obras');
                 },
                 (error) => {
                     const resMessage =

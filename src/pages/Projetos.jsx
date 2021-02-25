@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { listProjetos, deleteProjeto } from '../api/api.js';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { listProjetosPorObra, deleteProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
@@ -20,6 +21,8 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
+    ViewList,
+    Backspace,
     AddCircle
 } from '@material-ui/icons';
 
@@ -29,16 +32,15 @@ export default () => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
 
-    useEffect(() => {
-        atualizarLista();
-    }, []);
+    const { idobra } = useParams();
+    let history = useHistory();
 
-    const atualizarLista = () => {
-        listProjetos()
+    const atualizarLista = useCallback(() => {
+        listProjetosPorObra(idobra)
             .then(data => {
                 setProjetos(data);
             });
-    };
+    }, [idobra]);
 
     const excluirProjeto = () => {
         deleteProjeto(idProjetoExclusao)
@@ -51,34 +53,45 @@ export default () => {
             });
     };
 
+    useEffect(() => {
+        atualizarLista();
+    }, [atualizarLista]);
+
     return (
         <div>
             <Box display="flex" padding="2px">
-                <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
+                <Tooltip title="Voltar">
+                    <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
+                        <Backspace />
+                    </IconButton>
+                </Tooltip>
+                <Box flexGrow={1} display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
                         Projetos
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/projeto">
+                    <IconButton variant="contained" color="primary" component={Link} to={`/obra/${idobra}/projeto`}>
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
                 {projetos.map(projeto => (
-                    <ListItem button key={projeto.id} component={Link} to={`/projeto/${projeto.id}/plantas`}>
+                    <ListItem button key={projeto.id} component={Link} to={`/obra/${idobra}/projeto/${projeto.id}/plantas`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={projeto.nome}
-                            secondary={projeto.previsao}
+                            primary={projeto.tipos_projeto.nome}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/projeto/${projeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${projeto.id}/detalhes`} >
+                                <ViewList />
+                            </IconButton>
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${projeto.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
@@ -98,9 +111,9 @@ export default () => {
                 setOpen={setConfirmOpen}
                 onConfirm={excluirProjeto}
             />
-            <SuccessDialog 
+            <SuccessDialog
                 mensagem="Projeto excluído com sucesso."
-                open={sucessOpen} 
+                open={sucessOpen}
                 setOpen={setSucessOpen}
             />
         </div>

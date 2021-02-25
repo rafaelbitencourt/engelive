@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { listMateriais, deleteMaterial } from '../api/api.js';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { listDetalhesPorProjeto, deleteDetalhe } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
@@ -26,26 +26,23 @@ import {
 } from '@material-ui/icons';
 
 export default () => {
-    const [materiais, setMateriais] = useState([]);
+    const [detalhes, setDetalhes] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idMaterialExclusao, setIdMaterialExclusao] = useState(null);
+    const [idDetalheExclusao, setIdDetalheExclusao] = useState(null);
 
+    const { idobra, idprojeto } = useParams();
     let history = useHistory();
 
-    useEffect(() => {
-        atualizarLista();
-    }, []);
-
-    const atualizarLista = () => {
-        listMateriais()
+    const atualizarLista = useCallback(() => {
+        listDetalhesPorProjeto(idprojeto)
             .then(data => {
-                setMateriais(data);
+                setDetalhes(data);
             });
-    };
+    }, [idprojeto]);
 
-    const excluirMaterial = () => {
-        deleteMaterial(idMaterialExclusao)
+    const excluirDetalhe = () => {
+        deleteDetalhe(idDetalheExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
@@ -54,6 +51,10 @@ export default () => {
                 alert(resp.message || 'Ocorreu um erro ao excluir o detalhe.');
             });
     };
+
+    useEffect(() => {
+        atualizarLista();
+    }, [atualizarLista]);
 
     return (
         <div>
@@ -69,29 +70,28 @@ export default () => {
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/material">
+                    <IconButton variant="contained" color="primary" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/detalhe/`}>
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {materiais.map(material => (
-                    <ListItem button key={material.id} component={Link} to={`/material/${material.id}`}>
+                {detalhes.map(detalhe => (
+                    <ListItem button key={detalhe.id} component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={material.nome}
-                        // secondary={projeto.previsao}
+                            primary={detalhe.nome}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/material/${material.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdMaterialExclusao(material.id);
+                                setIdDetalheExclusao(detalhe.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -101,14 +101,14 @@ export default () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir?"
+                titulo="Excluir detalhe?"
                 mensagem="Tem certeza de que deseja excluir o detalhe?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirMaterial}
+                onConfirm={excluirDetalhe}
             />
             <SuccessDialog
-                mensagem="detalhe excluído com sucesso."
+                mensagem="Detalhe excluído com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />

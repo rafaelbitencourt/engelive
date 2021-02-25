@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { listTiposProjetos, getProjeto, saveProjeto } from '../api/api.js';
+import { getTipoProjeto, saveTipoProjeto } from '../api/api.js';
 import {
     TextField,
     Button,
@@ -10,7 +10,6 @@ import {
     Typography,
     Grid
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
 import { SuccessDialog, ErrorDialog } from '../components/Dialog';
 
@@ -46,23 +45,21 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default () => {
-    const [sucessOpen, setSucessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
-    const [tiposProjetos, setTiposProjetos] = useState([]);
-    const [tipoProjeto, setTipoProjeto] = useState(null);    
+    const [sucessOpen, setSucessOpen] = useState(false);
     const classes = useStyles();
 
-    const { idobra, idprojeto } = useParams();
+    const { idtipoprojeto } = useParams();
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
-        saveProjeto({ ...inputs.projeto, idobra: idobra, idtipoprojeto: tipoProjeto.id })
+        saveTipoProjeto(inputs.tipo_projeto)
             .then(
                 (data) => {
-                    if (!idprojeto)
-                    history.replace('/obra/' + data.idobra + '/projeto/' + data.id);
-                setSucessOpen(true);
+                    if (!idtipoprojeto)
+                        history.replace('/tipo_projeto/' + data.id);
+                    setSucessOpen(true);
                 },
                 (error) => {
                     const resMessage =
@@ -81,11 +78,11 @@ export default () => {
     const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
-        if (idprojeto)
-            getProjeto(idprojeto)
+        if (idtipoprojeto)
+            getTipoProjeto(idtipoprojeto)
                 .then(
                     (data) => {
-                        setValue('projeto', data);
+                        setValue('tipo_projeto', data);
                     },
                     (error) => {
                         const resMessage =
@@ -94,21 +91,12 @@ export default () => {
                                 error.response.data.message) ||
                             error.message ||
                             error.toString();
-    
+
                         setMensagemErro(resMessage);
                         setErrorOpen(true);
                     }
                 );
-    }, [idprojeto, setValue]);
-
-    useEffect(() => {
-        listTiposProjetos()
-            .then(data => {
-                setTiposProjetos(data);
-            }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
-            });
-    }, [idprojeto]);
+    }, [idtipoprojeto, setValue]);
 
     return (
         <React.Fragment>
@@ -120,43 +108,23 @@ export default () => {
 
                 <Paper className={classes.paper}>
                     <Typography component="h1" variant="h4" align="center">
-                        Projeto
+                        Tipo de projeto
                     </Typography>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            {/* <TextField
-                                label="Descrição"
-                                placeholder="Descrição da planta"
-                                name="projeto.descricao"
+                            <TextField
+                                label="Nome"
+                                placeholder="Nome do tipo de projeto"
+                                name="tipo_projeto.nome"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 fullWidth
-                                error={errors.planta && errors.planta.descricao ? true : false}
-                                helperText={errors.planta && errors.planta.descricao ? errors.planta.descricao.message : null}
+                                error={errors.projeto && errors.projeto.nome ? true : false}
+                                helperText={errors.projeto && errors.projeto.nome ? errors.projeto.nome.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
                                 })}
-                            /> */}
-                            <Autocomplete
-                                value={tipoProjeto}
-                                onChange={(event, newValue) => setTipoProjeto(newValue)}
-                                options={tiposProjetos}
-                                autoHighlight
-                                getOptionLabel={(option) => option.nome}
-                                renderOption={(option) => option.nome}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Tipo"
-                                        variant="outlined"
-                                        required
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            autoComplete: 'new-password', // disable autocomplete and autofill
-                                        }}
-                                    />
-                                )}
                             />
                         </Grid>
                     </Grid>
@@ -173,7 +141,7 @@ export default () => {
                 </Paper>
             </form>
             <SuccessDialog
-                mensagem="Projeto salvo com sucesso."
+                mensagem="Tipo de projeto salvo com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />

@@ -1,6 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { listPlantasPorProjeto, deletePlanta } from '../api/api.js';
+import React, { useEffect, useState } from 'react';
+import { listObras, deleteObra } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
 
@@ -21,77 +20,69 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
-    Backspace,
     AddCircle
 } from '@material-ui/icons';
 
 export default () => {
-    const [plantas, setPlantas] = useState([]);
+    const [obras, setObras] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idPlantaExclusao, setIdPlantaExclusao] = useState(null);
+    const [idObraExclusao, setIdObraExclusao] = useState(null);
 
-    const { idobra, idprojeto } = useParams();
-    let history = useHistory();
+    useEffect(() => {
+        atualizarLista();
+    }, []);
 
-    const atualizarLista = useCallback(() => {
-        listPlantasPorProjeto(idprojeto)
+    const atualizarLista = () => {
+        listObras()
             .then(data => {
-                setPlantas(data);
+                setObras(data);
             });
-    }, [idprojeto]);
+    };
 
-    const excluirPlanta = () => {
-        deletePlanta(idPlantaExclusao)
+    const excluirObra = () => {
+        deleteObra(idObraExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir a planta.');
+                alert(resp.message || 'Ocorreu um erro ao excluir a obra.');
             });
     };
-
-    useEffect(() => {
-        atualizarLista();
-    }, [atualizarLista]);
 
     return (
         <div>
             <Box display="flex" padding="2px">
-                <Tooltip title="Voltar">
-                    <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
-                        <Backspace />
-                    </IconButton>
-                </Tooltip>
-                <Box flexGrow={1} display="flex" justifyContent="center">
+                <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
-                        Plantas
+                        Obras
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta`}>
+                    <IconButton variant="contained" color="primary" component={Link} to="/obra">
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {plantas.map(planta => (
-                    <ListItem button key={planta.id} component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}/detalhes`}>
+                {obras.map(obra => (
+                    <ListItem button key={obra.id} component={Link} to={`/obra/${obra.id}/projetos`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={planta.descricao}
+                            primary={obra.nome}
+                            secondary={obra.previsao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${obra.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdPlantaExclusao(planta.id);
+                                setIdObraExclusao(obra.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -101,15 +92,15 @@ export default () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir planta?"
-                mensagem="Tem certeza de que deseja excluir a planta?"
+                titulo="Excluir obra?"
+                mensagem="Tem certeza de que deseja excluir a obra?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirPlanta}
+                onConfirm={excluirObra}
             />
-            <SuccessDialog
-                mensagem="Planta excluída com sucesso."
-                open={sucessOpen}
+            <SuccessDialog 
+                mensagem="Obra excluída com sucesso."
+                open={sucessOpen} 
                 setOpen={setSucessOpen}
             />
         </div>
