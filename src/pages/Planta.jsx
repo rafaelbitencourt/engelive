@@ -178,7 +178,7 @@ export default () => {
                             color="default"
                             component={Link}
                             disabled={!idplanta}
-                            to={`/projeto/${idprojeto}/planta/${idplanta}/materiais`}>Detalhes da planta</Button>
+                            to={`/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>Detalhes da planta</Button>
                         <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
                         <Button
                             type="submit"

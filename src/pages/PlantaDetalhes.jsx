@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { listMateriais, getPlanta, getPlantasMateriais, savePlantasMateriais } from '../api/api.js';
+import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
@@ -71,7 +71,7 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
 
 export default () => {
     let history = useHistory();
-    const { idplanta } = useParams();
+    const { idprojeto, idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
 
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -80,7 +80,7 @@ export default () => {
 
     const [imagem, setImagem] = useState(null);
     const [imagemSize, setImagemSize] = useState({});
-    const [imagemMaterial, setImagemMaterial] = useState(null);
+    const [imagemDetalhe, setImagemDetalhe] = useState(null);
 
     const reducer = (state, dados) => {
         switch (dados.acao) {
@@ -108,28 +108,28 @@ export default () => {
     });
     const [alteracoesPendentes, setAlteracoesPendentes] = useState(false);
     usePreventWindowUnload(alteracoesPendentes);
-    const [plantaMateriais, setPlantaMateriais] = useState([]);
-    const [plantaMaterial, setPlantaMaterial] = useState(null);
-    const [materiais, setMateriais] = useState([]);
-    const [material, setMaterial] = useState(null);
+    const [plantaDetalhes, setPlantaDetalhes] = useState([]);
+    const [plantaDetalhe, setPlantaDetalhe] = useState(null);
+    const [detalhes, setDetalhes] = useState([]);
+    const [detalhe, setDetalhe] = useState(null);
 
-    const carregarPlantaMateriais = useCallback(() => {
-        getPlantasMateriais(idplanta)
+    const carregarPlantaDetalhes = useCallback(() => {
+        getPlantasDetalhes(idplanta)
             .then(data => {
-                setPlantaMateriais(data);
+                setPlantaDetalhes(data);
             }).catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
             });
     }, [idplanta]);
 
     const handleClickImagem = (evt) => {
-        setPlantaMaterial({
+        setPlantaDetalhe({
             idplanta: idplanta,
-            idmaterial: null,
+            iddetalhe: null,
             coordenadax: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
             coordenaday: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
         });
-        setMaterial(null);
+        setDetalhe(null);
         setCadastroOpen(true);
     }
 
@@ -138,18 +138,18 @@ export default () => {
         event.preventDefault();
         setCadastroOpen(false);
 
-        const indexPlantaMateriaisEditar =
-            plantaMateriais.findIndex(item => item.coordenadax === plantaMaterial.coordenadax && item.coordenaday === plantaMaterial.coordenaday);
+        const indexPlantaDetalhesEditar =
+            plantaDetalhes.findIndex(item => item.coordenadax === plantaDetalhe.coordenadax && item.coordenaday === plantaDetalhe.coordenaday);
 
-        plantaMaterial.idmaterial = material.id;
+        plantaDetalhe.iddetalhe = detalhe.id;
 
-        var plantaMaterialAux = plantaMateriais.concat(plantaMaterial);
+        var plantaDetalheAux = plantaDetalhes.concat(plantaDetalhe);
 
-        if (indexPlantaMateriaisEditar !== -1) {
-            plantaMaterialAux.splice(indexPlantaMateriaisEditar, 1);
+        if (indexPlantaDetalhesEditar !== -1) {
+            plantaDetalheAux.splice(indexPlantaDetalhesEditar, 1);
         }
 
-        setPlantaMateriais(plantaMaterialAux);
+        setPlantaDetalhes(plantaDetalheAux);
 
         if (!alteracoesPendentes) {
             setAlteracoesPendentes(true);
@@ -159,13 +159,13 @@ export default () => {
     const handleClickRemover = () => {
         setCadastroOpen(false);
 
-        const indexPlantaMateriaisRemover =
-            plantaMateriais.findIndex(item => item.coordenadax === plantaMaterial.coordenadax && item.coordenaday === plantaMaterial.coordenaday);
+        const indexPlantaDetalhesRemover =
+            plantaDetalhes.findIndex(item => item.coordenadax === plantaDetalhe.coordenadax && item.coordenaday === plantaDetalhe.coordenaday);
 
-        if (indexPlantaMateriaisRemover !== -1) {
-            var plantaMaterialAux = [...plantaMateriais];
-            plantaMaterialAux.splice(indexPlantaMateriaisRemover, 1);
-            setPlantaMateriais(plantaMaterialAux);
+        if (indexPlantaDetalhesRemover !== -1) {
+            var plantaDetalheAux = [...plantaDetalhes];
+            plantaDetalheAux.splice(indexPlantaDetalhesRemover, 1);
+            setPlantaDetalhes(plantaDetalheAux);
 
             if (!alteracoesPendentes) {
                 setAlteracoesPendentes(true);
@@ -178,13 +178,13 @@ export default () => {
     }
 
     const clicked = (area) => {
-        const plantaMateriaisEditar =
-            plantaMateriais.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
+        const plantaDetalhesEditar =
+            plantaDetalhes.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
 
-        if (plantaMateriaisEditar) {
-            setMaterial(materiais.find(item => item.id === plantaMateriaisEditar.idmaterial));
+        if (plantaDetalhesEditar) {
+            setDetalhe(detalhes.find(item => item.id === plantaDetalhesEditar.iddetalhe));
 
-            setPlantaMaterial(plantaMateriaisEditar);
+            setPlantaDetalhe(plantaDetalhesEditar);
             setCadastroOpen(true);
         }
     }
@@ -211,7 +211,7 @@ export default () => {
     }
 
     const salvar = () => {
-        savePlantasMateriais(idplanta, plantaMateriais)
+        savePlantasDetalhes(idplanta, plantaDetalhes)
             .then(() => {
                 setSucessOpen(true);
                 setAlteracoesPendentes(false);
@@ -226,13 +226,13 @@ export default () => {
     }, [imagemSize]);
 
     useEffect(() => {
-        listMateriais()
+        listDetalhesPorProjeto(idprojeto)
             .then(data => {
-                setMateriais(data);
+                setDetalhes(data);
             }).catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
             });
-    }, [idplanta]);
+    }, [idprojeto]);
 
     useEffect(() => {
         getPlanta(idplanta)
@@ -241,20 +241,20 @@ export default () => {
                     const bufferPlanta = Buffer.from(data.imagem, 'binary');
                     setImagem(bufferPlanta.toString('base64'));
                     setImagemSize(sizeOf(bufferPlanta));
-                    carregarPlantaMateriais();
+                    carregarPlantaDetalhes();
                 }
             }).catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao recuperar os dados da planta.');
             });
-    }, [idplanta, setImagem, carregarPlantaMateriais]);
+    }, [idplanta, setImagem, carregarPlantaDetalhes]);
 
     useEffect(() => {
         const areas = [];
 
-        plantaMateriais.forEach(function (item) {
-            var material = materiais.find(mat => mat.id === item.idmaterial);
+        plantaDetalhes.forEach(function (item) {
+            var detalhe = detalhes.find(det => det.id === item.iddetalhe);
             areas.push({
-                label: material ? material.nome : 'Detalhe não cadastrado.',
+                label: detalhe ? detalhe.nome : 'Detalhe não cadastrado.',
                 shape: "circle",
                 coords: [
                     item.coordenadax,
@@ -270,14 +270,14 @@ export default () => {
             name: "my-map",
             areas: areas
         });
-    }, [plantaMateriais, materiais]);
+    }, [plantaDetalhes, detalhes]);
 
     useEffect(() => {
-        if (material && material.imagem)
-            setImagemMaterial(Buffer.from(material.imagem, 'binary').toString('base64'));
+        if (detalhe && detalhe.imagem)
+            setImagemDetalhe(Buffer.from(detalhe.imagem, 'binary').toString('base64'));
         else
-            setImagemMaterial(null);
-    }, [material, setImagemMaterial]);
+            setImagemDetalhe(null);
+    }, [detalhe, setImagemDetalhe]);
 
     return (
         <div>
@@ -361,12 +361,12 @@ export default () => {
                 onClose={() => setCadastroOpen(false)}
                 aria-labelledby="form-dialog-title">
                 <form onSubmit={(event) => handleSubmit(event)}>
-                    <DialogTitle id="form-dialog-title">{(plantaMaterial && plantaMaterial.idmaterial) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
+                    <DialogTitle id="form-dialog-title">{(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
                     <DialogContent>
                         <Autocomplete
-                            value={material}
-                            onChange={(event, newValue) => setMaterial(newValue)}
-                            options={materiais}
+                            value={detalhe}
+                            onChange={(event, newValue) => setDetalhe(newValue)}
+                            options={detalhes}
                             autoHighlight
                             getOptionLabel={(option) => option.nome}
                             renderOption={(option) => option.nome}
@@ -384,16 +384,16 @@ export default () => {
                             )}
                         />
                         <Grid item xs={12}>
-                                {imagemMaterial ? (
+                                {imagemDetalhe ? (
                                     <CardMedia
-                                        alt="Material"
+                                        alt="Detalhe"
                                         component="img"
-                                        src={`data:image/jpeg;base64,${imagemMaterial}`} />
+                                        src={`data:image/jpeg;base64,${imagemDetalhe}`} />
                                     ) : (
                                     <TextField
                                         label="Descrição"
                                         variant="outlined"
-                                        value={material ? material.descricao : ' '}
+                                        value={detalhe ? detalhe.descricao : ' '}
                                         multiline={true}
                                         rows={5}
                                         fullWidth
@@ -404,14 +404,14 @@ export default () => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button disabled={!(plantaMaterial && plantaMaterial.idmaterial)} onClick={handleClickRemover} variant="contained" color="default">
+                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe)} onClick={handleClickRemover} variant="contained" color="default">
                             Remover
                         </Button>
                         <Button onClick={() => setCadastroOpen(false)} color="default">
                             Cancelar
                         </Button>
                         <Button type="submit" variant="contained" color="primary">
-                            {(plantaMaterial && plantaMaterial.idmaterial) ? "Alterar" : "Inserir"}
+                            {(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar" : "Inserir"}
                         </Button>
                     </DialogActions>
                 </form>

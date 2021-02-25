@@ -77,7 +77,7 @@ export default () => {
             </Box>
             <List>
                 {plantas.map(planta => (
-                    <ListItem button key={planta.id} component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}/materiais`}>
+                    <ListItem button key={planta.id} component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}/detalhes`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />

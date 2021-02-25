@@ -10,7 +10,7 @@ import Projetos from './pages/Projetos.jsx';
 import Projeto from './pages/Projeto.jsx';
 import Plantas from './pages/Plantas.jsx';
 import Planta from './pages/Planta.jsx';
-import PlantaMateriais from './pages/PlantaMateriais.jsx';
+import PlantaDetalhes from './pages/PlantaDetalhes.jsx';
 import Detalhes from './pages/Detalhes.jsx';
 import Detalhe from './pages/Detalhe.jsx';
 import TiposProjetos from './pages/TiposProjetos.jsx';
@@ -43,7 +43,7 @@ function App() {
         <CssBaseline />
         <main>
           <Switch>
-            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta/materiais" component={PlantaMateriais} />
+            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta/detalhes" component={PlantaDetalhes} />
             <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta?" component={Planta} />
             <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/plantas" component={Plantas} />
             <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/detalhe/:iddetalhe?" component={Detalhe} />
