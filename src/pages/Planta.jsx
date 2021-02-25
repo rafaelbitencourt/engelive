@@ -55,7 +55,7 @@ export default () => {
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
 
-    const { idprojeto, idplanta } = useParams();
+    const { idobra, idprojeto, idplanta } = useParams();
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
@@ -66,7 +66,7 @@ export default () => {
                 .then(
                     (data) => {
                         if (!idplanta)
-                        history.replace('/projeto/' + data.idprojeto + '/planta/' + data.id);
+                        history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/planta/' + data.id);
                     setSucessOpen(true);
                     },
                     (error) => {

@@ -31,7 +31,7 @@ export default () => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idPlantaExclusao, setIdPlantaExclusao] = useState(null);
 
-    const { idprojeto } = useParams();
+    const { idobra, idprojeto } = useParams();
     let history = useHistory();
 
     const atualizarLista = useCallback(() => {
@@ -70,14 +70,14 @@ export default () => {
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to={`/projeto/${idprojeto}/planta`}>
+                    <IconButton variant="contained" color="primary" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta`}>
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
                 {plantas.map(planta => (
-                    <ListItem button key={planta.id} component={Link} to={`/projeto/${idprojeto}/planta/${planta.id}/materiais`}>
+                    <ListItem button key={planta.id} component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}/materiais`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
@@ -87,7 +87,7 @@ export default () => {
                             primary={planta.descricao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/projeto/${idprojeto}/planta/${planta.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
