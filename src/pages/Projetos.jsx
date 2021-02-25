@@ -84,7 +84,7 @@ export default () => {
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={projeto.descricao}
+                            primary={projeto.tipos_projeto.nome}
                         />
                         <ListItemSecondaryAction>
                             <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${projeto.id}`} >
