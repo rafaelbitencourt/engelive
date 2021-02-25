@@ -11,8 +11,8 @@ import Projeto from './pages/Projeto.jsx';
 import Plantas from './pages/Plantas.jsx';
 import Planta from './pages/Planta.jsx';
 import PlantaMateriais from './pages/PlantaMateriais.jsx';
-import Materiais from './pages/Materiais.jsx';
-import Material from './pages/Material.jsx';
+import Detalhes from './pages/Detalhes.jsx';
+import Detalhe from './pages/Detalhe.jsx';
 import TiposProjetos from './pages/TiposProjetos.jsx';
 import TipoProjeto from './pages/TipoProjeto.jsx';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,15 +43,15 @@ function App() {
         <CssBaseline />
         <main>
           <Switch>
-            <PrivateRoute path="/obra/:idobra/planta/:idplanta/materiais" component={PlantaMateriais} />
-            <PrivateRoute path="/obra/:idobra/planta/:idplanta?" component={Planta} />
-            <PrivateRoute path="/obra/:idobra/plantas" component={Plantas} />
+            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta/materiais" component={PlantaMateriais} />
+            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta?" component={Planta} />
+            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/plantas" component={Plantas} />
+            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/detalhe/:iddetalhe?" component={Detalhe} />
+            <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/detalhes" component={Detalhes} />
             <PrivateRoute path="/obra/:idobra/projetos" component={Projetos} />
             <PrivateRoute path="/obra/:idobra/projeto/:idprojeto?" component={Projeto} />
             <PrivateRoute path="/obra/:idobra?" component={Obra} />
             <PrivateRoute path="/obras" component={Obras} />
-            <PrivateRoute path="/materiais" component={Materiais} />
-            <PrivateRoute path="/material/:idmaterial?" component={Material} />
             <PrivateRoute path="/tipos_projetos" component={TiposProjetos} />
             <PrivateRoute path="/tipo_projeto/:idtipoprojeto?" component={TipoProjeto} />
             <Route path="/register" component={Register} />

@@ -71,30 +71,34 @@ export const listMateriais = () => axios
     .get(urlApi + 'materiais', { headers: authHeader() })
     .then(({ data }) => data)
 
-export const deleteMaterial = (id) => axios
-    .delete(urlApi + 'materiais/' + id, { headers: authHeader() })
+export const listDetalhesPorProjeto = (id) => axios
+    .get(urlApi + 'projeto/' + id + '/detalhes', { headers: authHeader() })
+    .then(({ data }) => data)
 
-export const saveMaterial = (data) => {
+export const deleteDetalhe = (id) => axios
+    .delete(urlApi + 'detalhes/' + id, { headers: authHeader() })
+
+export const saveDetalhe = (data) => {
     if (data.id) {
         delete data.imagem;
-        return axios.put(urlApi + 'materiais/' + data.id, data, { headers: authHeader() })
+        return axios.put(urlApi + 'detalhes/' + data.id, data, { headers: authHeader() })
             .then(({ data }) => data)
     } else {
         const formData = new FormData();
         formData.append('nome', data.nome);
         formData.append('descricao', data.descricao);
-        formData.append('idtipo', data.idtipo);        
+        formData.append('idprojeto', data.idprojeto);        
         formData.append('imagem', data.imagem);
         const headers = authHeader();
         headers["content-type"] = 'multipart/form-data';
 
-        return axios.post(urlApi + 'materiais', formData, { headers: headers })
+        return axios.post(urlApi + 'detalhes', formData, { headers: headers })
             .then(({ data }) => data)
     }
 }
 
-export const getMaterial = (id) => axios
-    .get(urlApi + 'materiais/' + id, { headers: authHeader() })
+export const getDetalhe = (id) => axios
+    .get(urlApi + 'detalhes/' + id, { headers: authHeader() })
     .then(({ data }) => data)
 
 export const listTiposProjetos = () => axios

@@ -21,6 +21,7 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
+    ViewList,
     Backspace,
     AddCircle
 } from '@material-ui/icons';
@@ -87,6 +88,9 @@ export default () => {
                             primary={projeto.tipos_projeto.nome}
                         />
                         <ListItemSecondaryAction>
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${projeto.id}/detalhes`} >
+                                <ViewList />
+                            </IconButton>
                             <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${projeto.id}`} >
                                 <EditIcon />
                             </IconButton>

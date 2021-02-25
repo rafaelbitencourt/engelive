@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { getMaterial, saveMaterial } from '../api/api.js';
+import { getDetalhe, saveDetalhe } from '../api/api.js';
 import {
     TextField,
     Button,
@@ -55,18 +55,18 @@ export default () => {
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
 
-    const { idmaterial } = useParams();
+    const { idobra, idprojeto, iddetalhe } = useParams();
     let history = useHistory();
 
     const cbSubmit = (inputs) => {
-        if (!inputs.material.id && !inputs.material.imagem) {
+        if (!inputs.detalhe.id && !inputs.detalhe.imagem) {
             setWarningOpen(true);
         } else {
-            saveMaterial({ ...inputs.material, idtipo: 1 })
+            saveDetalhe({ ...inputs.detalhe, idprojeto: idprojeto })
                 .then(
                     (data) => {
-                        if (!idmaterial)
-                            history.replace('/material/' + data.id);
+                        if (!iddetalhe)
+                            history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/detalhe/' + data.id);
                         setSucessOpen(true);
                     },
                     (error) => {
@@ -87,11 +87,11 @@ export default () => {
     const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
-        if (idmaterial)
-            getMaterial(idmaterial)
+        if (iddetalhe)
+            getDetalhe(iddetalhe)
                 .then(
                     (data) => {
-                        setValue('material', data);
+                        setValue('detalhe', data);
                         if (data.imagem)
                             setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
                     },
@@ -107,10 +107,10 @@ export default () => {
                         setErrorOpen(true);
                     }
                 );
-    }, [idmaterial, setValue]);
+    }, [iddetalhe, setValue]);
 
     const onDropImagem = (imagens) => {
-        setValue('material.imagem', imagens[0]);
+        setValue('detalhe.imagem', imagens[0]);
     }
 
     return (
@@ -130,43 +130,25 @@ export default () => {
                             <TextField
                                 label="Nome"
                                 placeholder="Nome do detalhe"
-                                name="material.nome"
+                                name="detalhe.nome"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 fullWidth
-                                error={errors.material && errors.material.nome ? true : false}
-                                helperText={errors.material && errors.material.nome ? errors.material.nome.message : null}
+                                error={errors.detalhe && errors.detalhe.nome ? true : false}
+                                helperText={errors.detalhe && errors.detalhe.nome ? errors.detalhe.nome.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
                                 })}
                             />
                         </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Descrição"
-                                placeholder="Descrição do detalhe"
-                                name="material.descricao"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                multiline={true}
-                                rows={5}
-                                error={errors.material && errors.material.descricao ? true : false}
-                                helperText={errors.material && errors.material.descricao ? errors.material.descricao.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório"
-                                })}
-                            />
-                        </Grid>
-                        {idmaterial ? (
+                        {iddetalhe ? (
                             <Grid item xs={12}>
                                 {!imagem ? (
                                     <LinearProgress />
                                 ) : (
                                         <CardMedia
-                                            alt="Material"
+                                            alt="Detalhe"
                                             component="img"
                                             src={`data:image/jpeg;base64,${imagem}`} />
                                     )}
