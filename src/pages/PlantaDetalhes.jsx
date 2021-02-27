@@ -234,7 +234,6 @@ export default () => {
             .then(() => {
                 setSucessOpen(true);
                 setAlteracoesPendentes(false);
-                setEditando(false);
             })
             .catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao salvar os detalhes.');
