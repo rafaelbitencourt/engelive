@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes } from '../api/api.js';
+import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
@@ -14,7 +14,8 @@ import {
     TextField,
     Box,
     Grid,
-    CardMedia
+    CardMedia,
+    LinearProgress
 } from '@material-ui/core';
 import {
     Backspace,
@@ -279,6 +280,20 @@ export default () => {
             setImagemDetalhe(null);
     }, [detalhe, setImagemDetalhe]);
 
+    useEffect(() => {
+        if (detalhe && detalhe.id)
+            getDetalhe(detalhe.id)
+                .then(
+                    (data) => {
+                        if (data.imagem)
+                            setImagemDetalhe(Buffer.from(data.imagem, 'binary').toString('base64'));
+                    },
+                    (error) => {
+                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');                        
+                    }
+                );
+    }, [detalhe, setImagemDetalhe]);
+
     return (
         <div>
             <Box display="flex" padding="2px">
@@ -390,17 +405,7 @@ export default () => {
                                         component="img"
                                         src={`data:image/jpeg;base64,${imagemDetalhe}`} />
                                     ) : (
-                                    <TextField
-                                        label="Descrição"
-                                        variant="outlined"
-                                        value={detalhe ? detalhe.descricao : ' '}
-                                        multiline={true}
-                                        rows={5}
-                                        fullWidth
-                                        disabled
-                                        style={{ marginTop: 10 }}
-                                        inputProps={{ style: { color: 'black' } }}
-                                    />)}
+                                        <LinearProgress />)}
                         </Grid>
                     </DialogContent>
                     <DialogActions>
