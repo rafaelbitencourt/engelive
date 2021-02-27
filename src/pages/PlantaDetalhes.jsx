@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes } from '../api/api.js';
+import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
@@ -14,7 +14,8 @@ import {
     TextField,
     Box,
     Grid,
-    CardMedia
+    CardMedia,
+    LinearProgress
 } from '@material-ui/core';
 import {
     Backspace,
@@ -22,7 +23,9 @@ import {
     ZoomOutMap,
     ZoomOut,
     ZoomIn,
-    CheckCircle
+    CheckCircle,
+    Edit,
+    Visibility
 } from '@material-ui/icons';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -106,6 +109,8 @@ export default () => {
         name: "my-map",
         areas: []
     });
+    const [saindo, setSaindo] = useState(false);
+    const [editando, setEditando] = useState(false);
     const [alteracoesPendentes, setAlteracoesPendentes] = useState(false);
     usePreventWindowUnload(alteracoesPendentes);
     const [plantaDetalhes, setPlantaDetalhes] = useState([]);
@@ -123,6 +128,8 @@ export default () => {
     }, [idplanta]);
 
     const handleClickImagem = (evt) => {
+        if(!editando) return;
+
         setPlantaDetalhe({
             idplanta: idplanta,
             iddetalhe: null,
@@ -206,6 +213,18 @@ export default () => {
         if(sairSemSalvar || !alteracoesPendentes) {
             history.goBack()
         } else {
+            setSaindo(true);
+            setConfirmOpen(true);
+        }
+    }
+
+    const visualizar = (sairSemSalvar) => {
+        if(sairSemSalvar || !alteracoesPendentes) {
+            carregarPlantaDetalhes();
+            setEditando(false);
+            setAlteracoesPendentes(false);
+        } else {
+            setSaindo(false);
             setConfirmOpen(true);
         }
     }
@@ -215,6 +234,7 @@ export default () => {
             .then(() => {
                 setSucessOpen(true);
                 setAlteracoesPendentes(false);
+                setEditando(false);
             })
             .catch(resp => {
                 alert(resp.message || 'Ocorreu um erro ao salvar os detalhes.');
@@ -273,10 +293,18 @@ export default () => {
     }, [plantaDetalhes, detalhes]);
 
     useEffect(() => {
-        if (detalhe && detalhe.imagem)
-            setImagemDetalhe(Buffer.from(detalhe.imagem, 'binary').toString('base64'));
-        else
-            setImagemDetalhe(null);
+        setImagemDetalhe(null);
+        if (detalhe && detalhe.id)
+            getDetalhe(detalhe.id)
+                .then(
+                    (data) => {
+                        if (data.imagem)
+                            setImagemDetalhe(Buffer.from(data.imagem, 'binary').toString('base64'));
+                    },
+                    (error) => {
+                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');                        
+                    }
+                );
     }, [detalhe, setImagemDetalhe]);
 
     return (
@@ -288,6 +316,19 @@ export default () => {
                     </IconButton>
                 </Tooltip>
                 <Box flexGrow={1} display="flex" justifyContent="center">
+                    { editando ? (
+                        <Tooltip title="Modo visualização">
+                            <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
+                                <Visibility />
+                            </IconButton>
+                        </Tooltip>
+                    ) : (
+                        <Tooltip title="Modo edição">
+                            <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
+                                <Edit />
+                            </IconButton>
+                        </Tooltip>
+                    )}                    
                     <Tooltip title="Centralizar">
                         <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
                             <FilterCenterFocus />
@@ -349,11 +390,11 @@ export default () => {
                 setOpen={setSucessOpen}
             />
             <ConfirmDialog
-                titulo="Sair sem salvar?"
-                mensagem="Há alterações não salvas. Sair sem salvar?"
+                titulo="Descartar alterações?"
+                mensagem="Há alterações não salvas. Deseja descartar?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={() => voltar(true)}
+                onConfirm={() => saindo ? voltar(true) : visualizar(true)}
             />
             <Dialog
                 fullWidth
@@ -390,27 +431,17 @@ export default () => {
                                         component="img"
                                         src={`data:image/jpeg;base64,${imagemDetalhe}`} />
                                     ) : (
-                                    <TextField
-                                        label="Descrição"
-                                        variant="outlined"
-                                        value={detalhe ? detalhe.descricao : ' '}
-                                        multiline={true}
-                                        rows={5}
-                                        fullWidth
-                                        disabled
-                                        style={{ marginTop: 10 }}
-                                        inputProps={{ style: { color: 'black' } }}
-                                    />)}
+                                        <LinearProgress />)}
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe)} onClick={handleClickRemover} variant="contained" color="default">
+                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="contained" color="default">
                             Remover
                         </Button>
                         <Button onClick={() => setCadastroOpen(false)} color="default">
                             Cancelar
                         </Button>
-                        <Button type="submit" variant="contained" color="primary">
+                        <Button disabled={!editando} type="submit" variant="contained" color="primary">
                             {(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar" : "Inserir"}
                         </Button>
                     </DialogActions>
