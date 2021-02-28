@@ -13,10 +13,9 @@ import {
     DialogTitle,
     TextField,
     Box,
-    Grid,
-    CardMedia,
-    LinearProgress
+    Grid
 } from '@material-ui/core';
+import Image from 'material-ui-image';
 import {
     Backspace,
     FilterCenterFocus,
@@ -298,7 +297,7 @@ export default () => {
                 .then(
                     (data) => {
                         if (data.imagem)
-                            setImagemDetalhe(Buffer.from(data.imagem, 'binary').toString('base64'));
+                            setImagemDetalhe("data:image/jpeg;base64,"+Buffer.from(data.imagem, 'binary').toString('base64'));
                     },
                     (error) => {
                         alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');                        
@@ -424,13 +423,10 @@ export default () => {
                             )}
                         />
                         <Grid item xs={12}>
-                                {imagemDetalhe ? (
-                                    <CardMedia
-                                        alt="Detalhe"
-                                        component="img"
-                                        src={`data:image/jpeg;base64,${imagemDetalhe}`} />
-                                    ) : (
-                                        <LinearProgress />)}
+                            <Image
+                                aspectRatio={(16/9)}
+                                src={imagemDetalhe} 
+                            />
                         </Grid>
                     </DialogContent>
                     <DialogActions>

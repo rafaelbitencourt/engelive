@@ -78,7 +78,7 @@ export default () => {
             );
     };
 
-    const { register, errors, handleSubmit, setValue } = useForm();
+    const { handleSubmit, setValue } = useForm();
 
     useEffect(() => {
         if (idprojeto)
@@ -124,20 +124,6 @@ export default () => {
                     </Typography>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            {/* <TextField
-                                label="Descrição"
-                                placeholder="Descrição da planta"
-                                name="projeto.descricao"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                fullWidth
-                                error={errors.planta && errors.planta.descricao ? true : false}
-                                helperText={errors.planta && errors.planta.descricao ? errors.planta.descricao.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório"
-                                })}
-                            /> */}
                             <Autocomplete
                                 value={tipoProjeto}
                                 onChange={(event, newValue) => setTipoProjeto(newValue)}
