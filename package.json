@@ -16,6 +16,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-hook-form": "^6.6.0",
+    "react-image-lightbox": "^5.1.1",
     "react-images-upload": "^1.2.8",
     "react-map-interaction": "^2.0.0",
     "react-router": "^5.2.0",

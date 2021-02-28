@@ -16,6 +16,8 @@ import {
     Grid
 } from '@material-ui/core';
 import Image from 'material-ui-image';
+import Lightbox from "react-image-lightbox";
+import 'react-image-lightbox/style.css';
 import {
     Backspace,
     FilterCenterFocus,
@@ -394,9 +396,15 @@ export default () => {
                 setOpen={setConfirmOpen}
                 onConfirm={() => saindo ? voltar(true) : visualizar(true)}
             />
+            {cadastroOpen && !editando &&
+                <Lightbox
+                    mainSrc={imagemDetalhe}
+                    onCloseRequest={() => setCadastroOpen(false)}
+                />
+            }
             <Dialog
                 fullWidth
-                open={cadastroOpen}
+                open={cadastroOpen && editando}
                 onClose={() => setCadastroOpen(false)}
                 aria-labelledby="form-dialog-title">
                 <form onSubmit={(event) => handleSubmit(event)}>
