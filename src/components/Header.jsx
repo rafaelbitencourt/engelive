@@ -87,26 +87,12 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
         onClose={handleDrawerClose}
       >
         <List>
-          <ListItem button key='Projetos' onClick={() => {
-              history.push("/projetos");
-              setDrawerOpen(false);
-            }}>
-            <ListItemIcon><Description /></ListItemIcon>
-            <ListItemText primary='Projetos' />
-          </ListItem>
           <ListItem button key='TiposProjetos' onClick={() => {
               history.push("/tipos_projetos");
               setDrawerOpen(false);
             }}>
             <ListItemIcon><Description /></ListItemIcon>
             <ListItemText primary='Tipos de projeto' />
-          </ListItem>
-          <ListItem button key='Materiais' onClick={() => {
-              history.push("/materiais");
-              setDrawerOpen(false);
-            }}>
-            <ListItemIcon><Category /></ListItemIcon>
-            <ListItemText primary='Detalhes' />
           </ListItem>
           <ListItem button key='Colaboradores'>
             <ListItemIcon><People /></ListItemIcon>
