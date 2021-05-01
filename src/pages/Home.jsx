@@ -17,7 +17,7 @@ export default () => {
                     src="/logo.png" />
                 <Typography component="h1" variant="h3" align="center">
                     EngeLive
-            </Typography>
+                </Typography>
             </Container >
         </React.Fragment>
     );

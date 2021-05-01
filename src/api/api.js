@@ -1,8 +1,8 @@
 import axios from 'axios';
 import authHeader from '../services/auth-header';
+import config from '../configs/config.json';
 
-//const urlApi = "http://localhost:3001/";
-const urlApi = "https://engeliveapi.herokuapp.com/";
+const urlApi = config.UrlApi;
 
 export const listObras = () => axios
     .get(urlApi + 'obras', { headers: authHeader() })

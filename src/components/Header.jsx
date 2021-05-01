@@ -12,14 +12,19 @@ import {
   List,
   ListItem,
   ListItemText,
-  ListItemIcon
+  ListItemIcon,
+  Collapse
 } from '@material-ui/core';
 
 import {
   Menu as MenuIcon,
   Description,
   Category,
-  People
+  People,
+  MoveToInbox,
+  ExpandLess,
+  ExpandMore,
+  StarBorder
  } from '@material-ui/icons';
 
 import AuthService from '../services/auth.service';
@@ -39,6 +44,11 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
   let history = useHistory();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   const sair = () => {
     AuthService.logout();
@@ -87,17 +97,42 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
         onClose={handleDrawerClose}
       >
         <List>
+          <ListItem button key='Obras' onClick={() => {
+              history.push("/obras");
+              setDrawerOpen(false);
+            }}>
+            <ListItemIcon><Description /></ListItemIcon>
+            <ListItemText primary='Obras' />
+          </ListItem>
           <ListItem button key='TiposProjetos' onClick={() => {
               history.push("/tipos_projetos");
               setDrawerOpen(false);
             }}>
-            <ListItemIcon><Description /></ListItemIcon>
+            <ListItemIcon><Category /></ListItemIcon>
             <ListItemText primary='Tipos de projeto' />
           </ListItem>
           <ListItem button key='Colaboradores'>
             <ListItemIcon><People /></ListItemIcon>
             <ListItemText primary='Colaboradores' />
           </ListItem>
+
+          <ListItem button onClick={handleClick}>
+            <ListItemIcon>
+              <MoveToInbox />
+            </ListItemIcon>
+            <ListItemText primary="Inbox" />
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </ListItem>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItem button className={classes.nested}>
+                <ListItemIcon>
+                  <StarBorder />
+                </ListItemIcon>
+                <ListItemText primary="Starred" />
+              </ListItem>
+            </List>
+          </Collapse>
         </List>
       </Drawer>
       <ConfirmDialog
