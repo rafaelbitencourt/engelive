@@ -433,7 +433,7 @@ export default () => {
                         <Grid item xs={12}>
                             <Image
                                 aspectRatio={(16/9)}
-                                src={imagemDetalhe} 
+                                src={imagemDetalhe || "/logo.png"} 
                             />
                         </Grid>
                     </DialogContent>
