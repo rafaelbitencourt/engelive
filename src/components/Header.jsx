@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
+import NavigationBar from './NavigationBar';
 
 import {
   AppBar,
@@ -67,10 +68,7 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
     <div>
       <AppBar position="static">
         <Toolbar>
-          {showMenu &&
-            <IconButton hidden={showMenu} onClick={() => handleDrawerOpen(true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>}
+          {showMenu && <NavigationBar />}
             
           <Typography variant="h6" className={classes.title}>
             EngeLive
@@ -91,7 +89,7 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
           }
         </Toolbar>
       </AppBar>
-      <Drawer
+      {/* <Drawer
         anchor="left"
         open={drawerOpen}
         onClose={handleDrawerClose}
@@ -134,7 +132,7 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
             </List>
           </Collapse>
         </List>
-      </Drawer>
+      </Drawer> */}
       <ConfirmDialog
         titulo="Sair"
         mensagem="Tem certeza de que deseja sair?"
