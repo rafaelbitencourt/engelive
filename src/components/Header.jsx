@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link/*, useHistory*/ } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import NavigationBar from './NavigationBar';
 
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
   const classes = useStyles();
-  let history = useHistory();
+  // let history = useHistory();
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
 
@@ -53,7 +53,7 @@ export default ({ showMenu, showLoginRegister, showUserLogout, usuario }) => {
 
   const sair = () => {
     AuthService.logout();
-    history.push("/");
+    // history.push("/");
   };
 
   const handleDrawerOpen = () => {

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link/*, useHistory*/ } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import AuthService from '../services/auth.service';
 import Header from '../components/Header.jsx';
@@ -52,13 +52,13 @@ export default () => {
 
     const { register, errors, handleSubmit } = useForm({});
 
-    let history = useHistory();
+    // let history = useHistory();
 
     const cbSubmit = (inputs) => {
         AuthService.login(inputs.usuario, inputs.senha)
             .then(
                 () => {
-                    history.replace('/obras');
+                    // history.replace('/obras');
                 },
                 (error) => {
                     const resMessage =
@@ -114,12 +114,12 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button
+                        {/* <Button
                             className={classes.button}
                             color="default"
                             component={Link}
-                            to={`/register`}>Cadastre-se</Button>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                            to={`/register`}>Cadastre-se</Button> */}
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"

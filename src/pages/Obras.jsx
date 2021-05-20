@@ -60,14 +60,14 @@ export default () => {
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/obra">
+                    <IconButton variant="contained" color="primary" component={Link} to="/app/obra">
                         <AddCircle fontSize="large"/>
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
                 {obras.map(obra => (
-                    <ListItem button key={obra.id} component={Link} to={`/obra/${obra.id}/projetos`}>
+                    <ListItem button key={obra.id} component={Link} to={`/app/obra/${obra.id}/projetos`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
@@ -78,7 +78,7 @@ export default () => {
                             secondary={obra.previsao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${obra.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/obra/${obra.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {

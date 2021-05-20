@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink/*, withRouter */} from 'react-router-dom';
 
 import {
     IconButton,
@@ -143,4 +143,4 @@ const NavigationBar = (props) => {
     );
 };
 
-export default withRouter(NavigationBar);
+export default NavigationBar;// withRouter(NavigationBar);

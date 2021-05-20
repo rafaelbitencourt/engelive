@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listDetalhesPorProjeto, deleteDetalhe } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
@@ -32,7 +32,7 @@ export default () => {
     const [idDetalheExclusao, setIdDetalheExclusao] = useState(null);
 
     const { idobra, idprojeto } = useParams();
-    let history = useHistory();
+    // let history = useHistory();
 
     const atualizarLista = useCallback(() => {
         listDetalhesPorProjeto(idprojeto)
@@ -59,25 +59,25 @@ export default () => {
     return (
         <div>
             <Box display="flex" padding="2px">
-                <Tooltip title="Voltar">
+                {/* <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
                         <Backspace />
                     </IconButton>
-                </Tooltip>
+                </Tooltip> */}
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
                         Detalhes
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/detalhe/`}>
+                    <IconButton variant="contained" color="primary" component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/detalhe/`}>
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
                 {detalhes.map(detalhe => (
-                    <ListItem button key={detalhe.id} component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`}>
+                    <ListItem button key={detalhe.id} component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
@@ -87,7 +87,7 @@ export default () => {
                             primary={detalhe.nome}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getTipoProjeto, saveTipoProjeto } from '../api/api.js';
 import {
@@ -51,14 +51,14 @@ export default () => {
     const classes = useStyles();
 
     const { idtipoprojeto } = useParams();
-    let history = useHistory();
+    // let history = useHistory();
 
     const cbSubmit = (inputs) => {
         saveTipoProjeto(inputs.tipo_projeto)
             .then(
                 (data) => {
-                    if (!idtipoprojeto)
-                        history.replace('/tipo_projeto/' + data.id);
+                    // if (!idtipoprojeto)
+                    //     history.replace('/tipo_projeto/' + data.id);
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -129,7 +129,7 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"

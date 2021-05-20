@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback, useReducer } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
@@ -74,7 +74,7 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
 };
 
 export default () => {
-    let history = useHistory();
+    // let history = useHistory();
     const { idprojeto, idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
 
@@ -212,7 +212,7 @@ export default () => {
 
     const voltar = (sairSemSalvar) => {
         if(sairSemSalvar || !alteracoesPendentes) {
-            history.goBack()
+            // history.goBack()
         } else {
             setSaindo(true);
             setConfirmOpen(true);

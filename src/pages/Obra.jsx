@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link/*, useHistory*/, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getObra, saveObra } from '../api/api.js';
 import {
@@ -51,14 +51,14 @@ export default () => {
     const classes = useStyles();
 
     const { idobra } = useParams();
-    let history = useHistory();
+    // let history = useHistory();
 
     const cbSubmit = (inputs) => {
         saveObra(inputs.obra)
             .then(
                 (data) => {
                     if (!idobra)
-                        history.replace('/obra/' + data.id);
+                        // history.replace('/obra/' + data.id);
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -145,13 +145,13 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button
+                        {/* <Button
                             className={classes.button}
                             color="default"
                             component={Link}
                             disabled={!idobra}
-                            to={`/obra/${idobra}/projetos`}>Projetos da obra</Button>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                            to={`/obra/${idobra}/projetos`}>Projetos da obra</Button> */}
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, /*useHistory,*/ useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getPlanta, savePlanta } from '../api/api.js';
 import {
@@ -56,7 +56,7 @@ export default () => {
     const classes = useStyles();
 
     const { idobra, idprojeto, idplanta } = useParams();
-    let history = useHistory();
+    // let history = useHistory();
 
     const cbSubmit = (inputs) => {
         if (!inputs.planta.id && !inputs.planta.imagem) {
@@ -65,8 +65,8 @@ export default () => {
             savePlanta({ ...inputs.planta, idprojeto: idprojeto })
                 .then(
                     (data) => {
-                        if (!idplanta)
-                        history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/planta/' + data.id);
+                        // if (!idplanta)
+                        // history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/planta/' + data.id);
                     setSucessOpen(true);
                     },
                     (error) => {
@@ -173,13 +173,13 @@ export default () => {
 
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button
+                        {/* <Button
                             className={classes.button}
                             color="default"
                             component={Link}
                             disabled={!idplanta}
-                            to={`/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>Detalhes da planta</Button>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                            to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>Detalhes da planta</Button> */}
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"

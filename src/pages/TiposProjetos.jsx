@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 import { listTiposProjetos, deleteTipoProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
@@ -31,7 +31,7 @@ export default () => {
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idTipoProjetoExclusao, setIdTipoProjetoExclusao] = useState(null);
 
-    let history = useHistory();
+    // let history = useHistory();
 
     useEffect(() => {
         atualizarLista();
@@ -58,11 +58,11 @@ export default () => {
     return (
         <div>
             <Box display="flex" padding="2px">
-                <Tooltip title="Voltar">
+                {/* <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
                         <Backspace />
                     </IconButton>
-                </Tooltip>
+                </Tooltip> */}
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
                         Tipos de projetos
