@@ -19,16 +19,6 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 
-
-// import Account from 'src/pages/Account';
-// import CustomerList from 'src/pages/CustomerList';
-// import Dashboard from 'src/pages/Dashboard';
-// import Login from 'src/pages/Login';
-// import NotFound from 'src/pages/NotFound';
-// import ProductList from 'src/pages/ProductList';
-// import Register from 'src/pages/Register';
-// import Settings from 'src/pages/Settings';
-
 const routes = [
   {
     path: 'app',
@@ -50,10 +40,6 @@ const routes = [
       { path: 'tiposprojetos', element: <TiposProjetos /> },
       { path: 'tipoprojeto', element: <TipoProjeto /> },
       { path: 'tipoprojeto/:idtipoprojeto', element: <TipoProjeto /> },
-
-      // { path: 'dashboard', element: <Dashboard /> },
-      // { path: 'products', element: <ProductList /> },
-      // { path: 'settings', element: <Settings /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
@@ -71,22 +57,3 @@ const routes = [
 ];
 
 export default routes;
-
-
-          {/* <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta/detalhes" component={PlantaDetalhes} /> */}
-          //         <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/planta/:idplanta?" component={Planta} />
-          //         <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/plantas" component={Plantas} />
-          //         <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/detalhe/:iddetalhe?" component={Detalhe} />
-          //         <PrivateRoute path="/obra/:idobra/projeto/:idprojeto/detalhes" component={Detalhes} />
-          //         <PrivateRoute path="/obra/:idobra/projetos" component={Projetos} />
-          //         <PrivateRoute path="/obra/:idobra/projeto/:idprojeto?" component={Projeto} />
-          //         <PrivateRoute path="/obra/:idobra?" component={Obra} />
-          //         <PrivateRoute path="/obras" component={Obras} />
-           //         <PrivateRoute path="/tipos_projetos" component={TiposProjetos} />
-           //         <PrivateRoute path="/tipo_projeto/:idtipoprojeto?" component={TipoProjeto} />
-    //         <Route path="/register" component={Register} />
-    //         <Route path="/login" component={Login} />            
-    //         <Route path="/" component={Home}/>
-
-
-    

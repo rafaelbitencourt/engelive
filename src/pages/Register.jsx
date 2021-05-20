@@ -1,177 +1,188 @@
-import React, { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from "react-hook-form";
-import AuthService from '../services/auth.service';
-import Header from '../components/Header.jsx';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 import {
-    TextField,
-    Button,
-    Paper,
-    Typography,
-    Grid
+  Box,
+  Button,
+  Container,
+  Link,
+  TextField,
+  Typography,
+  FormHelperText
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, ErrorDialog } from '../components/Dialog';
+import AuthService from '../services/auth.service';
 
-const useStyles = makeStyles((theme) => ({
-    layout: {
-        width: 'auto',
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-            width: 600,
-            marginLeft: 'auto',
-            marginRight: 'auto',
+const Register = () => {
+  const navigate = useNavigate();
+  const [msgErro, setMsgErro] = useState(null);
+
+  const cbSubmit = (values, { setSubmitting }) => {
+    AuthService.register(values)
+      .then(
+        () => {
+          navigate('/login');
         },
-    },
-    paper: {
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-    buttons: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    button: {
-        marginTop: theme.spacing(3),
-        marginLeft: theme.spacing(1),
-    },
-}));
+        (error) => {
+          setSubmitting(false);
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-export default () => {
-    const { register, errors, handleSubmit, watch } = useForm({});
-    const senha = useRef({});
-    senha.current = watch("senha", "");
+          setMsgErro(resMessage);
+        }
+      );
+  };
 
-    const [sucessOpen, setSucessOpen] = useState(false);
-    const [errorOpen, setErrorOpen] = useState(false);
-    const [mensagemErro, setMensagemErro] = useState("");
-    const classes = useStyles();
+  return (
+    <>
+      <Helmet>
+        <title>Criar conta | Engelive</title>
+      </Helmet>
+      <Box
+        sx={{
+          backgroundColor: 'background.default',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          justifyContent: 'center'
+        }}
+      >
+        <Container maxWidth="sm">
+          <Formik
+            initialValues={{
+              email: '',
+              usuario: '',
+              senha: '',
+              confirmacaoSenha: ''
+            }}
+            validationSchema={
+              Yup.object().shape({
+                usuario: Yup.string().max(255).required('Usuário é obrigatório'),
+                email: Yup.string().email('E-mail inválido').max(255).required('E-mail é obrigatório'),
+                senha: Yup.string().max(255).required('Senha é obrigatória'),
+                confirmacaoSenha: Yup.string().oneOf([Yup.ref('senha'), null], 'As senhas não conferem')
+              })
+            }
+            onSubmit={cbSubmit}
+          >
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    color="textPrimary"
+                    variant="h2"
+                  >
+                    Criar nova conta
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    gutterBottom
+                    variant="body2"
+                  >
+                    Use e-mail, usuário e senha para criar uma conta
+                  </Typography>
+                </Box>
+                <TextField
+                  error={Boolean(touched.usuario && errors.usuario)}
+                  fullWidth
+                  helperText={touched.usuario && errors.usuario}
+                  label="Usuário"
+                  margin="normal"
+                  name="usuario"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  value={values.usuario}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.email && errors.email)}
+                  fullWidth
+                  helperText={touched.email && errors.email}
+                  label="E-mail"
+                  margin="normal"
+                  name="email"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="email"
+                  value={values.email}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.senha && errors.senha)}
+                  fullWidth
+                  helperText={touched.senha && errors.senha}
+                  label="Senha"
+                  margin="normal"
+                  name="senha"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.senha}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.confirmacaoSenha && errors.confirmacaoSenha)}
+                  fullWidth
+                  helperText={touched.confirmacaoSenha && errors.confirmacaoSenha}
+                  label="Confirmação de senha"
+                  margin="normal"
+                  name="confirmacaoSenha"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.confirmacaoSenha}
+                  variant="outlined"
+                />
+                {msgErro &&
+                  <FormHelperText error>
+                    {msgErro}
+                  </FormHelperText>}
+                <Box sx={{ py: 2 }}>
+                  <Button
+                    color="primary"
+                    disabled={isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Criar conta
+                  </Button>
+                </Box>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  Tem conta?
+                  {' '}
+                  <Link
+                    component={RouterLink}
+                    to="/login"
+                    variant="h6"
+                  >
+                    Entrar
+                  </Link>
+                </Typography>
+              </form>
+            )}
+          </Formik>
+        </Container>
+      </Box>
+    </>
+  );
+};
 
-    let navigate = useNavigate();
-
-    const cbSubmit = (inputs) => {
-        AuthService.register(inputs)
-            .then(
-                () => {
-                    setSucessOpen(true);
-                    navigate('/login');
-                },
-                (error) => {
-                    const resMessage =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-
-                    setMensagemErro(resMessage);
-                    setErrorOpen(true);
-                }
-            );
-    };
-
-    return (
-        <React.Fragment>
-            <Header />
-            <form
-                className={classes.layout}
-                onSubmit={handleSubmit(cbSubmit)}
-                autoComplete="off">
-
-                <Paper className={classes.paper}>
-                    <Typography component="h1" variant="h4" align="center">
-                        Cadastro
-                    </Typography>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Usuário"
-                                name="usuario"
-                                fullWidth
-                                error={errors.usuario ? true : false}
-                                helperText={errors.usuario ? errors.usuario.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório"
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="E-mail"
-                                name="email"
-                                fullWidth
-                                error={errors.email ? true : false}
-                                helperText={errors.email ? errors.email.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório",
-                                    pattern: {
-                                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                                        message: "Endereço de e-mail inválido"
-                                    }
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Senha"
-                                type="password"
-                                name="senha"
-                                fullWidth
-                                error={errors.senha ? true : false}
-                                helperText={errors.senha ? errors.senha.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório",
-                                    minLength: {
-                                        value: 8,
-                                        message: "A senha deve ter pelo menos 8 caracteres"
-                                    }
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Confirmação de senha"
-                                type="password"
-                                name="confirmacaoSenha"
-                                error={errors.confirmacaoSenha ? true : false}
-                                helperText={errors.confirmacaoSenha ? errors.confirmacaoSenha.message : null}
-                                inputRef={register({
-                                    validate: value =>
-                                        value === senha.current || "As senhas não conferem"
-                                })}
-                                fullWidth
-                            />
-                        </Grid>
-                    </Grid>
-                    <div className={classes.buttons}>
-                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                        >Salvar</Button>
-                    </div>
-                </Paper>
-            </form>
-            <SuccessDialog
-                mensagem="Cadastro realizado com sucesso."
-                open={sucessOpen}
-                setOpen={setSucessOpen}
-            />
-            <ErrorDialog
-                mensagem={mensagemErro}
-                open={errorOpen}
-                setOpen={setErrorOpen}
-            />
-        </React.Fragment>
-
-    );
-}
+export default Register;
