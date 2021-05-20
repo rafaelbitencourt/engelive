@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { /*useHistory,*/ useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { listProjetosPorObra, deleteProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
@@ -33,7 +33,7 @@ export default () => {
     const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
 
     const { idobra } = useParams();
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const atualizarLista = useCallback(() => {
         listProjetosPorObra(idobra)

@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-// import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import AuthService from '../services/auth.service';
 import Header from '../components/Header.jsx';
@@ -54,14 +54,14 @@ export default () => {
     const [mensagemErro, setMensagemErro] = useState("");
     const classes = useStyles();
 
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         AuthService.register(inputs)
             .then(
                 () => {
                     setSucessOpen(true);
-                    // history.replace('/login');
+                    navigate('/login');
                 },
                 (error) => {
                     const resMessage =

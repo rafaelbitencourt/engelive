@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link/*, useHistory*/, useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getObra, saveObra } from '../api/api.js';
 import {
@@ -8,7 +8,8 @@ import {
     CssBaseline,
     Paper,
     Typography,
-    Grid
+    Grid,
+    Hidden
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { SuccessDialog, ErrorDialog } from '../components/Dialog';
@@ -51,14 +52,15 @@ export default () => {
     const classes = useStyles();
 
     const { idobra } = useParams();
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         saveObra(inputs.obra)
             .then(
                 (data) => {
                     if (!idobra)
-                        // history.replace('/obra/' + data.id);
+                        navigate(`/app/obra/${data.id}`);
+
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -145,13 +147,13 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        {/* <Button
-                            className={classes.button}
-                            color="default"
-                            component={Link}
-                            disabled={!idobra}
-                            to={`/obra/${idobra}/projetos`}>Projetos da obra</Button> */}
-                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
+                        {idobra &&
+                        <Link to={`/obra/${idobra}/projetos`}>
+                            <Button className={classes.button}>Projetos da obra</Button>
+                        </Link>}
+                        <Link to="/app/obras">
+                            <Button className={classes.button}>Voltar</Button>
+                        </Link>
                         <Button
                             type="submit"
                             variant="contained"

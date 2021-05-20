@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { /*useHistory,*/ useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getDetalhe, saveDetalhe } from '../api/api.js';
 import {
@@ -56,7 +56,7 @@ export default () => {
     const classes = useStyles();
 
     const { idobra, idprojeto, iddetalhe } = useParams();
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         if (!inputs.detalhe.id && !inputs.detalhe.imagem) {
@@ -65,8 +65,8 @@ export default () => {
             saveDetalhe({ ...inputs.detalhe, idprojeto: idprojeto })
                 .then(
                     (data) => {
-                        // if (!iddetalhe)
-                        //     history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/detalhe/' + data.id);
+                        if (!iddetalhe)
+                            navigate(`/app/obra/${idobra}/projeto/${data.idprojeto}/detalhe/${data.id}`);
                         setSucessOpen(true);
                     },
                     (error) => {

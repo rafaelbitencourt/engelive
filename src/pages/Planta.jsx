@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, /*useHistory,*/ useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getPlanta, savePlanta } from '../api/api.js';
 import {
@@ -56,7 +56,7 @@ export default () => {
     const classes = useStyles();
 
     const { idobra, idprojeto, idplanta } = useParams();
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         if (!inputs.planta.id && !inputs.planta.imagem) {
@@ -65,9 +65,10 @@ export default () => {
             savePlanta({ ...inputs.planta, idprojeto: idprojeto })
                 .then(
                     (data) => {
-                        // if (!idplanta)
-                        // history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/planta/' + data.id);
-                    setSucessOpen(true);
+                        if (!idplanta)
+                            navigate(`/app/obra/${idobra}/projeto/${data.idprojeto}/planta/${data.id}`);
+
+                        setSucessOpen(true);
                     },
                     (error) => {
                         const resMessage =
@@ -173,12 +174,10 @@ export default () => {
 
                     </Grid>
                     <div className={classes.buttons}>
-                        {/* <Button
-                            className={classes.button}
-                            color="default"
-                            component={Link}
-                            disabled={!idplanta}
-                            to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>Detalhes da planta</Button> */}
+                        {idplanta &&
+                            <Link to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>
+                                <Button className={classes.button}>Detalhes da planta</Button>
+                            </Link>}
                         {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"

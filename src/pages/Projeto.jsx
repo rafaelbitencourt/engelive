@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { /*useHistory,*/ useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { listTiposProjetos, getProjeto, saveProjeto } from '../api/api.js';
 import {
@@ -54,15 +54,16 @@ export default () => {
     const classes = useStyles();
 
     const { idobra, idprojeto } = useParams();
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         saveProjeto({ ...inputs.projeto, idobra: idobra, idtipoprojeto: tipoProjeto.id })
             .then(
                 (data) => {
                     if (!idprojeto)
-                    // history.replace('/obra/' + data.idobra + '/projeto/' + data.id);
-                setSucessOpen(true);
+                        navigate(`/obra/${data.idobra}/projeto/${data.id}`);
+                        
+                    setSucessOpen(true);
                 },
                 (error) => {
                     const resMessage =

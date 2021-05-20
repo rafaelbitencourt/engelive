@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link/*, useHistory*/ } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import AuthService from '../services/auth.service';
 import Header from '../components/Header.jsx';
@@ -52,13 +52,13 @@ export default () => {
 
     const { register, errors, handleSubmit } = useForm({});
 
-    // let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         AuthService.login(inputs.usuario, inputs.senha)
             .then(
                 () => {
-                    // history.replace('/obras');
+                    navigate('/app/obras');
                 },
                 (error) => {
                     const resMessage =
@@ -114,6 +114,9 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
+                        <Link to='/register'>
+                            <Button className={classes.button}>Cadastre-se</Button>
+                        </Link>
                         {/* <Button
                             className={classes.button}
                             color="default"

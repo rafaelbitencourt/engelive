@@ -69,14 +69,14 @@ export default () => {
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/tipo_projeto">
+                    <IconButton variant="contained" color="primary" component={Link} to="/app/tipoprojeto">
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
                 {tiposProjetos.map(tipoProjeto => (
-                    <ListItem button key={tipoProjeto.id} component={Link} to={`/tipo_projeto/${tipoProjeto.id}`}>
+                    <ListItem button key={tipoProjeto.id} component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
@@ -87,7 +87,7 @@ export default () => {
                         // secondary={projeto.previsao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/tipo_projeto/${tipoProjeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
