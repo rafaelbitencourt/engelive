@@ -19,10 +19,10 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 
-const routes = [
+const routes = (isLoggedIn) => [
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'obras', element: <Obras /> },
       { path: 'obra', element: <Obra /> },
@@ -40,18 +40,17 @@ const routes = [
       { path: 'tiposprojetos', element: <TiposProjetos /> },
       { path: 'tipoprojeto', element: <TipoProjeto /> },
       { path: 'tipoprojeto/:idtipoprojeto', element: <TipoProjeto /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '*', element: <NotFound /> }
     ]
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: !isLoggedIn ? <MainLayout /> : <Navigate to="/app/obras" />,
     children: [
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
-      { path: '404', element: <NotFound /> },
       { path: '/', element: <Home /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { path: '*', element: <NotFound /> }
     ]
   }
 ];
