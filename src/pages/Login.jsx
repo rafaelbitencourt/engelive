@@ -61,7 +61,7 @@ const Login = () => {
               password: ''
             }}
             validationSchema={Yup.object().shape({
-              user: Yup.string().max(255).required('Usuário é obricatório'),
+              user: Yup.string().max(255).required('Usuário é obrigatório'),
               password: Yup.string().max(255).required('Senha é obrigatória')
             })}
             onSubmit={cbSubmit}
