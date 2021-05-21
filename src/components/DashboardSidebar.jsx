@@ -72,7 +72,7 @@ const items = [
   // }
 ];
 
-const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+const DashboardSidebar = ({ onMobileClose, openMobile, logOut }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -154,22 +154,23 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
         >
           Upgrade to PRO version and access 20 more screens
         </Typography>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            pt: 2
-          }}
-        >
-          <Button
-            color="primary"
-            component="a"
-            href="https://react-material-kit.devias.io"
-            variant="contained"
+        <Hidden lgUp>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              pt: 2
+            }}
           >
-            See PRO version
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={logOut}
+            >
+              SAIR
           </Button>
-        </Box>
+          </Box>
+        </Hidden>
       </Box>
     </Box>
   );
