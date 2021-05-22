@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet';
 // import { useHistory } from 'react-router-dom';
 import { listTiposProjetos, deleteTipoProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
@@ -57,6 +58,9 @@ export default () => {
 
     return (
         <div>
+            <Helmet>
+                <title>Tipos de projetos | Engelive</title>
+            </Helmet>
             <Box display="flex" padding="2px">
                 {/* <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>

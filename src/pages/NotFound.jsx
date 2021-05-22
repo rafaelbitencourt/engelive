@@ -1,4 +1,4 @@
-// import { Helmet } from 'react-helmet';
+import { Helmet } from 'react-helmet';
 import {
   Box,
   Container,
@@ -7,9 +7,9 @@ import {
 
 const NotFound = () => (
   <>
-    {/* <Helmet>
-      <title>404 | Material Kit</title>
-    </Helmet> */}
+    <Helmet>
+      <title>Página indisponível | Engelive</title>
+    </Helmet>
     <Box
       sx={{
         backgroundColor: 'background.default',
@@ -25,25 +25,26 @@ const NotFound = () => (
           color="textPrimary"
           variant="h1"
         >
-          404: The page you are looking for isn’t here
+          Esta página não está disponível
         </Typography>
         <Typography
           align="center"
           color="textPrimary"
           variant="subtitle2"
         >
-          You either tried some shady route or you came here by mistake.
-          Whichever it is, try using the navigation
+          O link pode não estar funcionando ou a página pode ter sido removida. 
+          Verifique se o link que você está tentando abrir está correto.
         </Typography>
         <Box sx={{ textAlign: 'center' }}>
           <img
             alt="Under development"
-            src="/static/images/undraw_page_not_found_su7k.svg"
+            src="/logo.png"            
             style={{
               marginTop: 50,
               display: 'inline-block',
-              maxWidth: '100%',
-              width: 560
+              // maxWidth: '30%',
+              minWidth: '40%',
+              width: 300
             }}
           />
         </Box>

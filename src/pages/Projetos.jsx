@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { Helmet } from 'react-helmet';
 import { useNavigate, useParams } from 'react-router-dom';
 import { listProjetosPorObra, deleteProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
@@ -59,6 +60,9 @@ export default () => {
 
     return (
         <div>
+            <Helmet>
+                <title>Projetos | Engelive</title>
+            </Helmet>
             <Box display="flex" padding="2px">
                 {/* <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
@@ -66,13 +70,13 @@ export default () => {
                     </IconButton>
                 </Tooltip> */}
                 <Box flexGrow={1} display="flex" justifyContent="center">
-                    <Typography variant="h4" color="primary" style={{paddingTop: '5px'}}>
+                    <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
                         Projetos
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
                     <IconButton variant="contained" color="primary" component={Link} to={`/app/obra/${idobra}/projeto`}>
-                        <AddCircle fontSize="large"/>
+                        <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
