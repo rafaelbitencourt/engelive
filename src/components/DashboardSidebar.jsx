@@ -21,9 +21,25 @@ import {
 //   UserPlus as UserPlusIcon,
 //   Users as UsersIcon
 // } from 'react-feather';
+import { Category, Description } from '@material-ui/icons';
 import NavItem from './NavItem';
 
 const items = [
+  {
+    href: '/app/tiposprojetos',
+    icon: Category,
+    title: 'Tipos de projetos'
+  },
+  {
+    href: '/app/obras',
+    icon: Description,
+    title: 'Obras'
+  },
+  {
+    href: '/app/obra/2/projetos',
+    icon: Description,
+    title: 'Casa Gege'
+  },  
   // {
   //   href: '/app/dashboard',
   //   icon: BarChartIcon,
