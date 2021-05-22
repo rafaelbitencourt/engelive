@@ -41,6 +41,7 @@ const DashboardLayoutContent = experimentalStyled('div')({
 
 const DashboardLayout = () => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
+  const usuario = AuthService.getCurrentUser();
   let navigate = useNavigate();
 
   const logOut = () => {
@@ -58,6 +59,7 @@ const DashboardLayout = () => {
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
         logOut={logOut}
+        user={usuario}
       />
       <DashboardLayoutWrapper>
         <DashboardLayoutContainer>

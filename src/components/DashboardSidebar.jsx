@@ -23,12 +23,6 @@ import {
 // } from 'react-feather';
 import NavItem from './NavItem';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
-
 const items = [
   // {
   //   href: '/app/dashboard',
@@ -72,7 +66,7 @@ const items = [
   // }
 ];
 
-const DashboardSidebar = ({ onMobileClose, openMobile, logOut }) => {
+const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
   const location = useLocation();
 
   useEffect(() => {
@@ -111,13 +105,13 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut }) => {
           color="textPrimary"
           variant="h5"
         >
-          {user.name}
+          {user.usuario}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {user.jobTitle}
+          {user.email}
         </Typography>
       </Box>
       <Divider />
@@ -136,7 +130,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut }) => {
       <Box sx={{ flexGrow: 1 }} />
       <Box
         sx={{
-          backgroundColor: 'background.default',
+          // backgroundColor: 'background.default',
           m: 2,
           p: 2
         }}
