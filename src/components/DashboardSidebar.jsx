@@ -23,6 +23,7 @@ import {
 // } from 'react-feather';
 import { Category, Description } from '@material-ui/icons';
 import NavItem from './NavItem';
+import NavMenu from './navmenu/NavMenu';
 
 const items = [
   {
@@ -132,16 +133,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
       </Box>
       <Divider />
       <Box sx={{ p: 2 }}>
-        <List>
-          {items.map((item) => (
-            <NavItem
-              href={item.href}
-              key={item.title}
-              title={item.title}
-              icon={item.icon}
-            />
-          ))}
-        </List>
+        <NavMenu />
       </Box>
       <Box sx={{ flexGrow: 1 }} />
       <Box

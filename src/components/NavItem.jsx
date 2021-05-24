@@ -10,6 +10,7 @@ const NavItem = ({
   href,
   icon: Icon,
   title,
+  cb,
   ...rest
 }) => {
   const location = useLocation();
@@ -35,7 +36,6 @@ const NavItem = ({
           fontWeight: 'medium',
           justifyContent: 'flex-start',
           letterSpacing: 0,
-          py: 1.25,
           textTransform: 'none',
           width: '100%',
           ...(active && {
@@ -46,6 +46,7 @@ const NavItem = ({
           }
         }}
         to={href}
+        onClick={cb}
       >
         {Icon && (
           <Icon size="20" />
