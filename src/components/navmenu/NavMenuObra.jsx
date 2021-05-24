@@ -16,7 +16,7 @@ const NavMenuObra = ({ obra }) => {
             />
             <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <Box sx={{ paddingLeft: 2 }}>
-                    <List>
+                    <List disablePadding>
                         {obra.projetos.map((projeto) => (
                             <NavMenuProjeto idobra={obra.id} projeto={projeto} />
                         ))}

@@ -15,7 +15,7 @@ const NavMenuProjeto = ({ idobra, projeto }) => {
             />
             <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <Box sx={{ paddingLeft: 2 }}>
-                    <List>
+                    <List disablePadding>
                         {projeto.plantas.map((planta) => (
                             <NavItem
                                 href={`/app/obra/${idobra}/projeto/${projeto.id}/planta/${planta.id}/detalhes`}
