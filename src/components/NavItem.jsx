@@ -21,41 +21,32 @@ const NavItem = ({
   }, location.pathname) : false;
 
   return (
-    <ListItem
-      disableGutters
+    <Button
+      component={RouterLink}
       sx={{
-        display: 'flex',
-        py: 0
+        color: 'text.secondary',
+        fontWeight: 'bold',
+        justifyContent: 'flex-start',
+        letterSpacing: 0,
+        textTransform: 'none',
+        width: '100%',
+        ...(active && {
+          color: 'primary.main'
+        }),
+        '& svg': {
+          mr: 1
+        }
       }}
-      {...rest}
+      to={href}
+      onClick={cb}
     >
-      <Button
-        component={RouterLink}
-        sx={{
-          color: 'text.secondary',
-          fontWeight: 'medium',
-          justifyContent: 'flex-start',
-          letterSpacing: 0,
-          textTransform: 'none',
-          width: '100%',
-          ...(active && {
-            color: 'primary.main'
-          }),
-          '& svg': {
-            mr: 1
-          }
-        }}
-        to={href}
-        onClick={cb}
-      >
-        {Icon && (
-          <Icon size="20" />
-        )}
-        <span>
-          {title}
-        </span>
-      </Button>
-    </ListItem>
+      {Icon && (
+        <Icon size="20" />
+      )}
+      <span>
+        {title}
+      </span>
+    </Button>
   );
 };
 

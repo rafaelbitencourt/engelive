@@ -1,50 +1,45 @@
-import { List } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import NavMenuObra from './NavMenuObra';
 import NavItem from '../NavItem';
-
-const obras = [{
-    id: 2,
-    descricao: "Casa Gege",
-    projetos: [{
-        id: 36,
-        descricao: "Arquitetônico",
-        plantas: [{
-            id: 37,
-            descricao: "Planta baixa"
-        }, {
-            id: 38,
-            descricao: "Planta de situação"
-        }]
-    }]
-}, {
-    id: 2,
-    descricao: "Casa Gege",
-    projetos: [{
-        id: 36,
-        descricao: "Arquitetônico",
-        plantas: [{
-            id: 37,
-            descricao: "Planta baixa"
-        }, {
-            id: 38,
-            descricao: "Planta de situação"
-        }]
-    }]
-}];
+import { getMenu } from '../../api/api.js';
+import { Sync } from '@material-ui/icons';
+import { Box, IconButton, Tooltip } from '@material-ui/core';
 
 const NavMenu = () => {
+    const [obras, setObras] = useState([]);
+
+    useEffect(() => {
+        atualizarMenu();
+    }, []);
+
+    const atualizarMenu = () => {
+        getMenu()
+            .then(data => {
+                setObras(data);
+            });
+    };
+
     return (
         <>
-            <NavItem
-                href={`/app/obras`}
-                key={'obras'}
-                title="Obras"
-            />
-            <List disablePadding>
-                {obras.map((obra) => (
-                    <NavMenuObra obra={obra} />
-                ))}
-            </List>
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'row'
+                }}
+            >
+                <NavItem
+                    href={`/app/obras`}
+                    title="Obras"
+                />
+                <Tooltip title="Atualizar">
+                    <IconButton variant="contained" color="primary" aria-label="Atualizar" onClick={atualizarMenu}>
+                        <Sync />
+                    </IconButton>
+                </Tooltip>
+            </Box>
+            {obras.map((obra) => (
+                <NavMenuObra key={`obra${obra.id}`} obra={obra} />
+            ))}
         </>
     );
 };

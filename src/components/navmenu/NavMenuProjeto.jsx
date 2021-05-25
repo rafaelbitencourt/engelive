@@ -9,21 +9,18 @@ const NavMenuProjeto = ({ idobra, projeto }) => {
         <>
             <NavItem
                 href={`/app/obra/${idobra}/projeto/${projeto.id}/plantas`}
-                key={projeto.id}
-                title={projeto.descricao}
+                title={projeto.tipos_projeto.nome}
                 cb={() => setIsOpen(!isOpen)}
             />
             <Collapse in={isOpen} timeout="auto" unmountOnExit>
                 <Box sx={{ paddingLeft: 2 }}>
-                    <List disablePadding>
-                        {projeto.plantas.map((planta) => (
-                            <NavItem
-                                href={`/app/obra/${idobra}/projeto/${projeto.id}/planta/${planta.id}/detalhes`}
-                                key={planta.id}
-                                title={planta.descricao}
-                            />
-                        ))}
-                    </List>
+                    {projeto.plantas.map((planta) => (
+                        <NavItem
+                            href={`/app/obra/${idobra}/projeto/${projeto.id}/planta/${planta.id}/detalhes`}
+                            key={`planta${planta.id}`}
+                            title={planta.descricao}
+                        />
+                    ))}
                 </Box>
             </Collapse>
         </>
