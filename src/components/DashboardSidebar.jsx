@@ -40,7 +40,7 @@ const items = [
     href: '/app/obra/2/projetos',
     icon: Description,
     title: 'Casa Gege'
-  },  
+  },
   // {
   //   href: '/app/dashboard',
   //   icon: BarChartIcon,
@@ -132,48 +132,27 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
         </Typography>
       </Box>
       <Divider />
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2, flexGrow: 1 }}>
         <NavMenu />
       </Box>
-      <Box sx={{ flexGrow: 1 }} />
-      <Box
-        sx={{
-          // backgroundColor: 'background.default',
-          m: 2,
-          p: 2
-        }}
-      >
-        <Typography
-          align="center"
-          gutterBottom
-          variant="h4"
+      <Hidden lgUp>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            p: 2
+          }}
         >
-          Need more?
-        </Typography>
-        <Typography
-          align="center"
-          variant="body2"
-        >
-          Upgrade to PRO version and access 20 more screens
-        </Typography>
-        <Hidden lgUp>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              pt: 2
-            }}
+          <Button
+            fullWidth
+            color="primary"
+            variant="contained"
+            onClick={logOut}
           >
-            <Button
-              color="primary"
-              variant="contained"
-              onClick={logOut}
-            >
-              SAIR
+            SAIR
           </Button>
-          </Box>
-        </Hidden>
-      </Box>
+        </Box>
+      </Hidden>
     </Box>
   );
 

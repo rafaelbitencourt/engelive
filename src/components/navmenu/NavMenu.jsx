@@ -20,7 +20,13 @@ const NavMenu = () => {
     };
 
     return (
-        <>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%'
+            }}
+        >
             <Box
                 sx={{
                     display: 'flex',
@@ -40,7 +46,12 @@ const NavMenu = () => {
             {obras.map((obra) => (
                 <NavMenuObra key={`obra${obra.id}`} obra={obra} />
             ))}
-        </>
+            <Box sx={{ flexGrow: 1 }} />
+            <NavItem
+                href={`/app/tiposprojetos`}
+                title="Tipos de projetos"
+            />
+        </Box>
     );
 };
 
