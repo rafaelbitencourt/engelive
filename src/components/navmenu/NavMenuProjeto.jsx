@@ -10,19 +10,26 @@ const NavMenuProjeto = ({ idobra, projeto }) => {
             <NavItem
                 href={`/app/obra/${idobra}/projeto/${projeto.id}/plantas`}
                 title={projeto.tipos_projeto.nome}
-                cb={() => setIsOpen(!isOpen)}
             />
-            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+            {(!!projeto.plantas.length &&
                 <Box sx={{ paddingLeft: 2 }}>
-                    {projeto.plantas.map((planta) => (
-                        <NavItem
-                            href={`/app/obra/${idobra}/projeto/${projeto.id}/planta/${planta.id}/detalhes`}
-                            key={`planta${planta.id}`}
-                            title={planta.descricao}
-                        />
-                    ))}
+                    <NavItem
+                        title="Plantas"
+                        cb={() => setIsOpen(!isOpen)}
+                    />
+                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                        <Box sx={{ paddingLeft: 2 }}>
+                            {projeto.plantas.map((planta) => (
+                                <NavItem
+                                    href={`/app/obra/${idobra}/projeto/${projeto.id}/planta/${planta.id}/detalhes`}
+                                    key={`planta${planta.id}`}
+                                    title={planta.descricao}
+                                />
+                            ))}
+                        </Box>
+                    </Collapse>
                 </Box>
-            </Collapse>
+            )}
         </>
     );
 };

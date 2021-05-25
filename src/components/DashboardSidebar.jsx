@@ -8,80 +8,9 @@ import {
   Divider,
   Drawer,
   Hidden,
-  List,
   Typography
 } from '@material-ui/core';
-// import {
-//   AlertCircle as AlertCircleIcon,
-//   BarChart as BarChartIcon,
-//   Lock as LockIcon,
-//   Settings as SettingsIcon,
-//   ShoppingBag as ShoppingBagIcon,
-//   User as UserIcon,
-//   UserPlus as UserPlusIcon,
-//   Users as UsersIcon
-// } from 'react-feather';
-import { Category, Description } from '@material-ui/icons';
-import NavItem from './NavItem';
 import NavMenu from './navmenu/NavMenu';
-
-const items = [
-  {
-    href: '/app/tiposprojetos',
-    icon: Category,
-    title: 'Tipos de projetos'
-  },
-  {
-    href: '/app/obras',
-    icon: Description,
-    title: 'Obras'
-  },
-  {
-    href: '/app/obra/2/projetos',
-    icon: Description,
-    title: 'Casa Gege'
-  },
-  // {
-  //   href: '/app/dashboard',
-  //   icon: BarChartIcon,
-  //   title: 'Dashboard'
-  // },
-  // {
-  //   href: '/app/customers',
-  //   icon: UsersIcon,
-  //   title: 'Customers'
-  // },
-  // {
-  //   href: '/app/products',
-  //   icon: ShoppingBagIcon,
-  //   title: 'Products'
-  // },
-  // {
-  //   href: '/app/account',
-  //   icon: UserIcon,
-  //   title: 'Account'
-  // },
-  // {
-  //   href: '/app/settings',
-  //   icon: SettingsIcon,
-  //   title: 'Settings'
-  // },
-  // {
-  //   href: '/login',
-  //   icon: LockIcon,
-  //   title: 'Login'
-  // },
-  // {
-  //   href: '/register',
-  //   icon: UserPlusIcon,
-  //   title: 'Register'
-  // },
-  // {
-  //   href: '/404',
-  //   icon: AlertCircleIcon,
-  //   title: 'Error'
-  // }
-];
 
 const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
   const location = useLocation();
@@ -163,7 +92,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
           anchor="left"
           onClose={onMobileClose}
           open={openMobile}
-          variant="temporary"
+          variant="persistent"
           PaperProps={{
             sx: {
               width: 256

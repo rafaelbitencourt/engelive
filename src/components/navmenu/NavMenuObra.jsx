@@ -11,15 +11,22 @@ const NavMenuObra = ({ obra }) => {
             <NavItem
                 href={`/app/obra/${obra.id}/projetos`}
                 title={obra.nome}
-                cb={() => setIsOpen(!isOpen)}
             />
-            <Collapse in={isOpen} timeout="auto" unmountOnExit>
+            {(!!obra.projetos.length &&
                 <Box sx={{ paddingLeft: 2 }}>
-                    {obra.projetos.map((projeto) => (
-                        <NavMenuProjeto key={`projeto${projeto.id}`} idobra={obra.id} projeto={projeto} />
-                    ))}
+                    <NavItem
+                        title="Projetos"
+                        cb={() => setIsOpen(!isOpen)}
+                    />
+                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                        <Box sx={{ paddingLeft: 2 }}>
+                            {obra.projetos.map((projeto) => (
+                                <NavMenuProjeto key={`projeto${projeto.id}`} idobra={obra.id} projeto={projeto} />
+                            ))}
+                        </Box>
+                    </Collapse>
                 </Box>
-            </Collapse>
+            )}
         </>
     );
 };
