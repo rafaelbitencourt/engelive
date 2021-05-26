@@ -37,7 +37,7 @@ const NavItem = ({
           mr: 1
         }
       }}
-      to={href || location.pathname}
+      to={href}
       onClick={cb}
     >
       {Icon && (
