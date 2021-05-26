@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
     Box,
     Collapse,
-    Tooltip,
     IconButton
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
@@ -15,11 +14,9 @@ const NavMenuObra = ({ obra }) => {
     return (
         <>
             <Box display="flex" flexDirection="row">
-                <Tooltip title="Atualizar">
-                    <IconButton variant="contained" color="primary" aria-label="Atualizar" onClick={() => setIsOpen(!isOpen)}>
-                        {isOpen ? <ExpandLess /> : <ExpandMore />}
-                    </IconButton>
-                </Tooltip>
+                <IconButton variant="contained" color="primary" aria-label="Atualizar" onClick={() => setIsOpen(!isOpen)}>
+                    {isOpen ? <ExpandLess /> : <ExpandMore />}
+                </IconButton>
                 <NavItem
                     href={`/app/obra/${obra.id}/projetos`}
                     title={obra.nome}
