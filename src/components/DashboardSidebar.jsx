@@ -8,8 +8,10 @@ import {
   Divider,
   Drawer,
   Hidden,
-  Typography
+  Typography,
+  IconButton
 } from '@material-ui/core';
+import { ChevronLeft } from '@material-ui/icons';
 import NavMenu from './navmenu/NavMenu';
 
 const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
@@ -29,6 +31,22 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
         height: '100%'
       }}
     >
+      <Hidden lgUp>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            p: 1,
+            height: 64
+          }}
+        >
+          <Box sx={{ flexGrow: 1 }}/>
+          <IconButton onClick={onMobileClose}>
+            <ChevronLeft />
+          </IconButton>
+        </Box>
+        <Divider />
+      </Hidden>
       <Box
         sx={{
           alignItems: 'center',
