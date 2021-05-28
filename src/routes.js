@@ -1,7 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from './components/DashboardLayout';
 import MainLayout from './components/MainLayout';
-import Obras from './pages/Obras';
+import Obras from './pages/Obras2';
 import Obra from './pages/Obra';
 import Projetos from './pages/Projetos';
 import Projeto from './pages/Projeto';
