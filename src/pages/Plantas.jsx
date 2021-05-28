@@ -22,11 +22,11 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
-    Backspace,
+    // Backspace,
     AddCircle
 } from '@material-ui/icons';
 
-export default () => {
+const Plantas = () => {
     const [plantas, setPlantas] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -119,3 +119,5 @@ export default () => {
         </div>
     );
 }
+
+export default Plantas;

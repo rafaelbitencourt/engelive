@@ -13,7 +13,7 @@ const NavMenuProjeto = ({ idobra, projeto }) => {
     return (
         <>
             <Box display="flex" flexDirection="row">
-                <IconButton variant="contained" color="primary" aria-label="Atualizar" onClick={() => setIsOpen(!isOpen)}>
+                <IconButton variant="contained" color="primary" aria-label="collapse" onClick={() => setIsOpen(!isOpen)}>
                     {isOpen ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
                 <NavItem

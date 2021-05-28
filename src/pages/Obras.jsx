@@ -24,7 +24,7 @@ import {
     AddCircle
 } from '@material-ui/icons';
 
-export default () => {
+const Obras = () => {
     const [obras, setObras] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
@@ -110,3 +110,5 @@ export default () => {
         </div>
     );
 }
+
+export default Obras;

@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Projeto = () => {
     const [sucessOpen, setSucessOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
@@ -173,3 +173,5 @@ export default () => {
 
     );
 }
+
+export default Projeto;

@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Detalhe = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
@@ -202,3 +202,5 @@ export default () => {
 
     );
 }
+
+export default Detalhe;

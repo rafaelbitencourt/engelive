@@ -10,6 +10,7 @@ const NavMenu = () => {
 
     useEffect(() => {
         atualizarMenu();
+        return () => setObras([]);
     }, []);
 
     const atualizarMenu = () => {

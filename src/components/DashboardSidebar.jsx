@@ -19,9 +19,9 @@ const DashboardSidebar = ({ onMobileClose, openMobile, logOut, user }) => {
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
-      onMobileClose();
+      onMobileClose(); 
     }
-  }, [location.pathname]);
+  }, [location.pathname, openMobile, onMobileClose]);
 
   const content = (
     <Box

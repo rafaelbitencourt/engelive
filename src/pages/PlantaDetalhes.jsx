@@ -73,7 +73,7 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
     };
 };
 
-export default () => {
+const PlantaDetalhes = () => {
     // let history = useHistory();
     const { idprojeto, idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
@@ -453,3 +453,5 @@ export default () => {
         </div>
     );
 }
+
+export default PlantaDetalhes;

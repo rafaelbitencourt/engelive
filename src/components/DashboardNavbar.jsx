@@ -7,7 +7,8 @@ import {
   Box,
   Hidden,
   IconButton,
-  Toolbar
+  Toolbar,
+  Tooltip
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
@@ -16,7 +17,7 @@ import Logo from './Logo';
 
 const DashboardNavbar = ({ onMobileNavOpen, logOut, ...rest }) => {
   const [notifications] = useState([]);
-  
+
   return (
     <AppBar
       elevation={0}
@@ -37,9 +38,11 @@ const DashboardNavbar = ({ onMobileNavOpen, logOut, ...rest }) => {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit" onClick={logOut}>
-            <InputIcon />
-          </IconButton>
+          <Tooltip title="Sair">
+            <IconButton color="inherit" onClick={logOut}>
+              <InputIcon />
+            </IconButton>
+          </Tooltip>
         </Hidden>
         <Hidden lgUp>
           <IconButton

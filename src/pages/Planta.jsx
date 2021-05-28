@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Planta = () => {
     const [sucessOpen, setSucessOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
@@ -208,3 +208,5 @@ export default () => {
 
     );
 }
+
+export default Planta;

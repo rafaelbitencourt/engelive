@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
-import { useNavigate, useParams } from 'react-router-dom';
+import { /*useNavigate,*/ useParams } from 'react-router-dom';
 import { listProjetosPorObra, deleteProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
@@ -23,18 +23,18 @@ import {
     Delete as DeleteIcon,
     Edit as EditIcon,
     ViewList,
-    Backspace,
+    // Backspace,
     AddCircle
 } from '@material-ui/icons';
 
-export default () => {
+const Projetos = () => {
     const [projetos, setProjetos] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
 
     const { idobra } = useParams();
-    let navigate = useNavigate();
+    // let navigate = useNavigate();
 
     const atualizarLista = useCallback(() => {
         listProjetosPorObra(idobra)
@@ -123,3 +123,5 @@ export default () => {
         </div>
     );
 }
+
+export default Projetos;

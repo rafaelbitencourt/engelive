@@ -8,8 +8,7 @@ import {
     CssBaseline,
     Paper,
     Typography,
-    Grid,
-    Hidden
+    Grid
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { SuccessDialog, ErrorDialog } from '../components/Dialog';
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Obra = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
@@ -178,3 +177,5 @@ export default () => {
 
     );
 }
+
+export default Obra;
