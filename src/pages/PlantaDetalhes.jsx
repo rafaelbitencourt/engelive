@@ -14,7 +14,8 @@ import {
     TextField,
     Box,
     Grid,
-    Container
+    Container,
+    Hidden
 } from '@material-ui/core';
 import Image from 'material-ui-image';
 import Lightbox from "react-image-lightbox";
@@ -319,6 +320,12 @@ const PlantaDetalhes = () => {
         }
     }, [windowWidth, windowHeight]);
 
+    const lightboxCustom = (modalStyle) => <Lightbox
+        mainSrc={imagemDetalhe}
+        onCloseRequest={() => setCadastroOpen(false)}
+        reactModalStyle={modalStyle}
+    />
+
     return (
         <Box height="100%" display="flex" flexDirection="column">
             <Box display="flex" padding="2px">
@@ -416,10 +423,24 @@ const PlantaDetalhes = () => {
                 onConfirm={() => saindo ? voltar(true) : visualizar(true)}
             />
             {cadastroOpen && !editando &&
-                <Lightbox
-                    mainSrc={imagemDetalhe}
-                    onCloseRequest={() => setCadastroOpen(false)}
-                />
+                <>
+                    <Hidden lgUp>
+                        {lightboxCustom({
+                            content: {
+                                marginTop: 64
+                            }
+                        })}
+                    </Hidden>
+                    <Hidden lgDown>
+                        {lightboxCustom({
+                            content: {
+                                marginTop: 64,
+                                marginLeft: 128,
+                                paddingLeft: 128
+                            }
+                        })}
+                    </Hidden>
+                </>
             }
             <Dialog
                 fullWidth
