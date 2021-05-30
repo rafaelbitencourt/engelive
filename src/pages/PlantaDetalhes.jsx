@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useReducer } from 'react';
+import React, { useRef, useLayoutEffect, useEffect, useState, useCallback, useReducer } from 'react';
 import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
@@ -13,7 +13,8 @@ import {
     DialogTitle,
     TextField,
     Box,
-    Grid
+    Grid,
+    Container
 } from '@material-ui/core';
 import Image from 'material-ui-image';
 import Lightbox from "react-image-lightbox";
@@ -57,12 +58,12 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
     var scale = interacao.scale;
     if (ajustar) {
         const scaleWidth = windowWidth / imagemSize.width;
-        const scaleHeight = (windowHeight - 110) / imagemSize.height;
+        const scaleHeight = windowHeight / imagemSize.height;
         scale = Math.min(scaleWidth, scaleHeight, maxScale);
         scale = Math.max(scale, minScale);
     }
     const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
-    const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
+    const translationY = (windowHeight - (imagemSize.height * scale)) / 2;
 
     return {
         scale: scale,
@@ -77,6 +78,8 @@ const PlantaDetalhes = () => {
     // let history = useHistory();
     const { idprojeto, idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
+    const targetRef = useRef();
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [sucessOpen, setSucessOpen] = useState(false);
@@ -93,9 +96,11 @@ const PlantaDetalhes = () => {
             case 'maisZoom':
                 return zoom(true, state, imagemSize);
             case 'centralizar':
-                return centralizar(false, state, imagemSize, windowWidth, windowHeight);
+                // return centralizar(false, state, imagemSize, windowWidth, windowHeight);
+                return centralizar(false, state, imagemSize, dimensions.width, dimensions.height);
             case 'ajustar':
-                return centralizar(true, state, imagemSize, windowWidth, windowHeight);
+                // return centralizar(true, state, imagemSize, windowWidth, windowHeight);
+                return centralizar(true, state, imagemSize, dimensions.width, dimensions.height);
             default:
                 return dados;
         }
@@ -129,7 +134,7 @@ const PlantaDetalhes = () => {
     }, [idplanta]);
 
     const handleClickImagem = (evt) => {
-        if(!editando) return;
+        if (!editando) return;
 
         setPlantaDetalhe({
             idplanta: idplanta,
@@ -211,7 +216,7 @@ const PlantaDetalhes = () => {
     }
 
     const voltar = (sairSemSalvar) => {
-        if(sairSemSalvar || !alteracoesPendentes) {
+        if (sairSemSalvar || !alteracoesPendentes) {
             // history.goBack()
         } else {
             setSaindo(true);
@@ -220,7 +225,7 @@ const PlantaDetalhes = () => {
     }
 
     const visualizar = (sairSemSalvar) => {
-        if(sairSemSalvar || !alteracoesPendentes) {
+        if (sairSemSalvar || !alteracoesPendentes) {
             carregarPlantaDetalhes();
             setEditando(false);
             setAlteracoesPendentes(false);
@@ -299,16 +304,25 @@ const PlantaDetalhes = () => {
                 .then(
                     (data) => {
                         if (data.imagem)
-                            setImagemDetalhe("data:image/jpeg;base64,"+Buffer.from(data.imagem, 'binary').toString('base64'));
+                            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(data.imagem, 'binary').toString('base64'));
                     },
                     (error) => {
-                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');                        
+                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');
                     }
                 );
     }, [detalhe, setImagemDetalhe]);
 
+    useEffect(() => {
+        if (targetRef.current) {
+            setDimensions({
+                width: targetRef.current.offsetWidth,
+                height: targetRef.current.offsetHeight
+            });
+        }
+    }, [windowWidth, windowHeight]);
+
     return (
-        <div>
+        <Box height="100%" display="flex" flexDirection="column">
             <Box display="flex" padding="2px">
                 <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => voltar(false)}>
@@ -316,7 +330,7 @@ const PlantaDetalhes = () => {
                     </IconButton>
                 </Tooltip>
                 <Box flexGrow={1} display="flex" justifyContent="center">
-                    { editando ? (
+                    {editando ? (
                         <Tooltip title="Modo visualização">
                             <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
                                 <Visibility />
@@ -328,7 +342,7 @@ const PlantaDetalhes = () => {
                                 <Edit />
                             </IconButton>
                         </Tooltip>
-                    )}                    
+                    )}
                     <Tooltip title="Centralizar">
                         <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
                             <FilterCenterFocus />
@@ -358,32 +372,39 @@ const PlantaDetalhes = () => {
                     </span>
                 </Tooltip>
             </Box>
-            <MapInteraction
-                value={interacao}
-                onChange={(value) => setInteracao(value)}
-                minScale={minScale}
-                maxScale={maxScale}
+            <Container
+                ref={targetRef}
+                disableGutters={true}
+                maxWidth={false}
+                style={{ flex: 1, overflow: 'auto' }}
             >
-                {
-                    ({ translation, scale }) => {
-                        return <div style={{ height: windowHeight - 110, width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
-                            <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
-                                <ImageMapper
-                                    src={`data:image/jpeg;base64,${imagem}`}
-                                    map={map}
-                                    onLoad={load}
-                                    onClick={area => clicked(area)}
-                                    onMouseEnter={area => enterArea(area)}
-                                    onMouseLeave={area => leaveArea(area)}
-                                    onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
-                                    onImageClick={evt => handleClickImagem(evt)}
-                                    onImageMouseMove={evt => moveOnImage(evt)}
-                                />
+                <MapInteraction
+                    value={interacao}
+                    onChange={(value) => setInteracao(value)}
+                    minScale={minScale}
+                    maxScale={maxScale}
+                >
+                    {
+                        ({ translation, scale }) => {
+                            return <div style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
+                                <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
+                                    <ImageMapper
+                                        src={`data:image/jpeg;base64,${imagem}`}
+                                        map={map}
+                                        onLoad={load}
+                                        onClick={area => clicked(area)}
+                                        onMouseEnter={area => enterArea(area)}
+                                        onMouseLeave={area => leaveArea(area)}
+                                        onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
+                                        onImageClick={evt => handleClickImagem(evt)}
+                                        onImageMouseMove={evt => moveOnImage(evt)}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        }
                     }
-                }
-            </MapInteraction>
+                </MapInteraction>
+            </Container>
             <SuccessDialog
                 mensagem="Detalhes da planta salvos com sucesso."
                 open={sucessOpen}
@@ -432,8 +453,8 @@ const PlantaDetalhes = () => {
                         />
                         <Grid item xs={12}>
                             <Image
-                                aspectRatio={(16/9)}
-                                src={imagemDetalhe || "/logo.png"} 
+                                aspectRatio={(16 / 9)}
+                                src={imagemDetalhe || "/logo.png"}
                             />
                         </Grid>
                     </DialogContent>
@@ -450,7 +471,7 @@ const PlantaDetalhes = () => {
                     </DialogActions>
                 </form>
             </Dialog>
-        </div>
+        </Box>
     );
 }
 
