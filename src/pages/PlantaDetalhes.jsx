@@ -457,13 +457,13 @@ const PlantaDetalhes = () => {
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="contained" color="default">
+                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="outlined">
                             Remover
                         </Button>
-                        <Button onClick={() => setCadastroOpen(false)} color="default">
+                        <Button onClick={() => setCadastroOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button disabled={!editando} type="submit" variant="contained" color="primary">
+                        <Button disabled={!editando} type="submit" variant="contained">
                             {(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar" : "Inserir"}
                         </Button>
                     </DialogActions>
