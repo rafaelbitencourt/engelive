@@ -96,10 +96,8 @@ const PlantaDetalhes = () => {
             case 'maisZoom':
                 return zoom(true, state, imagemSize);
             case 'centralizar':
-                // return centralizar(false, state, imagemSize, windowWidth, windowHeight);
                 return centralizar(false, state, imagemSize, dimensions.width, dimensions.height);
             case 'ajustar':
-                // return centralizar(true, state, imagemSize, windowWidth, windowHeight);
                 return centralizar(true, state, imagemSize, dimensions.width, dimensions.height);
             default:
                 return dados;
@@ -386,7 +384,7 @@ const PlantaDetalhes = () => {
                 >
                     {
                         ({ translation, scale }) => {
-                            return <div style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
+                            return <div style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden" }}>
                                 <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
                                     <ImageMapper
                                         src={`data:image/jpeg;base64,${imagem}`}
