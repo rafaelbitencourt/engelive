@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useCallback, useReducer } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useRef, useLayoutEffect, useEffect, useState, useCallback, useReducer } from 'react';
+import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from '../api/api.js';
 import ImageMapper from '../components/ImageMapper';
 import { MapInteraction } from 'react-map-interaction';
@@ -13,7 +13,9 @@ import {
     DialogTitle,
     TextField,
     Box,
-    Grid
+    Grid,
+    Container,
+    Hidden
 } from '@material-ui/core';
 import Image from 'material-ui-image';
 import Lightbox from "react-image-lightbox";
@@ -57,12 +59,12 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
     var scale = interacao.scale;
     if (ajustar) {
         const scaleWidth = windowWidth / imagemSize.width;
-        const scaleHeight = (windowHeight - 110) / imagemSize.height;
+        const scaleHeight = windowHeight / imagemSize.height;
         scale = Math.min(scaleWidth, scaleHeight, maxScale);
         scale = Math.max(scale, minScale);
     }
     const translationX = (windowWidth - (imagemSize.width * scale)) / 2;
-    const translationY = (windowHeight - 110 - (imagemSize.height * scale)) / 2;
+    const translationY = (windowHeight - (imagemSize.height * scale)) / 2;
 
     return {
         scale: scale,
@@ -73,10 +75,12 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
     };
 };
 
-export default () => {
-    let history = useHistory();
+const PlantaDetalhes = () => {
+    // let history = useHistory();
     const { idprojeto, idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
+    const targetRef = useRef();
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [sucessOpen, setSucessOpen] = useState(false);
@@ -93,9 +97,9 @@ export default () => {
             case 'maisZoom':
                 return zoom(true, state, imagemSize);
             case 'centralizar':
-                return centralizar(false, state, imagemSize, windowWidth, windowHeight);
+                return centralizar(false, state, imagemSize, dimensions.width, dimensions.height);
             case 'ajustar':
-                return centralizar(true, state, imagemSize, windowWidth, windowHeight);
+                return centralizar(true, state, imagemSize, dimensions.width, dimensions.height);
             default:
                 return dados;
         }
@@ -129,7 +133,7 @@ export default () => {
     }, [idplanta]);
 
     const handleClickImagem = (evt) => {
-        if(!editando) return;
+        if (!editando) return;
 
         setPlantaDetalhe({
             idplanta: idplanta,
@@ -211,8 +215,8 @@ export default () => {
     }
 
     const voltar = (sairSemSalvar) => {
-        if(sairSemSalvar || !alteracoesPendentes) {
-            history.goBack()
+        if (sairSemSalvar || !alteracoesPendentes) {
+            // history.goBack()
         } else {
             setSaindo(true);
             setConfirmOpen(true);
@@ -220,7 +224,7 @@ export default () => {
     }
 
     const visualizar = (sairSemSalvar) => {
-        if(sairSemSalvar || !alteracoesPendentes) {
+        if (sairSemSalvar || !alteracoesPendentes) {
             carregarPlantaDetalhes();
             setEditando(false);
             setAlteracoesPendentes(false);
@@ -299,16 +303,31 @@ export default () => {
                 .then(
                     (data) => {
                         if (data.imagem)
-                            setImagemDetalhe("data:image/jpeg;base64,"+Buffer.from(data.imagem, 'binary').toString('base64'));
+                            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(data.imagem, 'binary').toString('base64'));
                     },
                     (error) => {
-                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');                        
+                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');
                     }
                 );
     }, [detalhe, setImagemDetalhe]);
 
+    useEffect(() => {
+        if (targetRef.current) {
+            setDimensions({
+                width: targetRef.current.offsetWidth,
+                height: targetRef.current.offsetHeight
+            });
+        }
+    }, [windowWidth, windowHeight]);
+
+    const lightboxCustom = (modalStyle) => <Lightbox
+        mainSrc={imagemDetalhe}
+        onCloseRequest={() => setCadastroOpen(false)}
+        reactModalStyle={modalStyle}
+    />
+
     return (
-        <div>
+        <Box height="100%" display="flex" flexDirection="column">
             <Box display="flex" padding="2px">
                 <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => voltar(false)}>
@@ -316,7 +335,7 @@ export default () => {
                     </IconButton>
                 </Tooltip>
                 <Box flexGrow={1} display="flex" justifyContent="center">
-                    { editando ? (
+                    {editando ? (
                         <Tooltip title="Modo visualização">
                             <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
                                 <Visibility />
@@ -328,7 +347,7 @@ export default () => {
                                 <Edit />
                             </IconButton>
                         </Tooltip>
-                    )}                    
+                    )}
                     <Tooltip title="Centralizar">
                         <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
                             <FilterCenterFocus />
@@ -358,32 +377,39 @@ export default () => {
                     </span>
                 </Tooltip>
             </Box>
-            <MapInteraction
-                value={interacao}
-                onChange={(value) => setInteracao(value)}
-                minScale={minScale}
-                maxScale={maxScale}
+            <Container
+                ref={targetRef}
+                disableGutters={true}
+                maxWidth={false}
+                style={{ flex: 1, overflow: 'auto' }}
             >
-                {
-                    ({ translation, scale }) => {
-                        return <div style={{ height: windowHeight - 110, width: "100%", position: "relative", overflow: "hidden", touchAction: "none", userSelect: "none" }}>
-                            <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
-                                <ImageMapper
-                                    src={`data:image/jpeg;base64,${imagem}`}
-                                    map={map}
-                                    onLoad={load}
-                                    onClick={area => clicked(area)}
-                                    onMouseEnter={area => enterArea(area)}
-                                    onMouseLeave={area => leaveArea(area)}
-                                    onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
-                                    onImageClick={evt => handleClickImagem(evt)}
-                                    onImageMouseMove={evt => moveOnImage(evt)}
-                                />
+                <MapInteraction
+                    value={interacao}
+                    onChange={(value) => setInteracao(value)}
+                    minScale={minScale}
+                    maxScale={maxScale}
+                >
+                    {
+                        ({ translation, scale }) => {
+                            return <div style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden" }}>
+                                <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
+                                    <ImageMapper
+                                        src={`data:image/jpeg;base64,${imagem}`}
+                                        map={map}
+                                        onLoad={load}
+                                        onClick={area => clicked(area)}
+                                        onMouseEnter={area => enterArea(area)}
+                                        onMouseLeave={area => leaveArea(area)}
+                                        onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
+                                        onImageClick={evt => handleClickImagem(evt)}
+                                        onImageMouseMove={evt => moveOnImage(evt)}
+                                    />
+                                </div>
                             </div>
-                        </div>
+                        }
                     }
-                }
-            </MapInteraction>
+                </MapInteraction>
+            </Container>
             <SuccessDialog
                 mensagem="Detalhes da planta salvos com sucesso."
                 open={sucessOpen}
@@ -397,10 +423,24 @@ export default () => {
                 onConfirm={() => saindo ? voltar(true) : visualizar(true)}
             />
             {cadastroOpen && !editando &&
-                <Lightbox
-                    mainSrc={imagemDetalhe}
-                    onCloseRequest={() => setCadastroOpen(false)}
-                />
+                <>
+                    <Hidden lgUp>
+                        {lightboxCustom({
+                            content: {
+                                marginTop: 64
+                            }
+                        })}
+                    </Hidden>
+                    <Hidden lgDown>
+                        {lightboxCustom({
+                            content: {
+                                marginTop: 64,
+                                marginLeft: 128,
+                                paddingLeft: 128
+                            }
+                        })}
+                    </Hidden>
+                </>
             }
             <Dialog
                 fullWidth
@@ -432,24 +472,26 @@ export default () => {
                         />
                         <Grid item xs={12}>
                             <Image
-                                aspectRatio={(16/9)}
-                                src={imagemDetalhe || "/logo.png"} 
+                                aspectRatio={(16 / 9)}
+                                src={imagemDetalhe || "/logo.png"}
                             />
                         </Grid>
                     </DialogContent>
                     <DialogActions>
-                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="contained" color="default">
+                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="outlined">
                             Remover
                         </Button>
-                        <Button onClick={() => setCadastroOpen(false)} color="default">
+                        <Button onClick={() => setCadastroOpen(false)}>
                             Cancelar
                         </Button>
-                        <Button disabled={!editando} type="submit" variant="contained" color="primary">
+                        <Button disabled={!editando} type="submit" variant="contained">
                             {(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar" : "Inserir"}
                         </Button>
                     </DialogActions>
                 </form>
             </Dialog>
-        </div>
+        </Box>
     );
 }
+
+export default PlantaDetalhes;

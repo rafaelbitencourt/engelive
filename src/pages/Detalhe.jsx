@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getDetalhe, saveDetalhe } from '../api/api.js';
 import {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Detalhe = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
@@ -56,7 +56,7 @@ export default () => {
     const classes = useStyles();
 
     const { idobra, idprojeto, iddetalhe } = useParams();
-    let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         if (!inputs.detalhe.id && !inputs.detalhe.imagem) {
@@ -66,7 +66,7 @@ export default () => {
                 .then(
                     (data) => {
                         if (!iddetalhe)
-                            history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/detalhe/' + data.id);
+                            navigate(`/app/obra/${idobra}/projeto/${data.idprojeto}/detalhe/${data.id}`);
                         setSucessOpen(true);
                     },
                     (error) => {
@@ -172,7 +172,7 @@ export default () => {
                             )}
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"
@@ -202,3 +202,5 @@ export default () => {
 
     );
 }
+
+export default Detalhe;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getPlanta, savePlanta } from '../api/api.js';
 import {
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Planta = () => {
     const [sucessOpen, setSucessOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
@@ -56,7 +56,7 @@ export default () => {
     const classes = useStyles();
 
     const { idobra, idprojeto, idplanta } = useParams();
-    let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         if (!inputs.planta.id && !inputs.planta.imagem) {
@@ -66,8 +66,9 @@ export default () => {
                 .then(
                     (data) => {
                         if (!idplanta)
-                        history.replace('/obra/' + idobra + '/projeto/' + data.idprojeto + '/planta/' + data.id);
-                    setSucessOpen(true);
+                            navigate(`/app/obra/${idobra}/projeto/${data.idprojeto}/planta/${data.id}`);
+
+                        setSucessOpen(true);
                     },
                     (error) => {
                         const resMessage =
@@ -173,13 +174,11 @@ export default () => {
 
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button
-                            className={classes.button}
-                            color="default"
-                            component={Link}
-                            disabled={!idplanta}
-                            to={`/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>Detalhes da planta</Button>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                        {idplanta &&
+                            <Link to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>
+                                <Button className={classes.button}>Detalhes da planta</Button>
+                            </Link>}
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"
@@ -209,3 +208,5 @@ export default () => {
 
     );
 }
+
+export default Planta;

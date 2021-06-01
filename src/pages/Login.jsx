@@ -1,140 +1,157 @@
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { useForm } from "react-hook-form";
-import AuthService from '../services/auth.service';
-import Header from '../components/Header.jsx';
+import { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 import {
-    TextField,
-    Button,
-    Paper,
-    Typography,
-    Grid
+  Box,
+  Button,
+  Container,
+  Link,
+  TextField,
+  Typography,
+  FormHelperText
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { ErrorDialog } from '../components/Dialog';
+import AuthService from '../services/auth.service';
 
-const useStyles = makeStyles((theme) => ({
-    layout: {
-        width: 'auto',
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2),
-        [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-            width: 600,
-            marginLeft: 'auto',
-            marginRight: 'auto',
+const Login = () => {
+  const navigate = useNavigate();
+  const [msgErro, setMsgErro] = useState(null);
+
+  const cbSubmit = (values, { setSubmitting }) => {
+    setMsgErro(null);
+    AuthService.login(values.user, values.password)
+      .then(
+        () => {
+          navigate('/app/obras');
         },
-    },
-    paper: {
-        marginTop: theme.spacing(3),
-        marginBottom: theme.spacing(3),
-        padding: theme.spacing(2),
-        [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-            marginTop: theme.spacing(6),
-            marginBottom: theme.spacing(6),
-            padding: theme.spacing(3),
-        },
-    },
-    buttons: {
-        display: 'flex',
-        justifyContent: 'flex-end',
-    },
-    button: {
-        marginTop: theme.spacing(3),
-        marginLeft: theme.spacing(1),
-    },
-}));
+        (error) => {
+          setSubmitting(false);
+          const resMessage =
+            (error.response &&
+              error.response.data &&
+              error.response.data.message) ||
+            error.message ||
+            error.toString();
 
-export default () => {
-    const classes = useStyles();
+          setMsgErro(resMessage);
+        }
+      );
+  };
 
-    const [errorOpen, setErrorOpen] = useState(false);
-    const [mensagemErro, setMensagemErro] = useState("");
+  return (
+    <>
+      <Helmet>
+        <title>Entrar | Engelive</title>
+      </Helmet>
+      <Box
+        sx={{
+          backgroundColor: 'background.default',
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          justifyContent: 'center'
+        }}
+      >
+        <Container maxWidth="sm">
+          <Formik
+            initialValues={{
+              user: '',
+              password: ''
+            }}
+            validationSchema={Yup.object().shape({
+              user: Yup.string().max(255).required('Usuário é obrigatório'),
+              password: Yup.string().max(255).required('Senha é obrigatória')
+            })}
+            onSubmit={cbSubmit}
+          >
+            {({
+              errors,
+              handleBlur,
+              handleChange,
+              handleSubmit,
+              isSubmitting,
+              touched,
+              values
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <Box sx={{ mb: 3 }}>
+                  <Typography
+                    color="textPrimary"
+                    variant="h2"
+                  >
+                    Entrar
+                  </Typography>
+                  <Typography
+                    color="textSecondary"
+                    variant="body2"
+                  >
+                    Entrar com usuário e senha
+                  </Typography>
+                </Box>
+                <TextField
+                  error={Boolean(touched.user && errors.user)}
+                  fullWidth
+                  helperText={touched.user && errors.user}
+                  label="Usuário"
+                  margin="normal"
+                  name="user"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="text"
+                  value={values.user}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.password && errors.password)}
+                  fullWidth
+                  helperText={touched.password && errors.password}
+                  label="Senha"
+                  margin="normal"
+                  name="password"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.password}
+                  variant="outlined"
+                />
+                {msgErro &&
+                  <FormHelperText error>
+                    {msgErro}
+                  </FormHelperText>}
+                <Box sx={{ py: 2 }}>
+                  <Button
+                    color="primary"
+                    disabled={isSubmitting}
+                    fullWidth
+                    size="large"
+                    type="submit"
+                    variant="contained"
+                  >
+                    Entrar
+                  </Button>
+                </Box>
+                <Typography
+                  color="textSecondary"
+                  variant="body1"
+                >
+                  Não tem uma conta?
+                  {' '}
+                  <Link
+                    component={RouterLink}
+                    to="/register"
+                    variant="h6"
+                  >
+                    Criar conta
+                  </Link>
+                </Typography>
+              </form>
+            )}
+          </Formik>
+        </Container>
+      </Box>
+    </>
+  );
+};
 
-    const { register, errors, handleSubmit } = useForm({});
-
-    let history = useHistory();
-
-    const cbSubmit = (inputs) => {
-        AuthService.login(inputs.usuario, inputs.senha)
-            .then(
-                () => {
-                    history.replace('/obras');
-                },
-                (error) => {
-                    const resMessage =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-
-                    setMensagemErro(resMessage);
-                    setErrorOpen(true);
-                }
-            );
-    };
-
-    return (
-        <React.Fragment>
-            <Header/>
-            <form
-                className={classes.layout}
-                onSubmit={handleSubmit(cbSubmit)}
-                autoComplete="off">
-
-                <Paper className={classes.paper}>
-                    <Typography component="h1" variant="h4" align="center">
-                        Login
-                    </Typography>
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Usuário"
-                                name="usuario"
-                                fullWidth
-                                error={errors.usuario ? true : false}
-                                helperText={errors.usuario ? errors.usuario.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório"
-                                })}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                label="Senha"
-                                name="senha"
-                                type="password"
-                                fullWidth
-                                error={errors.senha ? true : false}
-                                helperText={errors.senha ? errors.senha.message : null}
-                                inputRef={register({
-                                    required: "Campo obrigatório"
-                                })}
-                            />
-                        </Grid>
-                    </Grid>
-                    <div className={classes.buttons}>
-                        <Button
-                            className={classes.button}
-                            color="default"
-                            component={Link}
-                            to={`/register`}>Cadastre-se</Button>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                        >Login</Button>
-                    </div>
-                </Paper>
-            </form>
-            <ErrorDialog
-                mensagem={mensagemErro}
-                open={errorOpen}
-                setOpen={setErrorOpen}
-            />
-        </React.Fragment>
-
-    );
-}
+export default Login;

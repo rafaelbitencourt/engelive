@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default (alteracoesPendentes) => {
+const usePreventWindowUnload = (alteracoesPendentes) => {
     useEffect(() => {
         if (alteracoesPendentes) {
             window.onbeforeunload = () => true
@@ -9,3 +9,5 @@ export default (alteracoesPendentes) => {
         }
     }, [alteracoesPendentes]);
 }
+
+export default usePreventWindowUnload;

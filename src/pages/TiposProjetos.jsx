@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+// import { useHistory } from 'react-router-dom';
 import { listTiposProjetos, deleteTipoProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
@@ -21,17 +22,17 @@ import {
     Folder as FolderIcon,
     Delete as DeleteIcon,
     Edit as EditIcon,
-    Backspace,
+    // Backspace,
     AddCircle
 } from '@material-ui/icons';
 
-export default () => {
+const TiposProjetos = () => {
     const [tiposProjetos, setTiposProjetos] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idTipoProjetoExclusao, setIdTipoProjetoExclusao] = useState(null);
 
-    let history = useHistory();
+    // let history = useHistory();
 
     useEffect(() => {
         atualizarLista();
@@ -57,26 +58,29 @@ export default () => {
 
     return (
         <div>
+            <Helmet>
+                <title>Tipos de projetos | Engelive</title>
+            </Helmet>
             <Box display="flex" padding="2px">
-                <Tooltip title="Voltar">
+                {/* <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
                         <Backspace />
                     </IconButton>
-                </Tooltip>
+                </Tooltip> */}
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
                         Tipos de projetos
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/tipo_projeto">
+                    <IconButton variant="contained" color="primary" component={Link} to="/app/tipoprojeto">
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
                 {tiposProjetos.map(tipoProjeto => (
-                    <ListItem button key={tipoProjeto.id} component={Link} to={`/tipo_projeto/${tipoProjeto.id}`}>
+                    <ListItem button key={tipoProjeto.id} component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
@@ -87,7 +91,7 @@ export default () => {
                         // secondary={projeto.previsao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/tipo_projeto/${tipoProjeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
@@ -115,3 +119,5 @@ export default () => {
         </div>
     );
 }
+
+export default TiposProjetos;

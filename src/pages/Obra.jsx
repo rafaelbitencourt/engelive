@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getObra, saveObra } from '../api/api.js';
 import {
@@ -44,21 +44,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const Obra = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
     const classes = useStyles();
 
     const { idobra } = useParams();
-    let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         saveObra(inputs.obra)
             .then(
                 (data) => {
                     if (!idobra)
-                        history.replace('/obra/' + data.id);
+                        navigate(`/app/obra/${data.id}`);
+
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -145,13 +146,13 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button
-                            className={classes.button}
-                            color="default"
-                            component={Link}
-                            disabled={!idobra}
-                            to={`/obra/${idobra}/projetos`}>Projetos da obra</Button>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                        {idobra &&
+                        <Link to={`/obra/${idobra}/projetos`}>
+                            <Button className={classes.button}>Projetos da obra</Button>
+                        </Link>}
+                        <Link to="/app/obras">
+                            <Button className={classes.button}>Voltar</Button>
+                        </Link>
                         <Button
                             type="submit"
                             variant="contained"
@@ -176,3 +177,5 @@ export default () => {
 
     );
 }
+
+export default Obra;

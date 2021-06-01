@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getTipoProjeto, saveTipoProjeto } from '../api/api.js';
 import {
@@ -44,21 +44,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default () => {
+const TipoProjeto = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
     const classes = useStyles();
 
     const { idtipoprojeto } = useParams();
-    let history = useHistory();
+    let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
         saveTipoProjeto(inputs.tipo_projeto)
             .then(
                 (data) => {
                     if (!idtipoprojeto)
-                        history.replace('/tipo_projeto/' + data.id);
+                        navigate(`/app/tipoprojeto/${data.id}`);
+
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -129,7 +130,7 @@ export default () => {
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button>
+                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
                             variant="contained"
@@ -154,3 +155,5 @@ export default () => {
 
     );
 }
+
+export default TipoProjeto;
