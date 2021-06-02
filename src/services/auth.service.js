@@ -30,6 +30,10 @@ class AuthService {
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'));;
     }
+
+    getToken() {
+        return this.getCurrentUser()?.accessToken;
+    }
 }
 
 export default new AuthService();

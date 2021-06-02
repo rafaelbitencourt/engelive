@@ -1,9 +1,10 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { /*useNavigate,*/ useParams } from 'react-router-dom';
-import { listProjetosPorObra, deleteProjeto } from '../api/api.js';
+import { deleteProjeto } from '../api/api.js';
 import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
+import useAxios from 'axios-hooks';
 
 import {
     List,
@@ -15,7 +16,8 @@ import {
     IconButton,
     Typography,
     Box,
-    Tooltip
+    Tooltip,
+    CircularProgress
 } from '@material-ui/core';
 
 import {
@@ -28,25 +30,18 @@ import {
 } from '@material-ui/icons';
 
 const Projetos = () => {
-    const [projetos, setProjetos] = useState([]);
+    const { idobra } = useParams();
+    const [{ data, loading, error }, refetch] = useAxios(`obra/${idobra}/projetos`, { useCache: false });
+
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [idProjetoExclusao, setIdProjetoExclusao] = useState(null);
-
-    const { idobra } = useParams();
     // let navigate = useNavigate();
-
-    const atualizarLista = useCallback(() => {
-        listProjetosPorObra(idobra)
-            .then(data => {
-                setProjetos(data);
-            });
-    }, [idobra]);
 
     const excluirProjeto = () => {
         deleteProjeto(idProjetoExclusao)
             .then(data => {
-                atualizarLista();
+                // atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
@@ -54,9 +49,37 @@ const Projetos = () => {
             });
     };
 
-    useEffect(() => {
-        atualizarLista();
-    }, [atualizarLista]);
+    if (loading)
+        return <Box
+            height='100%'
+            width='100%'
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <CircularProgress />
+        </Box>;
+
+    if (error)
+        return <Box
+            height='100%'
+            width='100%'
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Typography
+                align="center"
+                color="textPrimary"
+                variant="h3"
+            >
+                {error}
+            </Typography>
+        </Box>;
 
     return (
         <div>
@@ -81,7 +104,7 @@ const Projetos = () => {
                 </Tooltip>
             </Box>
             <List>
-                {projetos.map(projeto => (
+                {data.map(projeto => (
                     <ListItem button key={projeto.id} component={Link} to={`/app/obra/${idobra}/projeto/${projeto.id}/plantas`}>
                         <ListItemAvatar>
                             <Avatar>
