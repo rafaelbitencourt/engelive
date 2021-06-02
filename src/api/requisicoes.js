@@ -21,6 +21,9 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => response,
     error => {
+        if (error.__CANCEL__)
+            return error;
+
         if (error.code === "ECONNABORTED")
             return Promise.reject("Não foi possível se conectar ao servidor, verifique sua conexão com a internet.");
 

@@ -4,10 +4,6 @@ import config from '../configs/config.json';
 
 const urlApi = config.UrlApi;
 
-export const getMenu = () => axios
-    .get(urlApi + 'menu', { headers: authHeader() })
-    .then(({ data }) => data)
-
 export const listObras = () => axios
     .get(urlApi + 'obras', { headers: authHeader() })
     .then(({ data }) => data)
