@@ -29,10 +29,12 @@ axios.interceptors.response.use(
 
         switch (error.response?.status) {
             case 400:
-                return Promise.reject(error.response.data?.message || 'Ocorreu um erro');
+            case 404:
             case 401:
-                authService.logout();
-                return Promise.reject('Usuário não autenticado');
+                return Promise.reject(error.response.data?.message || 'Ocorreu um erro');
+            // case 401:
+            //     authService.logout();
+            //     return Promise.reject('Usuário não autenticado');
             default:
                 return Promise.reject(`Ocorreu um erro: ${error.response.data?.message}`);
         }

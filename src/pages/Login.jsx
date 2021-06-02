@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -13,31 +12,33 @@ import {
   FormHelperText
 } from '@material-ui/core';
 import AuthService from '../services/auth.service';
+import useAxios from 'axios-hooks';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [msgErro, setMsgErro] = useState(null);
+  const [
+    { data, loading, error },
+    executeLogin
+  ] = useAxios(
+    {
+      url: 'auth/signin',
+      method: 'POST'
+    },
+    { manual: true }
+  )
 
-  const cbSubmit = (values, { setSubmitting }) => {
-    setMsgErro(null);
-    AuthService.login(values.user, values.password)
-      .then(
-        () => {
-          navigate('/app/obras');
-        },
-        (error) => {
-          setSubmitting(false);
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setMsgErro(resMessage);
-        }
-      );
+  const cbSubmit = (values) => {
+    executeLogin({
+      data: {
+        usuario: values.user,
+        senha: values.password
+      }
+    })
   };
+
+  if (data) {
+    AuthService.login(data);
+    return <Navigate to="/app/obras" />
+  }
 
   return (
     <>
@@ -115,14 +116,14 @@ const Login = () => {
                   value={values.password}
                   variant="outlined"
                 />
-                {msgErro &&
+                {error &&
                   <FormHelperText error>
-                    {msgErro}
+                    {error}
                   </FormHelperText>}
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
+                    disabled={loading}
                     fullWidth
                     size="large"
                     type="submit"
