@@ -1,4 +1,4 @@
-import { Link as RouterLink, Navigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -15,6 +15,9 @@ import AuthService from '../../services/auth.service';
 import useAxios from 'axios-hooks';
 
 const Login = () => {
+  const location = useLocation();
+  const { from } = location.state || { from: "/app/obras" };
+
   const [
     { data, loading, error },
     executeLogin
@@ -37,7 +40,7 @@ const Login = () => {
 
   if (data) {
     AuthService.login(data);
-    return <Navigate to="/app/obras" />
+    return <Navigate to={from} replace />
   }
 
   return (

@@ -23,10 +23,10 @@ import {
 
 import { Navigate } from 'react-router-dom';
 
-const routes = (isLoggedIn) => [
+const routes = (isLoggedIn, currentLocation) => [
   {
     path: 'app',
-    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
+    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" replace state={{ from: currentLocation }}/>,
     children: [
       { path: 'obras', element: <Obras /> },
       { path: 'obra', element: <Obra /> },

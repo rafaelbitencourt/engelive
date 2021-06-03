@@ -5,7 +5,7 @@ import authService from '../services/auth.service'
 
 const axios = Axios.create({
     baseURL: config.UrlApi,
-    timeout: 10000
+    timeout: 30000
 })
 
 axios.interceptors.request.use(

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useCallback, useReducer } from 'react';
 import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from 'api/api.js';
-import ImageMapper from 'components/ImageMapper';
+import { ImageMapper } from 'components';
 import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
