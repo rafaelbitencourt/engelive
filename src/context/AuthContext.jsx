@@ -4,8 +4,11 @@ import {
     CircularProgress,
 } from '@material-ui/core';
 import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
 import { useCrossTabState } from 'hooks';
+import {
+    setTokenApi,
+    setInterceptorExpiresApi
+} from 'services/api';
 
 const AuthContext = createContext({});
 
@@ -13,22 +16,28 @@ const AuthProvider = ({ children }) => {
     const location = useLocation();
     let navigate = useNavigate();
 
-    const [user, login, loading] = useCrossTabState('user', null);
+    const [user, setUser, loading] = useCrossTabState('user', null);
+
+    useEffect(() => setInterceptorExpiresApi(resetUser), []);
 
     useEffect(() => {
         if (user) {
-            axios.defaults.headers["x-access-token"] = user?.accessToken;
+            setTokenApi(user?.accessToken);
             if (location.state?.from)
                 navigate(location.state.from, { replace: true });
         } else {
-            delete axios.defaults.headers["x-access-token"];
-            if(location.pathname !== "/")
+            setTokenApi(undefined);
+            if (location.pathname !== "/")
                 navigate("/login", { state: { from: location.pathname } });
         }
     }, [user]);
 
+    const resetUser = () => {
+        setUser(null);
+    }
+
     const logout = () => {
-        login(null);
+        setUser(null);
         navigate("/");
     }
 
@@ -52,7 +61,7 @@ const AuthProvider = ({ children }) => {
     console.log('carregando22')
 
     return (
-        <AuthContext.Provider value={{ isSigned, user, login, logout }}>
+        <AuthContext.Provider value={{ isSigned, user, setUser, logout }}>
             {children}
         </AuthContext.Provider>
     );

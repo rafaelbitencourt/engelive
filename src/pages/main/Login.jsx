@@ -15,7 +15,7 @@ import {
 import useAxios from 'axios-hooks';
 
 const Login = () => {
-  const { login } = useAuth();
+  const { setUser } = useAuth();
 
   const [
     { data, loading, error },
@@ -37,7 +37,7 @@ const Login = () => {
     })
   };
 
-  if (data) login(data);
+  if (data) setUser(data);
 
   return (
     <>
