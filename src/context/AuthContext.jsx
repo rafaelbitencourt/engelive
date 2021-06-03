@@ -1,4 +1,4 @@
-import React, { createContext, useEffect, useContext } from 'react';
+import React, { createContext, useEffect, useContext, useCallback } from 'react';
 import {
     Box,
     CircularProgress,
@@ -7,7 +7,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useCrossTabState } from 'hooks';
 import {
     setTokenApi,
-    setInterceptorExpiresApi
+    setInterceptorResponseApi
 } from 'services/api';
 
 const AuthContext = createContext({});
@@ -18,7 +18,18 @@ const AuthProvider = ({ children }) => {
 
     const [user, setUser, loading] = useCrossTabState('user', null);
 
-    useEffect(() => setInterceptorExpiresApi(resetUser));
+    const resetUser = useCallback(() => {
+        setUser(null);
+    }, [setUser]);
+
+    const logout = () => {
+        setUser(null);
+        navigate("/");
+    }
+
+    const isSigned = () => !!user;
+
+    useEffect(() => setInterceptorResponseApi(resetUser), [resetUser]);
 
     useEffect(() => {
         if (user) {
@@ -31,17 +42,6 @@ const AuthProvider = ({ children }) => {
                 navigate("/login", { state: { from: location.pathname } });
         }
     }, [user, navigate]);
-
-    const resetUser = () => {
-        setUser(null);
-    }
-
-    const logout = () => {
-        setUser(null);
-        navigate("/");
-    }
-
-    const isSigned = () => !!user;
 
     if (loading) {
         return <Box

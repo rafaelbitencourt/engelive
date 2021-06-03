@@ -10,7 +10,7 @@ const setTokenApi = (token) => {
     axios.defaults.headers["x-access-token"] = token;
 }
 
-const setInterceptorExpiresApi = (resetUser) => {
+const setInterceptorResponseApi = (resetUser) => {
     axios.interceptors.response.use(
         response => response,
         error => {
@@ -20,23 +20,20 @@ const setInterceptorExpiresApi = (resetUser) => {
             if (error.code === "ECONNABORTED")
                 return Promise.reject("Não foi possível se conectar ao servidor, verifique sua conexão com a internet.");
 
-            switch (error.response?.status) {
-                case 400:
-                case 404:
-                    return Promise.reject(error.response.data?.message || 'Ocorreu um erro');
-                case 401:
-                    resetUser();
-                    return Promise.reject("Usuário não autenticado");
-                // case 401:
-                //     authService.logout();
-                //     return Promise.reject('Usuário não autenticado');
-                default:
-                    return Promise.reject(`Ocorreu um erro: ${error.response.data?.message}`);
-            }
+            if (error.response?.status === 401) 
+                return resetUser();
+
+            if (error.response?.status >= 500)
+                return Promise.reject(`Ocorreu um erro no servidor: ${error.response.data?.message}`);
+
+            if (error.response?.status >= 400)
+                return Promise.reject(error.response.data?.message || 'Ocorreu um erro');
+
+            return Promise.reject(error);
         });
 };
 
 export {
     setTokenApi,
-    setInterceptorExpiresApi
+    setInterceptorResponseApi
 };
