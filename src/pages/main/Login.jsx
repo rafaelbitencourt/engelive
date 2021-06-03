@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { AuthContext } from 'context/AuthContext'
+import { useAuth } from 'context/AuthContext'
 import { Link as RouterLink } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import * as Yup from 'yup'
@@ -16,7 +15,7 @@ import {
 import useAxios from 'axios-hooks';
 
 const Login = () => {
-  const { login } = useContext(AuthContext);
+  const { login } = useAuth();
 
   const [
     { data, loading, error },

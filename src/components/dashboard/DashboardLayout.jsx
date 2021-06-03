@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from 'context/AuthContext';
+import React, { useState } from 'react';
+import { useAuth } from 'context/AuthContext';
 import { Outlet } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
-import AuthService from 'services/auth.service';
 
 const DashboardLayoutRoot = experimentalStyled('div')(
   ({ theme }) => ({
@@ -42,9 +41,7 @@ const DashboardLayoutContent = experimentalStyled('div')({
 
 const DashboardLayout = () => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
-  const usuario = AuthService.getCurrentUser();
-  
-  const { logout } = useContext(AuthContext);
+  const { user, logout } = useAuth();
 
   return (
     <DashboardLayoutRoot>
@@ -56,7 +53,7 @@ const DashboardLayout = () => {
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
         logOut={logout}
-        user={usuario}
+        user={user}
       />
       <DashboardLayoutWrapper>
         <DashboardLayoutContainer>

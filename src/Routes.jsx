@@ -1,5 +1,4 @@
-import React, { useContext } from 'react'
-import { AuthContext } from 'context/AuthContext'
+import { useAuth } from 'context/AuthContext'
 import { useRoutes, useLocation } from "react-router-dom"
 import { Navigate } from 'react-router-dom'
 import {
@@ -26,7 +25,7 @@ import {
 
 const Routes = () => {
   const location = useLocation();
-  const { signed } = useContext(AuthContext);
+  const { signed } = useAuth();
   
   const routing = useRoutes([
     {

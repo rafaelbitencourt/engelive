@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect, useContext } from 'react'
 import {
     Box,
     CircularProgress,
@@ -60,4 +60,6 @@ const AuthProvider = ({ children }) => {
     );
 }
 
-export { AuthContext, AuthProvider };
+const useAuth = () => useContext(AuthContext);
+
+export { useAuth, AuthProvider };
