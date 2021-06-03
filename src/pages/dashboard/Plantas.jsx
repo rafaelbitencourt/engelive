@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
-// import { useHistory } from 'react-router-dom';
-import { listTiposProjetos, deleteTipoProjeto } from '../api/api.js';
-import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
+import { /*useHistory,*/ useParams } from 'react-router-dom';
+import { listPlantasPorProjeto, deletePlanta } from 'api/api.js';
+import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
 import { Link } from "react-router-dom";
 
 import {
@@ -26,40 +26,41 @@ import {
     AddCircle
 } from '@material-ui/icons';
 
-const TiposProjetos = () => {
-    const [tiposProjetos, setTiposProjetos] = useState([]);
+const Plantas = () => {
+    const [plantas, setPlantas] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idTipoProjetoExclusao, setIdTipoProjetoExclusao] = useState(null);
+    const [idPlantaExclusao, setIdPlantaExclusao] = useState(null);
 
+    const { idobra, idprojeto } = useParams();
     // let history = useHistory();
 
-    useEffect(() => {
-        atualizarLista();
-    }, []);
-
-    const atualizarLista = () => {
-        listTiposProjetos()
+    const atualizarLista = useCallback(() => {
+        listPlantasPorProjeto(idprojeto)
             .then(data => {
-                setTiposProjetos(data);
+                setPlantas(data);
             });
-    };
+    }, [idprojeto]);
 
-    const excluirTipoProjeto = () => {
-        deleteTipoProjeto(idTipoProjetoExclusao)
+    const excluirPlanta = () => {
+        deletePlanta(idPlantaExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir o tipo de projeto.');
+                alert(resp.message || 'Ocorreu um erro ao excluir a planta.');
             });
     };
+
+    useEffect(() => {
+        atualizarLista();
+    }, [atualizarLista]);
 
     return (
         <div>
             <Helmet>
-                <title>Tipos de projetos | Engelive</title>
+                <title>Plantas | Engelive</title>
             </Helmet>
             <Box display="flex" padding="2px">
                 {/* <Tooltip title="Voltar">
@@ -67,35 +68,34 @@ const TiposProjetos = () => {
                         <Backspace />
                     </IconButton>
                 </Tooltip> */}
-                <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
+                <Box flexGrow={1} display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
-                        Tipos de projetos
+                        Plantas
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/app/tipoprojeto">
+                    <IconButton variant="contained" color="primary" component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/planta`}>
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {tiposProjetos.map(tipoProjeto => (
-                    <ListItem button key={tipoProjeto.id} component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`}>
+                {plantas.map(planta => (
+                    <ListItem button key={planta.id} component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}/detalhes`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={tipoProjeto.nome}
-                        // secondary={projeto.previsao}
+                            primary={planta.descricao}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${planta.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdTipoProjetoExclusao(tipoProjeto.id);
+                                setIdPlantaExclusao(planta.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -105,14 +105,14 @@ const TiposProjetos = () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir?"
-                mensagem="Tem certeza de que deseja excluir o tipo de projeto?"
+                titulo="Excluir planta?"
+                mensagem="Tem certeza de que deseja excluir a planta?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirTipoProjeto}
+                onConfirm={excluirPlanta}
             />
             <SuccessDialog
-                mensagem="Tipo de projeto excluído com sucesso."
+                mensagem="Planta excluída com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />
@@ -120,4 +120,4 @@ const TiposProjetos = () => {
     );
 }
 
-export default TiposProjetos;
+export default Plantas;

@@ -11,7 +11,7 @@ import {
   Typography,
   FormHelperText
 } from '@material-ui/core';
-import AuthService from '../services/auth.service';
+import AuthService from '../../services/auth.service';
 import useAxios from 'axios-hooks';
 
 const Login = () => {

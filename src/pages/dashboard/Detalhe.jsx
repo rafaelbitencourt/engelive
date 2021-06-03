@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { getPlanta, savePlanta } from '../api/api.js';
+import { getDetalhe, saveDetalhe } from 'api/api.js';
 import {
     TextField,
     Button,
@@ -13,7 +13,7 @@ import {
     LinearProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, WarningDialog, ErrorDialog } from '../components/Dialog';
+import { SuccessDialog, WarningDialog, ErrorDialog } from 'components/Dialog';
 import ImageUploader from 'react-images-upload';
 
 const useStyles = makeStyles((theme) => ({
@@ -47,27 +47,26 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Planta = () => {
-    const [sucessOpen, setSucessOpen] = useState(false);
-    const [warningOpen, setWarningOpen] = useState(false);
+const Detalhe = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
+    const [sucessOpen, setSucessOpen] = useState(false);
+    const [warningOpen, setWarningOpen] = useState(false);
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
 
-    const { idobra, idprojeto, idplanta } = useParams();
+    const { idobra, idprojeto, iddetalhe } = useParams();
     let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
-        if (!inputs.planta.id && !inputs.planta.imagem) {
+        if (!inputs.detalhe.id && !inputs.detalhe.imagem) {
             setWarningOpen(true);
         } else {
-            savePlanta({ ...inputs.planta, idprojeto: idprojeto })
+            saveDetalhe({ ...inputs.detalhe, idprojeto: idprojeto })
                 .then(
                     (data) => {
-                        if (!idplanta)
-                            navigate(`/app/obra/${idobra}/projeto/${data.idprojeto}/planta/${data.id}`);
-
+                        if (!iddetalhe)
+                            navigate(`/app/obra/${idobra}/projeto/${data.idprojeto}/detalhe/${data.id}`);
                         setSucessOpen(true);
                     },
                     (error) => {
@@ -77,7 +76,7 @@ const Planta = () => {
                                 error.response.data.message) ||
                             error.message ||
                             error.toString();
-    
+
                         setMensagemErro(resMessage);
                         setErrorOpen(true);
                     }
@@ -88,13 +87,13 @@ const Planta = () => {
     const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
-        if (idplanta)
-            getPlanta(idplanta)
+        if (iddetalhe)
+            getDetalhe(iddetalhe)
                 .then(
                     (data) => {
-                        setValue('planta', data);
-                    if (data.imagem)
-                        setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
+                        setValue('detalhe', data);
+                        if (data.imagem)
+                            setImagem(Buffer.from(data.imagem, 'binary').toString('base64'));
                     },
                     (error) => {
                         const resMessage =
@@ -103,15 +102,15 @@ const Planta = () => {
                                 error.response.data.message) ||
                             error.message ||
                             error.toString();
-    
+
                         setMensagemErro(resMessage);
                         setErrorOpen(true);
                     }
                 );
-    }, [idplanta, setValue]);
+    }, [iddetalhe, setValue]);
 
     const onDropImagem = (imagens) => {
-        setValue('planta.imagem', imagens[0]);
+        setValue('detalhe.imagem', imagens[0]);
     }
 
     return (
@@ -124,32 +123,32 @@ const Planta = () => {
 
                 <Paper className={classes.paper}>
                     <Typography component="h1" variant="h4" align="center">
-                        Planta
+                        Detalhes
                     </Typography>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <TextField
-                                label="Descrição"
-                                placeholder="Descrição da planta"
-                                name="planta.descricao"
+                                label="Nome"
+                                placeholder="Nome do detalhe"
+                                name="detalhe.nome"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
                                 fullWidth
-                                error={errors.planta && errors.planta.descricao ? true : false}
-                                helperText={errors.planta && errors.planta.descricao ? errors.planta.descricao.message : null}
+                                error={errors.detalhe && errors.detalhe.nome ? true : false}
+                                helperText={errors.detalhe && errors.detalhe.nome ? errors.detalhe.nome.message : null}
                                 inputRef={register({
                                     required: "Campo obrigatório"
                                 })}
                             />
                         </Grid>
-                        {idplanta ? (
+                        {iddetalhe ? (
                             <Grid item xs={12}>
                                 {!imagem ? (
                                     <LinearProgress />
                                 ) : (
                                         <CardMedia
-                                            alt="Planta"
+                                            alt="Detalhe"
                                             component="img"
                                             src={`data:image/jpeg;base64,${imagem}`} />
                                     )}
@@ -159,7 +158,7 @@ const Planta = () => {
                                     <ImageUploader
                                         withIcon={false}
                                         label="Máximo: 200Mb - Extensões: jpg | jpeg | png"
-                                        buttonText='Selecionar planta'
+                                        buttonText='Selecionar imagem'
                                         name="imagem"
                                         onChange={onDropImagem}
                                         imgExtension={['.jpg', '.jpeg', '.png']}
@@ -171,13 +170,8 @@ const Planta = () => {
                                     />
                                 </Grid>
                             )}
-
                     </Grid>
                     <div className={classes.buttons}>
-                        {idplanta &&
-                            <Link to={`/app/obra/${idobra}/projeto/${idprojeto}/planta/${idplanta}/detalhes`}>
-                                <Button className={classes.button}>Detalhes da planta</Button>
-                            </Link>}
                         {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
                         <Button
                             type="submit"
@@ -190,12 +184,12 @@ const Planta = () => {
                 </Paper>
             </form>
             <SuccessDialog
-                mensagem="Planta salva com sucesso."
+                mensagem="Detalhe salvo com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />
             <WarningDialog
-                mensagem="Selecione a planta."
+                mensagem="Selecione uma imagem."
                 open={warningOpen}
                 setOpen={setWarningOpen}
             />
@@ -209,4 +203,4 @@ const Planta = () => {
     );
 }
 
-export default Planta;
+export default Detalhe;

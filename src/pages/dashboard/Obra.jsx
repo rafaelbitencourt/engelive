@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { listTiposProjetos, getProjeto, saveProjeto } from '../api/api.js';
+import { getObra, saveObra } from 'api/api.js';
 import {
     TextField,
     Button,
@@ -10,9 +10,8 @@ import {
     Typography,
     Grid
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, ErrorDialog } from '../components/Dialog';
+import { SuccessDialog, ErrorDialog } from 'components/Dialog';
 
 const useStyles = makeStyles((theme) => ({
     layout: {
@@ -45,24 +44,22 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Projeto = () => {
-    const [sucessOpen, setSucessOpen] = useState(false);
+const Obra = () => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
-    const [tiposProjetos, setTiposProjetos] = useState([]);
-    const [tipoProjeto, setTipoProjeto] = useState(null);    
+    const [sucessOpen, setSucessOpen] = useState(false);
     const classes = useStyles();
 
-    const { idobra, idprojeto } = useParams();
+    const { idobra } = useParams();
     let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
-        saveProjeto({ ...inputs.projeto, idobra: idobra, idtipoprojeto: tipoProjeto.id })
+        saveObra(inputs.obra)
             .then(
                 (data) => {
-                    if (!idprojeto)
-                        navigate(`/obra/${data.idobra}/projeto/${data.id}`);
-                        
+                    if (!idobra)
+                        navigate(`/app/obra/${data.id}`);
+
                     setSucessOpen(true);
                 },
                 (error) => {
@@ -79,14 +76,14 @@ const Projeto = () => {
             );
     };
 
-    const { handleSubmit, setValue } = useForm();
+    const { register, errors, handleSubmit, setValue } = useForm();
 
     useEffect(() => {
-        if (idprojeto)
-            getProjeto(idprojeto)
+        if (idobra)
+            getObra(idobra)
                 .then(
                     (data) => {
-                        setValue('projeto', data);
+                        setValue('obra', data);
                     },
                     (error) => {
                         const resMessage =
@@ -95,21 +92,12 @@ const Projeto = () => {
                                 error.response.data.message) ||
                             error.message ||
                             error.toString();
-    
+
                         setMensagemErro(resMessage);
                         setErrorOpen(true);
                     }
                 );
-    }, [idprojeto, setValue]);
-
-    useEffect(() => {
-        listTiposProjetos()
-            .then(data => {
-                setTiposProjetos(data);
-            }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
-            });
-    }, [idprojeto]);
+    }, [idobra, setValue]);
 
     return (
         <React.Fragment>
@@ -121,34 +109,50 @@ const Projeto = () => {
 
                 <Paper className={classes.paper}>
                     <Typography component="h1" variant="h4" align="center">
-                        Projeto
+                        Obra
                     </Typography>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <Autocomplete
-                                value={tipoProjeto}
-                                onChange={(event, newValue) => setTipoProjeto(newValue)}
-                                options={tiposProjetos}
-                                autoHighlight
-                                getOptionLabel={(option) => option.nome}
-                                renderOption={(option) => option.nome}
-                                renderInput={(params) => (
-                                    <TextField
-                                        {...params}
-                                        label="Tipo"
-                                        variant="outlined"
-                                        required
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            autoComplete: 'new-password', // disable autocomplete and autofill
-                                        }}
-                                    />
-                                )}
+                            <TextField
+                                label="Nome"
+                                placeholder="Nome da obra"
+                                name="obra.nome"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                fullWidth
+                                error={errors.obra && errors.obra.nome ? true : false}
+                                helperText={errors.obra && errors.obra.nome ? errors.obra.nome.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Previsão"
+                                type="date"
+                                name="obra.previsao"
+                                InputLabelProps={{
+                                    shrink: true
+                                }}
+                                fullWidth
+                                error={errors.obra && errors.obra.previsao ? true : false}
+                                helperText={errors.obra && errors.obra.previsao ? errors.obra.previsao.message : null}
+                                inputRef={register({
+                                    required: "Campo obrigatório"
+                                })}
                             />
                         </Grid>
                     </Grid>
                     <div className={classes.buttons}>
-                        {/* <Button onClick={() => history.goBack()} className={classes.button}>Voltar</Button> */}
+                        {idobra &&
+                        <Link to={`/obra/${idobra}/projetos`}>
+                            <Button className={classes.button}>Projetos da obra</Button>
+                        </Link>}
+                        <Link to="/app/obras">
+                            <Button className={classes.button}>Voltar</Button>
+                        </Link>
                         <Button
                             type="submit"
                             variant="contained"
@@ -174,4 +178,4 @@ const Projeto = () => {
     );
 }
 
-export default Projeto;
+export default Obra;

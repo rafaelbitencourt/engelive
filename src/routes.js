@@ -1,23 +1,24 @@
+import {
+  Home,
+  Login,
+  NotFound,
+  Register,
+  Obras,
+  Obra,
+  Projetos,
+  Projeto,
+  Detalhes,
+  Detalhe,
+  Plantas,
+  Planta,
+  PlantaDetalhes,
+  TiposProjetos,
+  TipoProjeto
+} from 'pages'
+
 import { Navigate } from 'react-router-dom';
-import DashboardLayout from './components/DashboardLayout';
-import MainLayout from './components/MainLayout';
-import Obras from './pages/Obras2';
-import Obra from './pages/Obra';
-import Projetos from './pages/Projetos';
-import Projeto from './pages/Projeto';
-import Detalhes from './pages/Detalhes';
-import Detalhe from './pages/Detalhe';
-import Plantas from './pages/Plantas';
-import Planta from './pages/Planta';
-import PlantaDetalhes from './pages/PlantaDetalhes';
-
-import TiposProjetos from './pages/TiposProjetos';
-import TipoProjeto from './pages/TipoProjeto';
-
-import Home from './pages/Home';
-import Register from './pages/Register';
-import Login from './pages/Login';
-import NotFound from './pages/NotFound';
+import DashboardLayout from 'components/DashboardLayout';
+import MainLayout from 'components/MainLayout';
 
 const routes = (isLoggedIn) => [
   {
