@@ -53,7 +53,7 @@ const DashboardLayout = () => {
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
         logOut={logout}
-        user={user}
+        user={user || {}}
       />
       <DashboardLayoutWrapper>
         <DashboardLayoutContainer>

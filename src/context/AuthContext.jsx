@@ -5,6 +5,7 @@ import {
 } from '@material-ui/core';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { useCrossTabState } from 'hooks';
 
 const AuthContext = createContext({});
 
@@ -13,31 +14,25 @@ const AuthProvider = ({ children }) => {
     const { from } = location.state || { from: "/app/obras" }
     let navigate = useNavigate();
 
-    const [user, setUser] = useState(null);
+    const [user, login, loading] = useCrossTabState('user', null);
     const [signed, setSigned] = useState(false);
-    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const data = JSON.parse(localStorage.getItem('user'));
-        if (data) {
-            setUser(data);
+        if (user) {
             setSigned(true);
-            axios.defaults.headers["x-access-token"] = data?.accessToken;
+            axios.defaults.headers["x-access-token"] = user?.accessToken;
+            navigate(from, { replace: true });
+        } else {
+            delete axios.defaults.headers["x-access-token"];
+            if (signed) {
+                setSigned(false);
+                navigate("/login", { state: { from: location.pathname } });
+            }
         }
-        setLoading(false);
-    }, []);
-
-    const login = (data) => {
-        localStorage.setItem("user", JSON.stringify(data));
-        setUser(data);
-        setSigned(true);
-        axios.defaults.headers["x-access-token"] = data?.accessToken;
-        navigate(from, { replace: true });
-    }
+    }, [user]);
 
     const logout = () => {
-        localStorage.removeItem("user");
-        setUser(null);
+        login(null);
         setSigned(false);
         navigate("/");
     }
@@ -54,7 +49,6 @@ const AuthProvider = ({ children }) => {
         >
             <CircularProgress />
         </Box>;
-
 
     return (
         <AuthContext.Provider value={{ signed, user, login, logout }}>
