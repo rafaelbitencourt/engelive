@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from "react-hook-form";
-import { getTipoProjeto, saveTipoProjeto } from '../api/api.js';
+import { getTipoProjeto, saveTipoProjeto } from 'api/api.js';
 import {
     TextField,
     Button,
@@ -11,7 +11,7 @@ import {
     Grid
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, ErrorDialog } from '../components/Dialog';
+import { SuccessDialog, ErrorDialog } from 'components/Dialog';
 
 const useStyles = makeStyles((theme) => ({
     layout: {

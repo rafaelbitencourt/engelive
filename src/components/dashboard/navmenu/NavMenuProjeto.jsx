@@ -5,7 +5,7 @@ import {
     IconButton
 } from '@material-ui/core';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-import NavItem from '../NavItem';
+import NavItem from './NavItem';
 
 const NavMenuProjeto = ({ idobra, projeto }) => {
     const [isOpen, setIsOpen] = useState(false);

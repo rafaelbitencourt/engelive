@@ -1,7 +1,7 @@
-import React, { useRef, useLayoutEffect, useEffect, useState, useCallback, useReducer } from 'react';
+import React, { useRef, useEffect, useState, useCallback, useReducer } from 'react';
 import { /*useHistory,*/ useParams } from 'react-router-dom';
-import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from '../api/api.js';
-import ImageMapper from '../components/ImageMapper';
+import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from 'api/api.js';
+import { ImageMapper } from 'components';
 import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
@@ -32,8 +32,8 @@ import {
 } from '@material-ui/icons';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
-import usePreventWindowUnload from '../hooks/usePreventWindowUnload';
+import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
+import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
 

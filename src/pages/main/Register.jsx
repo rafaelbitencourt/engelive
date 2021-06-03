@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -12,31 +11,27 @@ import {
   Typography,
   FormHelperText
 } from '@material-ui/core';
-import AuthService from '../services/auth.service';
+import useAxios from 'axios-hooks';
 
 const Register = () => {
-  const navigate = useNavigate();
-  const [msgErro, setMsgErro] = useState(null);
+  const [
+    { data, loading, error },
+    executeRegister
+  ] = useAxios(
+    {
+      url: 'auth/signup',
+      method: 'POST'
+    },
+    { manual: true }
+  )
 
-  const cbSubmit = (values, { setSubmitting }) => {
-    AuthService.register(values)
-      .then(
-        () => {
-          navigate('/login');
-        },
-        (error) => {
-          setSubmitting(false);
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
-
-          setMsgErro(resMessage);
-        }
-      );
+  const cbSubmit = (values) => {
+    executeRegister({
+      data: values
+    })
   };
+
+  if (data) return <Navigate to="/login" />
 
   return (
     <>
@@ -75,7 +70,6 @@ const Register = () => {
               handleBlur,
               handleChange,
               handleSubmit,
-              isSubmitting,
               touched,
               values
             }) => (
@@ -146,14 +140,14 @@ const Register = () => {
                   value={values.confirmacaoSenha}
                   variant="outlined"
                 />
-                {msgErro &&
+                {error &&
                   <FormHelperText error>
-                    {msgErro}
+                    {error}
                   </FormHelperText>}
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
+                    disabled={loading}
                     fullWidth
                     size="large"
                     type="submit"

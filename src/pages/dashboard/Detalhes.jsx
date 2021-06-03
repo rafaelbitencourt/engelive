@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
-// import { useHistory } from 'react-router-dom';
-import { listTiposProjetos, deleteTipoProjeto } from '../api/api.js';
-import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
+import React, { useEffect, useState, useCallback } from 'react';
+import { /*useHistory,*/ useParams } from 'react-router-dom';
+import { listDetalhesPorProjeto, deleteDetalhe } from 'api/api.js';
+import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
 import { Link } from "react-router-dom";
 
 import {
@@ -26,41 +25,39 @@ import {
     AddCircle
 } from '@material-ui/icons';
 
-const TiposProjetos = () => {
-    const [tiposProjetos, setTiposProjetos] = useState([]);
+const Detalhes = () => {
+    const [detalhes, setDetalhes] = useState([]);
     const [sucessOpen, setSucessOpen] = useState(false);
     const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idTipoProjetoExclusao, setIdTipoProjetoExclusao] = useState(null);
+    const [idDetalheExclusao, setIdDetalheExclusao] = useState(null);
 
+    const { idobra, idprojeto } = useParams();
     // let history = useHistory();
 
-    useEffect(() => {
-        atualizarLista();
-    }, []);
-
-    const atualizarLista = () => {
-        listTiposProjetos()
+    const atualizarLista = useCallback(() => {
+        listDetalhesPorProjeto(idprojeto)
             .then(data => {
-                setTiposProjetos(data);
+                setDetalhes(data);
             });
-    };
+    }, [idprojeto]);
 
-    const excluirTipoProjeto = () => {
-        deleteTipoProjeto(idTipoProjetoExclusao)
+    const excluirDetalhe = () => {
+        deleteDetalhe(idDetalheExclusao)
             .then(data => {
                 atualizarLista();
                 setSucessOpen(true);
             })
             .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir o tipo de projeto.');
+                alert(resp.message || 'Ocorreu um erro ao excluir o detalhe.');
             });
     };
 
+    useEffect(() => {
+        atualizarLista();
+    }, [atualizarLista]);
+
     return (
         <div>
-            <Helmet>
-                <title>Tipos de projetos | Engelive</title>
-            </Helmet>
             <Box display="flex" padding="2px">
                 {/* <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
@@ -69,33 +66,32 @@ const TiposProjetos = () => {
                 </Tooltip> */}
                 <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
-                        Tipos de projetos
+                        Detalhes
                     </Typography>
                 </Box>
                 <Tooltip title="Novo">
-                    <IconButton variant="contained" color="primary" component={Link} to="/app/tipoprojeto">
+                    <IconButton variant="contained" color="primary" component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/detalhe/`}>
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
             <List>
-                {tiposProjetos.map(tipoProjeto => (
-                    <ListItem button key={tipoProjeto.id} component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`}>
+                {detalhes.map(detalhe => (
+                    <ListItem button key={detalhe.id} component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`}>
                         <ListItemAvatar>
                             <Avatar>
                                 <FolderIcon />
                             </Avatar>
                         </ListItemAvatar>
                         <ListItemText
-                            primary={tipoProjeto.nome}
-                        // secondary={projeto.previsao}
+                            primary={detalhe.nome}
                         />
                         <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/tipoprojeto/${tipoProjeto.id}`} >
+                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/obra/${idobra}/projeto/${idprojeto}/detalhe/${detalhe.id}`} >
                                 <EditIcon />
                             </IconButton>
                             <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdTipoProjetoExclusao(tipoProjeto.id);
+                                setIdDetalheExclusao(detalhe.id);
                                 setConfirmOpen(true);
                             }} >
                                 <DeleteIcon />
@@ -105,14 +101,14 @@ const TiposProjetos = () => {
                 ))}
             </List>
             <ConfirmDialog
-                titulo="Excluir?"
-                mensagem="Tem certeza de que deseja excluir o tipo de projeto?"
+                titulo="Excluir detalhe?"
+                mensagem="Tem certeza de que deseja excluir o detalhe?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluirTipoProjeto}
+                onConfirm={excluirDetalhe}
             />
             <SuccessDialog
-                mensagem="Tipo de projeto excluído com sucesso."
+                mensagem="Detalhe excluído com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
             />
@@ -120,4 +116,4 @@ const TiposProjetos = () => {
     );
 }
 
-export default TiposProjetos;
+export default Detalhes;

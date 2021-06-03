@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+import { useAuth } from 'context/AuthContext'
+import { Link as RouterLink } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+import * as Yup from 'yup'
+import { Formik } from 'formik'
 import {
   Box,
   Button,
@@ -11,33 +11,33 @@ import {
   TextField,
   Typography,
   FormHelperText
-} from '@material-ui/core';
-import AuthService from '../services/auth.service';
+} from '@material-ui/core'
+import useAxios from 'axios-hooks';
 
 const Login = () => {
-  const navigate = useNavigate();
-  const [msgErro, setMsgErro] = useState(null);
+  const { setUser } = useAuth();
 
-  const cbSubmit = (values, { setSubmitting }) => {
-    setMsgErro(null);
-    AuthService.login(values.user, values.password)
-      .then(
-        () => {
-          navigate('/app/obras');
-        },
-        (error) => {
-          setSubmitting(false);
-          const resMessage =
-            (error.response &&
-              error.response.data &&
-              error.response.data.message) ||
-            error.message ||
-            error.toString();
+  const [
+    { data, loading, error },
+    executeLogin
+  ] = useAxios(
+    {
+      url: 'auth/signin',
+      method: 'POST'
+    },
+    { manual: true }
+  )
 
-          setMsgErro(resMessage);
-        }
-      );
+  const cbSubmit = (values) => {
+    executeLogin({
+      data: {
+        usuario: values.user,
+        senha: values.password
+      }
+    })
   };
+
+  if (data) setUser(data);
 
   return (
     <>
@@ -70,7 +70,6 @@ const Login = () => {
               handleBlur,
               handleChange,
               handleSubmit,
-              isSubmitting,
               touched,
               values
             }) => (
@@ -115,14 +114,14 @@ const Login = () => {
                   value={values.password}
                   variant="outlined"
                 />
-                {msgErro &&
+                {error &&
                   <FormHelperText error>
-                    {msgErro}
+                    {error}
                   </FormHelperText>}
                 <Box sx={{ py: 2 }}>
                   <Button
                     color="primary"
-                    disabled={isSubmitting}
+                    disabled={loading}
                     fullWidth
                     size="large"
                     type="submit"

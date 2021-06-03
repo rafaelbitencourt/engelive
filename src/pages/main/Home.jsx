@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet'
 import {
     Container,
     Typography,
@@ -11,6 +12,9 @@ import { Link } from 'react-router-dom';
 
 const Home = () => (
     <>
+        <Helmet>
+            <title>Engelive</title>
+        </Helmet>
         <Box
             sx={{
                 backgroundColor: 'background.default',
@@ -60,7 +64,7 @@ const Home = () => (
                                 <Grid item>
                                     <Typography
                                         color="textPrimary"
-                                        variant="h1"
+                                        variant="engelive"
                                     >
                                         EngeLive
                                     </Typography>

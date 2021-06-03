@@ -31,6 +31,12 @@ const typography = {
   },
   overline: {
     fontWeight: 500
+  },
+  engelive: {
+    fontFamily: "Helvetica",
+    fontWeight: 600,
+    fontSize: 30,
+    letterSpacing: '-0.24px'
   }
 };
 

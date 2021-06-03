@@ -1,24 +1,17 @@
-import { useEffect, useState } from 'react';
 import NavMenuObra from './NavMenuObra';
-import NavItem from '../NavItem';
-import { getMenu } from '../../api/api.js';
+import NavItem from './NavItem';
 import { Sync } from '@material-ui/icons';
-import { Box, IconButton, Tooltip } from '@material-ui/core';
+import { 
+    Box, 
+    IconButton, 
+    Tooltip, 
+    CircularProgress, 
+    FormHelperText 
+} from '@material-ui/core';
+import useAxios from 'axios-hooks';
 
 const NavMenu = () => {
-    const [obras, setObras] = useState([]);
-
-    useEffect(() => {
-        atualizarMenu();
-        return () => setObras([]);
-    }, []);
-
-    const atualizarMenu = () => {
-        getMenu()
-            .then(data => {
-                setObras(data);
-            });
-    };
+    const [{ data, loading, error }, refetch] = useAxios("menu", { useCache: false });
 
     return (
         <Box
@@ -28,6 +21,10 @@ const NavMenu = () => {
                 height: '100%'
             }}
         >
+            {error &&
+                <FormHelperText error>
+                    {error}
+                </FormHelperText>}
             <Box
                 sx={{
                     display: 'flex',
@@ -38,13 +35,19 @@ const NavMenu = () => {
                     href={`/app/obras`}
                     title="Obras"
                 />
-                <Tooltip title="Atualizar">
-                    <IconButton variant="contained" color="primary" aria-label="Atualizar" onClick={atualizarMenu}>
-                        <Sync />
+                {loading ?
+                    <IconButton>
+                        <CircularProgress size={24} />
                     </IconButton>
-                </Tooltip>
+                    :
+                    <Tooltip title="Atualizar obras">
+                        <IconButton variant="contained" color="primary" onClick={refetch}>
+                            <Sync />
+                        </IconButton>
+                    </Tooltip>
+                }
             </Box>
-            {obras.map((obra) => (
+            {data && data.map((obra) => (
                 <NavMenuObra key={`obra${obra.id}`} obra={obra} />
             ))}
             <Box sx={{ flexGrow: 1 }} />

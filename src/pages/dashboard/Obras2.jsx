@@ -1,29 +1,49 @@
-import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import {
     Box,
     Container,
     Grid,
-    Pagination
+    Pagination,
+    CircularProgress,
+    Typography
 } from '@material-ui/core';
-// import ProductListToolbar from 'src/components/product/ProductListToolbar';
-import ObraCard from '../components/obras/ObraCard';
-import { listObras, deleteObra } from '../api/api.js';
+import ObraCard from 'components/obras/ObraCard';
+import useAxios from 'axios-hooks';
 
 const Obras = () => {
-    const [obras, setObras] = useState([]);
+    const [{ data, loading, error }, refetch] = useAxios("obras", { useCache: false });
 
-    useEffect(() => {
-        atualizarLista();
-        return () => setObras([]);
-    }, []);
+    if (loading)
+        return <Box
+            height='100%'
+            width='100%'
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <CircularProgress />
+        </Box>;
 
-    const atualizarLista = () => {
-        listObras()
-            .then(data => {
-                setObras(data);
-            });
-    };
+    if (error)
+        return <Box
+            height='100%'
+            width='100%'
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Typography
+                align="center"
+                color="textPrimary"
+                variant="h3"
+            >
+                {error}
+            </Typography>
+        </Box>;
 
     return (
         <>
@@ -44,7 +64,7 @@ const Obras = () => {
                             container
                             spacing={3}
                         >
-                            {obras.map((obra) => (
+                            {data.map((obra) => (
                                 <Grid
                                     item
                                     key={obra.id}
