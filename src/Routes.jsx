@@ -25,12 +25,12 @@ import {
 
 const Routes = () => {
   const location = useLocation();
-  const { signed } = useAuth();
+  const { isSigned } = useAuth();
   
   const routing = useRoutes([
     {
       path: 'app',
-      element: signed ? <DashboardLayout /> : <Navigate to="/login" replace state={{ from: location.pathname }} />,
+      element: isSigned() ? <DashboardLayout /> : <Navigate to="/login" replace state={{ from: location.pathname }} />,
       children: [
         { path: 'obras', element: <Obras /> },
         { path: 'obra', element: <Obra /> },
@@ -53,7 +53,7 @@ const Routes = () => {
     },
     {
       path: '/',
-      element: !signed ? <MainLayout /> : <Navigate to="/app/obras" />,
+      element: !isSigned() ? <MainLayout /> : <Navigate to="/app/obras" />,
       children: [
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
