@@ -13,12 +13,12 @@ import {
 const AuthContext = createContext({});
 
 const AuthProvider = ({ children }) => {
-    const location = useLocation();
     let navigate = useNavigate();
+    const location = useLocation();
 
     const [user, setUser, loading] = useCrossTabState('user', null);
 
-    useEffect(() => setInterceptorExpiresApi(resetUser), []);
+    useEffect(() => setInterceptorExpiresApi(resetUser));
 
     useEffect(() => {
         if (user) {
@@ -30,7 +30,7 @@ const AuthProvider = ({ children }) => {
             if (location.pathname !== "/")
                 navigate("/login", { state: { from: location.pathname } });
         }
-    }, [user]);
+    }, [user, navigate]);
 
     const resetUser = () => {
         setUser(null);
@@ -44,7 +44,6 @@ const AuthProvider = ({ children }) => {
     const isSigned = () => !!user;
 
     if (loading) {
-        console.log('carregando')
         return <Box
             height='90vh'
             width='100%'
@@ -57,8 +56,6 @@ const AuthProvider = ({ children }) => {
             <CircularProgress />
         </Box>;
     }
-
-    console.log('carregando22')
 
     return (
         <AuthContext.Provider value={{ isSigned, user, setUser, logout }}>
