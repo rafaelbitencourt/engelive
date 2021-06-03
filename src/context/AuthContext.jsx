@@ -1,9 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react'
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import {
     Box,
     CircularProgress,
 } from '@material-ui/core';
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const AuthContext = createContext({});
 
@@ -17,10 +18,11 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const local = localStorage.getItem('user');
-        if (local) {
-            setUser(JSON.parse(local));
+        const data = JSON.parse(localStorage.getItem('user'));
+        if (data) {
+            setUser(data);
             setSigned(true);
+            axios.defaults.headers["x-access-token"] = data?.accessToken;
         }
         setLoading(false);
     }, []);
@@ -29,6 +31,7 @@ const AuthProvider = ({ children }) => {
         localStorage.setItem("user", JSON.stringify(data));
         setUser(data);
         setSigned(true);
+        axios.defaults.headers["x-access-token"] = data?.accessToken;
         navigate(from, { replace: true });
     }
 

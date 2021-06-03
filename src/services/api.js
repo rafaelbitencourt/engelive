@@ -1,21 +1,9 @@
-import Axios from 'axios'
-import { configure } from 'axios-hooks'
-import config from '../configs/config.json'
-import authService from '../services/auth.service'
+import axios from 'axios';
+import { configure } from 'axios-hooks';
+import config from 'configs/config.json';
 
-const axios = Axios.create({
-    baseURL: config.UrlApi,
-    timeout: 30000
-})
-
-axios.interceptors.request.use(
-    config => {
-        config.headers["x-access-token"] = authService.getToken()
-
-        return config;
-    },
-    error => Promise.reject(error)
-)
+axios.defaults.baseURL = config.UrlApi;
+axios.defaults.timeout = 30000;
 
 //Falta Tratar logout e refresh token  
 axios.interceptors.response.use(
