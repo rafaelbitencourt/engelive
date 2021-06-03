@@ -1,5 +1,5 @@
 import NavMenuObra from './NavMenuObra';
-import NavItem from '../NavItem';
+import NavItem from './NavItem';
 import { Sync } from '@material-ui/icons';
 import { 
     Box, 

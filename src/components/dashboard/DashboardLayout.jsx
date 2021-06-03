@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
-import AuthService from '../services/auth.service';
+import AuthService from 'services/auth.service';
 
 const DashboardLayoutRoot = experimentalStyled('div')(
   ({ theme }) => ({

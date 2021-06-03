@@ -1,3 +1,8 @@
+import { 
+  DashboardLayout, 
+  MainLayout 
+} from 'components';
+
 import {
   Home,
   Login,
@@ -17,8 +22,6 @@ import {
 } from 'pages'
 
 import { Navigate } from 'react-router-dom';
-import DashboardLayout from 'components/DashboardLayout';
-import MainLayout from 'components/MainLayout';
 
 const routes = (isLoggedIn) => [
   {
