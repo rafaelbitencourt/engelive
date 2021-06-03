@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import React, { useContext, useState } from 'react';
+import { AuthContext } from 'context/AuthContext';
+import { Outlet } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import DashboardNavbar from './DashboardNavbar';
 import DashboardSidebar from './DashboardSidebar';
@@ -42,23 +43,19 @@ const DashboardLayoutContent = experimentalStyled('div')({
 const DashboardLayout = () => {
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
   const usuario = AuthService.getCurrentUser();
-  let navigate = useNavigate();
-
-  const logOut = () => {
-    AuthService.logout();
-    navigate("/");
-  }
+  
+  const { logout } = useContext(AuthContext);
 
   return (
     <DashboardLayoutRoot>
       <DashboardNavbar
         onMobileNavOpen={() => setMobileNavOpen(true)}
-        logOut={logOut}
+        logOut={logout}
       />
       <DashboardSidebar
         onMobileClose={() => setMobileNavOpen(false)}
         openMobile={isMobileNavOpen}
-        logOut={logOut}
+        logOut={logout}
         user={usuario}
       />
       <DashboardLayoutWrapper>

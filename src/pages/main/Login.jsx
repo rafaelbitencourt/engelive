@@ -1,7 +1,9 @@
-import { Link as RouterLink, Navigate, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
+import React, { useContext } from 'react'
+import { AuthContext } from 'context/AuthContext'
+import { Link as RouterLink } from 'react-router-dom'
+import { Helmet } from 'react-helmet'
+import * as Yup from 'yup'
+import { Formik } from 'formik'
 import {
   Box,
   Button,
@@ -10,13 +12,11 @@ import {
   TextField,
   Typography,
   FormHelperText
-} from '@material-ui/core';
-import AuthService from '../../services/auth.service';
+} from '@material-ui/core'
 import useAxios from 'axios-hooks';
 
 const Login = () => {
-  const location = useLocation();
-  const { from } = location.state || { from: "/app/obras" };
+  const { login } = useContext(AuthContext);
 
   const [
     { data, loading, error },
@@ -38,10 +38,7 @@ const Login = () => {
     })
   };
 
-  if (data) {
-    AuthService.login(data);
-    return <Navigate to={from} replace />
-  }
+  if (data) login(data);
 
   return (
     <>

@@ -1,23 +1,17 @@
 import 'react-perfect-scrollbar/dist/css/styles.css';
-import { useRoutes, useLocation } from "react-router-dom";
 import { ThemeProvider } from '@material-ui/core';
 import { GlobalStyles } from 'components';
 import theme from 'theme';
-import routes from 'routes'; 
-import AuthService from 'services/auth.service';
+import Routes from 'Routes';
 import 'api/requisicoes';
+import { AuthProvider } from 'context/AuthContext'
 
-function App() {
-  const location = useLocation();
-  const currentUser = AuthService.getCurrentUser();
-  const routing = useRoutes(routes(!!currentUser, location.pathname));
-
-  return (
+const App = () => 
     <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      {routing}
+      <AuthProvider>
+        <GlobalStyles />
+        <Routes />
+      </AuthProvider>
     </ThemeProvider>
-  );
-}
 
 export default App;
