@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useAuth } from 'context/AuthContext'
 import { Link as RouterLink } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
@@ -37,7 +38,9 @@ const Login = () => {
     })
   };
 
-  if (data) setUser(data);
+  useEffect(() => {
+    setUser(data);
+  }, [data, setUser]);
 
   return (
     <>
