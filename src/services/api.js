@@ -1,8 +1,7 @@
 import axios from 'axios';
 import { configure } from 'axios-hooks';
-import config from 'configs/config.json';
 
-axios.defaults.baseURL = config.UrlApi;
+axios.defaults.baseURL = process.env.REACT_APP_URL_API;
 axios.defaults.timeout = 30000;
 configure({ axios });
 
