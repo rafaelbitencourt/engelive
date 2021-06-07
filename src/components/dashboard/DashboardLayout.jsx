@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useAuth } from 'context/AuthContext';
+import { useAuth } from 'context';
 import { Outlet } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import DashboardNavbar from './DashboardNavbar';

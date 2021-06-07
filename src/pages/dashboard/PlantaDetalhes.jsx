@@ -32,7 +32,7 @@ import {
 } from '@material-ui/icons';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
+import { SuccessDialog, ConfirmDialog } from 'components';
 import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";

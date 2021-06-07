@@ -13,7 +13,7 @@ import {
     LinearProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, WarningDialog, ErrorDialog } from 'components/Dialog';
+import { SuccessDialog, WarningDialog, ErrorDialog } from 'components';
 import ImageUploader from 'react-images-upload';
 
 const useStyles = makeStyles((theme) => ({

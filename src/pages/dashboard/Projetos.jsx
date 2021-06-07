@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { /*useNavigate,*/ useParams } from 'react-router-dom';
 import { deleteProjeto } from 'api/api.js';
-import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
+import { SuccessDialog, ConfirmDialog } from 'components';
 import { Link } from "react-router-dom";
 import useAxios from 'axios-hooks';
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
 import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listPlantasPorProjeto, deletePlanta } from 'api/api.js';
-import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
+import { SuccessDialog, ConfirmDialog } from 'components';
 import { Link } from "react-router-dom";
 
 import {

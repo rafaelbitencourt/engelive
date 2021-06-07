@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 // import { useHistory } from 'react-router-dom';
 import { listTiposProjetos, deleteTipoProjeto } from 'api/api.js';
-import { SuccessDialog, ConfirmDialog } from 'components/Dialog';
+import { SuccessDialog, ConfirmDialog } from 'components';
 import { Link } from "react-router-dom";
 
 import {
