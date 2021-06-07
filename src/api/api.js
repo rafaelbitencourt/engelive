@@ -1,8 +1,7 @@
 import axios from 'axios';
 import authHeader from '../services/auth-header';
-import config from '../configs/config.json';
 
-const urlApi = config.UrlApi;
+const urlApi = process.env.REACT_APP_URL_API;
 
 export const listObras = () => axios
     .get(urlApi + 'obras', { headers: authHeader() })
