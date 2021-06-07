@@ -8,7 +8,7 @@ import { useCrossTabState } from 'hooks';
 import {
     setTokenApi,
     setInterceptorResponseApi
-} from 'services/api';
+} from 'services';
 
 const AuthContext = createContext({});
 

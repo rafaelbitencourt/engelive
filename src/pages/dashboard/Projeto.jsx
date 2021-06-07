@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
-import { SuccessDialog, ErrorDialog } from 'components/Dialog';
+import { SuccessDialog, ErrorDialog } from 'components';
 
 const useStyles = makeStyles((theme) => ({
     layout: {

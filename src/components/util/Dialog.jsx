@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 
 
-export const SuccessDialog = (props) => {
+const SuccessDialog = (props) => {
     const { mensagem, open, setOpen } = props;
 
     return (
@@ -31,7 +31,7 @@ export const SuccessDialog = (props) => {
     );
 };
 
-export const WarningDialog = (props) => {
+const WarningDialog = (props) => {
     const { mensagem, open, setOpen } = props;
 
     return (
@@ -52,7 +52,7 @@ export const WarningDialog = (props) => {
     );
 };
 
-export const ErrorDialog = (props) => {
+const ErrorDialog = (props) => {
     const { mensagem, open, setOpen } = props;
 
     return (
@@ -72,7 +72,7 @@ export const ErrorDialog = (props) => {
     );
 };
 
-export const ConfirmDialog = (props) => {
+const ConfirmDialog = (props) => {
     const { titulo, mensagem, open, setOpen, onConfirm } = props;
     return (
         <Dialog
@@ -101,4 +101,11 @@ export const ConfirmDialog = (props) => {
             </DialogActions>
         </Dialog>
     );
+};
+
+export {
+    SuccessDialog,
+    WarningDialog,
+    ErrorDialog,
+    ConfirmDialog
 };

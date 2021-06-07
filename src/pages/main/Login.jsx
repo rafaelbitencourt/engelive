@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useAuth } from 'context/AuthContext'
+import { useAuth } from 'context'
 import { Link as RouterLink } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import * as Yup from 'yup'
