@@ -1,6 +1,10 @@
 {
   "name": "engelive",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "author": {
+    "name": "Rafael Silva de Bitencourt",
+    "email": "rafael_silbit@hotmail.com"
+  },
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.4.0",
@@ -9,9 +13,6 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.56",
     "@react-hook/window-size": "^3.0.6",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
     "axios": "^0.21.1",
     "axios-hooks": "^2.6.3",
     "formik": "^2.1.5",
@@ -30,6 +31,11 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "^4.0.3",
     "yup": "^0.29.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

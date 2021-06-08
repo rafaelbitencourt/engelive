@@ -1,6 +1,6 @@
 import DashboardLayout from './dashboard/DashboardLayout';
 import MainLayout from './main/MainLayout';
-import GlobalStyles from './GlobalStyles';
+import GlobalStyles from './util/GlobalStyles';
 import ImageMapper from './util/ImageMapper';
 import {
     SuccessDialog,
