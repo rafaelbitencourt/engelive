@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Paper,
   Box,
-  CircularProgress,
   List,
   ListItem,
   ListItemAvatar,
@@ -14,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { Edit as EditIcon, Folder as FolderIcon } from '@material-ui/icons';
 
-const Lista = ({ rows, loading, columnsModel, onClickRow }) => {
+const Lista = ({ rows, getTextItem, getLinkItem, getLinkEdit }) => {
   return (
     <Box p={1}>
       <Box
@@ -25,20 +24,33 @@ const Lista = ({ rows, loading, columnsModel, onClickRow }) => {
       >
         <List>
           {rows.map(row => (
-            <ListItem button key={row.id} component={Link} to={`/app/tipoprojeto/${row.id}`}>
+            <ListItem
+              button
+              key={row.id}
+              component={Link}
+              to={getLinkItem(row)}
+              
+            >
               <ListItemAvatar>
                 <Avatar>
                   <FolderIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={row.nome}
+                primary={getTextItem(row)}
               />
-              <ListItemSecondaryAction>
-                <IconButton edge="start" aria-label="edit" component={Link} to={`/app/tipoprojeto/${row.id}`} >
-                  <EditIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
+              {!!getLinkEdit &&
+                <ListItemSecondaryAction>
+                  <IconButton
+                    edge="start"
+                    aria-label="edit"
+                    component={Link}
+                    to={getLinkEdit(row)}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              }
             </ListItem>
           ))}
         </List>

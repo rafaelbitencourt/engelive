@@ -7,7 +7,7 @@ import {
     CircularProgress,
     Typography
 } from '@material-ui/core';
-import ObraCard from 'components/obras/ObraCard';
+import { ObraCard } from 'components/obras';
 import useAxios from 'axios-hooks';
 
 const Obras = () => {

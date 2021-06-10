@@ -5,6 +5,7 @@ import { deleteProjeto } from 'api/api.js';
 import { SuccessDialog, ConfirmDialog } from 'components';
 import { Link } from "react-router-dom";
 import useAxios from 'axios-hooks';
+import { ListaProjetos } from 'components/obras';
 
 import {
     List,
@@ -82,16 +83,17 @@ const Projetos = () => {
         </Box>;
 
     return (
-        <div>
+        <>
             <Helmet>
                 <title>Projetos | Engelive</title>
             </Helmet>
-            <Box display="flex" padding="2px">
-                {/* <Tooltip title="Voltar">
+            <ListaProjetos/>
+            {/* <Box display="flex" padding="2px">
+                <Tooltip title="Voltar">
                     <IconButton variant="contained" color="primary" onClick={() => history.goBack()}>
                         <Backspace />
                     </IconButton>
-                </Tooltip> */}
+                </Tooltip>
                 <Box flexGrow={1} display="flex" justifyContent="center">
                     <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
                         Projetos
@@ -142,8 +144,8 @@ const Projetos = () => {
                 mensagem="Projeto excluído com sucesso."
                 open={sucessOpen}
                 setOpen={setSucessOpen}
-            />
-        </div>
+            /> */}
+        </>
     );
 }
 
