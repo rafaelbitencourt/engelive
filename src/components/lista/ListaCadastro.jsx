@@ -48,7 +48,7 @@ const ListaCadastro = ({controller, linkNew, getTextItem, getLinkItem, getLinkEd
                 color="textPrimary"
                 variant="h3"
             >
-                Não há projetos cadastrados
+                Não há registros
             </Typography>
             <Box p={1} />
             <Button
