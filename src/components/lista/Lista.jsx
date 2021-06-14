@@ -6,7 +6,7 @@ import {
   List
 } from '@material-ui/core';
 
-const Lista = ({ rows, refetch, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
+const Lista = ({ rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
   return (
     <Box p={1}>
       <Box
@@ -19,7 +19,6 @@ const Lista = ({ rows, refetch, deleteMethod, getTextItem, getLinkItem, getLinkE
           {rows.map(row => (
             <ListaItem
               row={row}
-              refetch={refetch}
               deleteMethod={deleteMethod}
               getTextItem={getTextItem}
               getLinkItem={getLinkItem}

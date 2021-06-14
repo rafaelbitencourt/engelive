@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { ConfirmDialog } from 'components';
 import {
@@ -7,7 +7,8 @@ import {
     Avatar,
     ListItemText,
     ListItemSecondaryAction,
-    IconButton
+    IconButton,
+    CircularProgress
 } from '@material-ui/core';
 import {
     Edit as EditIcon,
@@ -16,11 +17,11 @@ import {
 } from '@material-ui/icons';
 import useAxios from 'axios-hooks';
 
-const ListaItem = ({ row, refetch, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
+const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const [
-        { data, loading, error, response },
+        { loading, error, response },
         executeDelete
     ] = useAxios(
         {
@@ -34,7 +35,7 @@ const ListaItem = ({ row, refetch, deleteMethod, getTextItem, getLinkItem, getLi
         executeDelete();
     };
 
-    if(response && refetch) refetch();
+    if (response && response.status === 200) return null;
 
     return (
         <>
@@ -43,7 +44,6 @@ const ListaItem = ({ row, refetch, deleteMethod, getTextItem, getLinkItem, getLi
                 key={row.id}
                 component={Link}
                 to={getLinkItem(row)}
-
             >
                 <ListItemAvatar>
                     <Avatar>
@@ -65,13 +65,26 @@ const ListaItem = ({ row, refetch, deleteMethod, getTextItem, getLinkItem, getLi
                         </IconButton>
                     }
                     {!!deleteMethod &&
-                        <IconButton
-                            edge="end"
-                            aria-label="delete"
-                            onClick={() => setConfirmOpen(true)}
-                        >
-                            <DeleteIcon />
-                        </IconButton>
+                        <>
+                            {
+                                (loading || response?.status === 200)
+                                    ?
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="delete"
+                                    >
+                                        <CircularProgress size={24} />
+                                    </IconButton>
+                                    :
+                                    <IconButton
+                                        edge="end"
+                                        aria-label="delete"
+                                        onClick={() => setConfirmOpen(true)}
+                                    >
+                                        <DeleteIcon />
+                                    </IconButton>
+                            }
+                        </>
                     }
                 </ListItemSecondaryAction>
             </ListItem>

@@ -28,11 +28,11 @@ const ListaCadastro = ({getMethod, deleteMethod, linkNew, getTextItem, getLinkIt
     const [{ data, loading, error }, refetch] = useAxios(getMethod, { useCache: false });
     const classes = useStyles();
 
-    if (loading) return <Loading />;
+    if (loading && !data) return <Loading />;
 
     if (error) return <Error error={error} />
 
-    if (data.length === 0)
+    if (!data || data.length === 0)
         return <Box
             height='100%'
             width='100%'
@@ -73,7 +73,6 @@ const ListaCadastro = ({getMethod, deleteMethod, linkNew, getTextItem, getLinkIt
             <Container>
                 <Lista
                     rows={data}
-                    refetch={refetch}
                     deleteMethod={deleteMethod}
                     getTextItem={getTextItem}
                     getLinkItem={getLinkItem}
