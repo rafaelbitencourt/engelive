@@ -2,7 +2,8 @@ import ListaCadastro from 'components/lista/ListaCadastro'
 
 const ListaTiposProjetos = () =>
     <ListaCadastro
-        controller="tipos_projetos"
+        getMethod="tipos_projetos"
+        deleteMethod="tipos_projetos"
         linkNew="/app/tipoprojeto"
         getTextItem={(row) => row.nome}
         getLinkItem={(row) => `/app/tipoprojeto/${row.id}`}

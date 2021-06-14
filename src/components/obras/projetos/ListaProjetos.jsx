@@ -6,7 +6,8 @@ const ListaProjetos = () => {
     const { idobra } = useParams();
 
     return <ListaCadastro
-        controller={`obra/${idobra}/projetos`}
+        getMethod={`obra/${idobra}/projetos`}
+        deleteMethod="projetos"
         linkNew={`/app/obra/${idobra}/projeto`}
         getTextItem={(row) => row.tipos_projeto.nome}
         getLinkItem={(row) => `/app/obra/${idobra}/projeto/${row.id}/plantas`}

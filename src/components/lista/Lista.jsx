@@ -1,19 +1,12 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import ListaItem from "./ListaItem";
 import {
   Paper,
   Box,
-  List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
-  ListItemSecondaryAction,
-  IconButton
+  List
 } from '@material-ui/core';
-import { Edit as EditIcon, Folder as FolderIcon } from '@material-ui/icons';
 
-const Lista = ({ rows, getTextItem, getLinkItem, getLinkEdit }) => {
+const Lista = ({ rows, refetch, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
   return (
     <Box p={1}>
       <Box
@@ -24,34 +17,14 @@ const Lista = ({ rows, getTextItem, getLinkItem, getLinkEdit }) => {
       >
         <List>
           {rows.map(row => (
-            <ListItem
-              button
-              key={row.id}
-              component={Link}
-              to={getLinkItem(row)}
-              
-            >
-              <ListItemAvatar>
-                <Avatar>
-                  <FolderIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={getTextItem(row)}
-              />
-              {!!getLinkEdit &&
-                <ListItemSecondaryAction>
-                  <IconButton
-                    edge="start"
-                    aria-label="edit"
-                    component={Link}
-                    to={getLinkEdit(row)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              }
-            </ListItem>
+            <ListaItem
+              row={row}
+              refetch={refetch}
+              deleteMethod={deleteMethod}
+              getTextItem={getTextItem}
+              getLinkItem={getLinkItem}
+              getLinkEdit={getLinkEdit}
+            />
           ))}
         </List>
       </Box>
