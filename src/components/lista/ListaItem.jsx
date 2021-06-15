@@ -9,7 +9,8 @@ import {
     ListItemText,
     ListItemSecondaryAction,
     IconButton,
-    CircularProgress
+    CircularProgress,
+    Tooltip
 } from '@material-ui/core';
 import {
     Edit as EditIcon,
@@ -57,14 +58,16 @@ const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit })
                 />
                 <ListItemSecondaryAction>
                     {!!getLinkEdit &&
-                        <IconButton
-                            edge="start"
-                            aria-label="edit"
-                            component={Link}
-                            to={getLinkEdit(row)}
-                        >
-                            <EditIcon />
-                        </IconButton>
+                        <Tooltip title="Editar">
+                            <IconButton
+                                edge="start"
+                                aria-label="edit"
+                                component={Link}
+                                to={getLinkEdit(row)}
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        </Tooltip>
                     }
                     {!!deleteMethod &&
                         <>
@@ -78,13 +81,15 @@ const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit })
                                         <CircularProgress size={24} />
                                     </IconButton>
                                     :
-                                    <IconButton
-                                        edge="end"
-                                        aria-label="delete"
-                                        onClick={() => setConfirmOpen(true)}
-                                    >
-                                        <DeleteIcon />
-                                    </IconButton>
+                                    <Tooltip title="Excluir">
+                                        <IconButton
+                                            edge="end"
+                                            aria-label="delete"
+                                            onClick={() => setConfirmOpen(true)}
+                                        >
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Tooltip>
                             }
                         </>
                     }
