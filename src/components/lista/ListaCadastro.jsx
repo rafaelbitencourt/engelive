@@ -28,7 +28,7 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
     const [{ data, loading, error }, refetch] = useAxios(getMethod, { useCache: false });
     const classes = useStyles();
 
-    if (loading && !data) return <Loading />;
+    if (loading) return <Loading />;
 
     if (error) return <Error error={error} />
 
