@@ -1,6 +1,9 @@
-import { useAuth, AuthProvider } from './AuthContext'
+import { useAuth, AuthProvider } from './AuthContext';
+import { useNotification, NotificationProvider } from './NotificationContext';
 
 export {
     useAuth, 
-    AuthProvider
+    AuthProvider,
+    useNotification,
+    NotificationProvider
 };

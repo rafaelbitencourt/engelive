@@ -18,6 +18,7 @@ const Lista = ({ rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) =>
         <List>
           {rows.map(row => (
             <ListaItem
+              key={row.id}
               row={row}
               deleteMethod={deleteMethod}
               getTextItem={getTextItem}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import { useNotification } from 'context';
 import { ConfirmDialog } from 'components';
 import {
     ListItem,
@@ -19,6 +20,7 @@ import useAxios from 'axios-hooks';
 
 const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
+    const { setError } = useNotification();
 
     const [
         { loading, error, response },
@@ -31,9 +33,10 @@ const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit })
         { manual: true }
     )
 
-    const excluir = () => {
-        executeDelete();
-    };
+    useEffect(() => {
+        if (!!error)
+            setError("Ocorreu um erro ao tentar excluir");
+    }, [error, setError]);
 
     if (response && response.status === 200) return null;
 
@@ -41,7 +44,6 @@ const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit })
         <>
             <ListItem
                 button
-                key={row.id}
                 component={Link}
                 to={getLinkItem(row)}
             >
@@ -93,7 +95,7 @@ const ListaItem = ({ row, deleteMethod, getTextItem, getLinkItem, getLinkEdit })
                 mensagem="Tem certeza de que deseja excluir?"
                 open={confirmOpen}
                 setOpen={setConfirmOpen}
-                onConfirm={excluir}
+                onConfirm={executeDelete}
             />
         </>
     );
