@@ -8,26 +8,24 @@ import {
 
 const Lista = ({ rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
   return (
-    <Box p={1}>
-      <Box
-        component={Paper}
-        display="flex"
-        flexDirection="column"
-        height="100%"
-      >
-        <List>
-          {rows.map(row => (
-            <ListaItem
-              key={row.id}
-              row={row}
-              deleteMethod={deleteMethod}
-              getTextItem={getTextItem}
-              getLinkItem={getLinkItem}
-              getLinkEdit={getLinkEdit}
-            />
-          ))}
-        </List>
-      </Box>
+    <Box
+      component={Paper}
+      display="flex"
+      flexDirection="column"
+      height="100%"
+    >
+      <List>
+        {rows.map(row => (
+          <ListaItem
+            key={row.id}
+            row={row}
+            deleteMethod={deleteMethod}
+            getTextItem={getTextItem}
+            getLinkItem={getLinkItem}
+            getLinkEdit={getLinkEdit}
+          />
+        ))}
+      </List>
     </Box>
   );
 }

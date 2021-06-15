@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet';
 import { ListaPlantas } from 'components/obras';
+import { Container, Box } from '@material-ui/core';
 
 const Plantas = () => {
     return (
@@ -7,7 +8,10 @@ const Plantas = () => {
             <Helmet>
                 <title>Plantas | Engelive</title>
             </Helmet>
-            <ListaPlantas />
+            <Container>
+                <Box p={1} />
+                <ListaPlantas />
+            </Container>
         </>
     );
 }

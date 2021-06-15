@@ -24,7 +24,7 @@ const useStyles = makeStyles({
     },
 });
 
-const ListaCadastro = ({getMethod, deleteMethod, linkNew, getTextItem, getLinkItem, getLinkEdit}) => {
+const ListaCadastro = ({ getMethod, deleteMethod, linkNew, getTextItem, getLinkItem, getLinkEdit }) => {
     const [{ data, loading, error }, refetch] = useAxios(getMethod, { useCache: false });
     const classes = useStyles();
 
@@ -70,15 +70,13 @@ const ListaCadastro = ({getMethod, deleteMethod, linkNew, getTextItem, getLinkIt
                     </IconButton>
                 </Tooltip>
             </Box>
-            <Container>
-                <Lista
-                    rows={data}
-                    deleteMethod={deleteMethod}
-                    getTextItem={getTextItem}
-                    getLinkItem={getLinkItem}
-                    getLinkEdit={getLinkEdit}
-                />
-            </Container>
+            <Lista
+                rows={data}
+                deleteMethod={deleteMethod}
+                getTextItem={getTextItem}
+                getLinkItem={getLinkItem}
+                getLinkEdit={getLinkEdit}
+            />
         </>
     );
 }

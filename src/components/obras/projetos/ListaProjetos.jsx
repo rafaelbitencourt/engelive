@@ -1,10 +1,6 @@
-import { useParams } from "react-router-dom";
-
 import ListaCadastro from 'components/lista/ListaCadastro'
 
-const ListaProjetos = () => {
-    const { idobra } = useParams();
-
+const ListaProjetos = ({ idobra }) => {
     return <ListaCadastro
         getMethod={`obra/${idobra}/projetos`}
         deleteMethod="projetos"

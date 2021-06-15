@@ -1,13 +1,22 @@
 import { Helmet } from 'react-helmet';
-import { ListaProjetos } from 'components/obras';
+import { ListaProjetos, DetalheObra } from 'components/obras';
+import { useParams } from "react-router-dom";
+import { Container, Box } from '@material-ui/core';
 
 const Projetos = () => {
+    const { idobra } = useParams();
+
     return (
         <>
             <Helmet>
                 <title>Projetos | Engelive</title>
             </Helmet>
-            <ListaProjetos />
+            <Container>
+                <Box p={1}/>
+                <DetalheObra idobra={idobra} />
+                <Box p={1}/>
+                <ListaProjetos idobra={idobra} />
+            </Container>
         </>
     );
 }

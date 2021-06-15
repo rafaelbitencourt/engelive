@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet';
 import { ListaTiposProjetos } from 'components/tiposprojetos';
+import { Container, Box } from '@material-ui/core';
 
 const TiposProjetos = () => {
     return (
@@ -7,7 +8,10 @@ const TiposProjetos = () => {
             <Helmet>
                 <title>Tipos de projetos | Engelive</title>
             </Helmet>
-            <ListaTiposProjetos />
+            <Container>
+                <Box p={1} />
+                <ListaTiposProjetos />
+            </Container>
         </>
     );
 }
