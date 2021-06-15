@@ -2,6 +2,7 @@ import ListaCadastro from 'components/lista/ListaCadastro'
 
 const ListaProjetos = ({ idobra }) => {
     return <ListaCadastro
+        title="Projetos"
         getMethod={`obra/${idobra}/projetos`}
         deleteMethod="projetos"
         linkNew={`/app/obra/${idobra}/projeto`}

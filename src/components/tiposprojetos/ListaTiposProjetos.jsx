@@ -2,6 +2,7 @@ import ListaCadastro from 'components/lista/ListaCadastro'
 
 const ListaTiposProjetos = () =>
     <ListaCadastro
+        title="Tipos de projeto"
         getMethod="tipos_projetos"
         deleteMethod="tipos_projetos"
         linkNew="/app/tipoprojeto"

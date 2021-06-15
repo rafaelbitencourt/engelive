@@ -8,7 +8,7 @@ import {
 import useAxios from 'axios-hooks';
 import { Loading, Error } from 'components'
 
-const DetalheObra = ({ idobra }) => {
+const Obra = ({ idobra }) => {
     const [{ data, loading, error }] = useAxios(`obras/${idobra}`, { useCache: false });
 
     if (error) return <Error error={error} />
@@ -50,4 +50,4 @@ const DetalheObra = ({ idobra }) => {
     );
 }
 
-export default DetalheObra;
+export default Obra;

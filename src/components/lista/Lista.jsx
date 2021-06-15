@@ -3,10 +3,11 @@ import ListaItem from "./ListaItem";
 import {
   Paper,
   Box,
-  List
+  List,
+  Typography
 } from '@material-ui/core';
 
-const Lista = ({ rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
+const Lista = ({ title, rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
   return (
     <Box
       component={Paper}
@@ -14,6 +15,16 @@ const Lista = ({ rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) =>
       flexDirection="column"
       height="100%"
     >
+      {title &&
+        <Box pt={2} pl={2}>
+          <Typography
+            color="textPrimary"
+            variant="h3"
+          >
+            {title}
+          </Typography>
+        </Box>
+      }
       <List>
         {rows.map(row => (
           <ListaItem
