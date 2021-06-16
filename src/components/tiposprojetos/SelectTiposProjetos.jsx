@@ -29,7 +29,6 @@ const SelectTiposProjetos = ({ value, setValue, errorField, helperTextField, nam
                     name={nameField}
                     error={errorField}
                     helperText={helperTextField}
-                    // required
                     inputProps={{
                         ...params.inputProps,
                         autoComplete: 'new-password', // disable autocomplete and autofill

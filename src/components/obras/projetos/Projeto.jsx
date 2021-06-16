@@ -126,8 +126,7 @@ const Obra = ({ idobra, idprojeto }) => {
                                 </Box>
                                 <SelectTiposProjetos
                                     errorField={Boolean(errors.idtipoprojeto)}
-                                    helperTextField={/*touched.idtipoprojeto && */errors.idtipoprojeto}
-                                    name="idtipoprojeto"
+                                    helperTextField={errors.idtipoprojeto}
                                     value={values.idtipoprojeto}
                                     setValue={(value) => setFieldValue("idtipoprojeto", value)}
                                 />
