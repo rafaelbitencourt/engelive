@@ -33,7 +33,7 @@ const Routes = () => {
       element: isSigned() ? <DashboardLayout /> : <Navigate to="/login" replace state={{ from: location.pathname }} />,
       children: [
         { path: 'obras', element: <Obras /> },
-        { path: 'obra', element: <Obra /> },
+        { path: 'obra', element: <Projetos /> },
         { path: 'obra/:idobra', element: <Obra /> },
         { path: 'obra/:idobra/projetos', element: <Projetos /> },
         { path: 'obra/:idobra/projeto', element: <Projeto /> },

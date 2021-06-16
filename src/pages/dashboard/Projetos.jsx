@@ -12,10 +12,14 @@ const Projetos = () => {
                 <title>Projetos | Engelive</title>
             </Helmet>
             <Container>
-                <Box p={1}/>
+                <Box p={1} />
                 <Obra idobra={idobra} />
-                <Box p={1}/>
-                <ListaProjetos idobra={idobra} />
+                {idobra &&
+                    <>
+                        <Box p={1} />
+                        <ListaProjetos idobra={idobra} />
+                    </>
+                }
             </Container>
         </>
     );

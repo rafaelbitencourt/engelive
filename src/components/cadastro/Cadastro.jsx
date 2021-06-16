@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import {
     Box,
@@ -19,14 +19,20 @@ import { ConfirmDialog } from 'components';
 import { Formik } from 'formik';
 
 const Cadastro = ({ title, controller, id, getFields, validationSchema, redirectAfterDelete }) => {
-    const [{ data, loading, error }] = useAxios(`${controller}/${id}`, { useCache: false });
     const [confirmOpen, setConfirmOpen] = useState(false);
+
+    const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
+        useCache: false,
+        manual: true
+    });
+
+    const getUrlSave = () => id ? `${controller}/${id}` : controller;
 
     const [{ loading: loadingSave, error: errorSave },
         executeSave
     ] = useAxios(
         {
-            url: `${controller}${id && `/${id}`}`,
+            url: getUrlSave(),
             method: `${id ? 'PUT' : 'POST'}`
         },
         { manual: true }
@@ -46,6 +52,10 @@ const Cadastro = ({ title, controller, id, getFields, validationSchema, redirect
     const cbSubmit = (values) => {
         executeSave({ data: values });
     };
+
+    useEffect(() => {
+        if (id) refetch();
+    }, [id]);
 
     if (responseDelete && responseDelete.status === 200) return <Navigate to={redirectAfterDelete} replace />;
 
@@ -107,20 +117,24 @@ const Cadastro = ({ title, controller, id, getFields, validationSchema, redirect
                                             </IconButton>
                                         </Tooltip>
                                     }
-                                    {loadingDelete
-                                        ?
-                                        <IconButton>
-                                            <CircularProgress size={24} />
-                                        </IconButton>
-                                        :
-                                        <Tooltip title="Excluir">
-                                            <IconButton onClick={() => setConfirmOpen(true)}>
-                                                <DeleteIcon />
-                                            </IconButton>
-                                        </Tooltip>
+                                    {id &&
+                                        <>
+                                            {loadingDelete
+                                                ?
+                                                <IconButton>
+                                                    <CircularProgress size={24} />
+                                                </IconButton>
+                                                :
+                                                <Tooltip title="Excluir">
+                                                    <IconButton onClick={() => setConfirmOpen(true)}>
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            }
+                                        </>
                                     }
                                 </Box>
-                                {getFields({errors,handleBlur,handleChange,touched,values,setFieldValue})}
+                                {getFields({ errors, handleBlur, handleChange, touched, values, setFieldValue })}
                             </form>
                         )}
                     </Formik>
