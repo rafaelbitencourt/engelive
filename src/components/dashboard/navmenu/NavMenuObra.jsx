@@ -18,7 +18,7 @@ const NavMenuObra = ({ obra }) => {
                     {isOpen ? <ExpandLess /> : <ExpandMore />}
                 </IconButton>
                 <NavItem
-                    href={`/app/obra/${obra.id}/projetos`}
+                    href={`/app/obra/${obra.id}`}
                     title={obra.nome}
                 />
             </Box>

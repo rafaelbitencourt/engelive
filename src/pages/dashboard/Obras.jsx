@@ -1,114 +1,120 @@
-import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { listObras, deleteObra } from '../api/api.js';
-import { SuccessDialog, ConfirmDialog } from '../components/Dialog';
 import { Link } from "react-router-dom";
-
 import {
-    List,
-    ListItem,
-    ListItemAvatar,
-    ListItemSecondaryAction,
-    ListItemText,
-    Avatar,
-    IconButton,
-    Typography,
     Box,
-    Tooltip
+    Container,
+    Grid,
+    Pagination,
+    CircularProgress,
+    Typography,
+    makeStyles,
+    Tooltip,
+    IconButton
 } from '@material-ui/core';
+import { AddCircle } from '@material-ui/icons';
+import { ObraCard } from 'components/obras';
+import useAxios from 'axios-hooks';
 
-import {
-    Folder as FolderIcon,
-    Delete as DeleteIcon,
-    Edit as EditIcon,
-    AddCircle
-} from '@material-ui/icons';
+const useStyles = makeStyles({
+    add: {
+        position: "fixed",
+        bottom: 0,
+        right: 10
+    },
+});
 
 const Obras = () => {
-    const [obras, setObras] = useState([]);
-    const [sucessOpen, setSucessOpen] = useState(false);
-    const [confirmOpen, setConfirmOpen] = useState(false);
-    const [idObraExclusao, setIdObraExclusao] = useState(null);
+    const [{ data, loading, error }, refetch] = useAxios("obras", { useCache: false });
+    const classes = useStyles();
 
-    useEffect(() => {
-        atualizarLista();
-    }, []);
+    if (loading)
+        return <Box
+            height='100%'
+            width='100%'
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <CircularProgress />
+        </Box>;
 
-    const atualizarLista = () => {
-        listObras()
-            .then(data => {
-                setObras(data);
-            });
-    };
-
-    const excluirObra = () => {
-        deleteObra(idObraExclusao)
-            .then(data => {
-                atualizarLista();
-                setSucessOpen(true);
-            })
-            .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao excluir a obra.');
-            });
-    };
+    if (error)
+        return <Box
+            height='100%'
+            width='100%'
+            sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}
+        >
+            <Typography
+                align="center"
+                color="textPrimary"
+                variant="h3"
+            >
+                {error}
+            </Typography>
+        </Box>;
 
     return (
-        <div>
+        <>
             <Helmet>
                 <title>Obras | Engelive</title>
             </Helmet>
-            <Box display="flex" padding="2px">
-                <Box flexGrow={1} paddingLeft="59px" display="flex" justifyContent="center">
-                    <Typography variant="h4" color="primary" style={{ paddingTop: '5px' }}>
-                        Obras
-                    </Typography>
-                </Box>
-                <Tooltip title="Novo">
+            <Box className={classes.add}>
+                <Tooltip title="Novo" >
                     <IconButton variant="contained" color="primary" component={Link} to="/app/obra">
                         <AddCircle fontSize="large" />
                     </IconButton>
                 </Tooltip>
             </Box>
-            <List>
-                {obras.map(obra => (
-                    <ListItem button key={obra.id} component={Link} to={`/app/obra/${obra.id}/projetos`}>
-                        <ListItemAvatar>
-                            <Avatar>
-                                <FolderIcon />
-                            </Avatar>
-                        </ListItemAvatar>
-                        <ListItemText
-                            primary={obra.nome}
-                            secondary={obra.previsao}
+            <Box
+                sx={{
+                    backgroundColor: 'background.default',
+                    minHeight: '100%',
+                    py: 3
+                }}
+            >
+                <Container maxWidth={false}>
+                    {/* <ProductListToolbar /> */}
+                    <Box sx={{ pt: 3 }}>
+                        <Grid
+                            container
+                            spacing={3}
+                        >
+                            {data.map((obra) => (
+                                <Grid
+                                    item
+                                    key={obra.id}
+                                    lg={4}
+                                    md={6}
+                                    xs={12}
+                                >
+                                    <ObraCard obra={obra} />
+                                </Grid>
+                            ))}
+                        </Grid>
+                    </Box>
+                    {/* <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            pt: 3
+                        }}
+                    >
+                        <Pagination
+                            color="primary"
+                            count={3}
+                            size="small"
                         />
-                        <ListItemSecondaryAction>
-                            <IconButton edge="start" aria-label="edit" component={Link} to={`/app/obra/${obra.id}`} >
-                                <EditIcon />
-                            </IconButton>
-                            <IconButton edge="end" aria-label="delete" onClick={() => {
-                                setIdObraExclusao(obra.id);
-                                setConfirmOpen(true);
-                            }} >
-                                <DeleteIcon />
-                            </IconButton>
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                ))}
-            </List>
-            <ConfirmDialog
-                titulo="Excluir obra?"
-                mensagem="Tem certeza de que deseja excluir a obra?"
-                open={confirmOpen}
-                setOpen={setConfirmOpen}
-                onConfirm={excluirObra}
-            />
-            <SuccessDialog
-                mensagem="Obra excluída com sucesso."
-                open={sucessOpen}
-                setOpen={setSucessOpen}
-            />
-        </div>
-    );
-}
+                    </Box> */}
+                </Container>
+            </Box>
+        </>
+    )
+};
 
 export default Obras;

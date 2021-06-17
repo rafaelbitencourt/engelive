@@ -32,7 +32,7 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
 
     if (error) return <Error error={error} />
 
-    const novo = data.length
+    const novo = data?.length
         ?
         <Box className={classes.add}>
             <Tooltip title="Novo" >

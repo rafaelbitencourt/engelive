@@ -7,7 +7,7 @@ const ListaProjetos = ({ idobra }) => {
         deleteMethod="projetos"
         linkNew={`/app/obra/${idobra}/projeto`}
         getTextItem={(row) => row.tipos_projeto.nome}
-        getLinkItem={(row) => `/app/obra/${idobra}/projeto/${row.id}/plantas`}
+        getLinkItem={(row) => `/app/obra/${idobra}/projeto/${row.id}`}
         getLinkEdit={(row) => `/app/obra/${idobra}/projeto/${row.id}`}
     />
 }
