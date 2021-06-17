@@ -4,10 +4,10 @@ import {
     IconButton,
     Box,
     Tooltip,
-    Container,
     makeStyles,
     Typography,
-    Button
+    Button,
+    Paper
 } from '@material-ui/core';
 
 
@@ -32,8 +32,17 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
 
     if (error) return <Error error={error} />
 
-    if (!data || data.length === 0)
-        return <Box
+    const novo = data.length
+        ?
+        <Box className={classes.add}>
+            <Tooltip title="Novo" >
+                <IconButton variant="contained" color="primary" component={Link} to={linkNew}>
+                    <AddCircle fontSize="large" />
+                </IconButton>
+            </Tooltip>
+        </Box>
+        :
+        <Box
             height='100%'
             width='100%'
             sx={{
@@ -59,17 +68,16 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
             >
                 Novo
             </Button>
-        </Box>;
+            <Box p={1} />
+        </Box>
 
     return (
-        <>
-            <Box className={classes.add}>
-                <Tooltip title="Novo" >
-                    <IconButton variant="contained" color="primary" component={Link} to={linkNew}>
-                        <AddCircle fontSize="large" />
-                    </IconButton>
-                </Tooltip>
-            </Box>
+        <Box
+            component={Paper}
+            display="flex"
+            flexDirection="column"
+            height="100%"
+        >
             <Lista
                 rows={data}
                 title={title}
@@ -78,7 +86,8 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
                 getLinkItem={getLinkItem}
                 getLinkEdit={getLinkEdit}
             />
-        </>
+            {novo}
+        </Box>
     );
 }
 

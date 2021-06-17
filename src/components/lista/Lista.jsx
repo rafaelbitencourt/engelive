@@ -1,7 +1,6 @@
 import React from 'react';
 import ListaItem from "./ListaItem";
 import {
-  Paper,
   Box,
   List,
   Typography
@@ -9,12 +8,7 @@ import {
 
 const Lista = ({ title, rows, deleteMethod, getTextItem, getLinkItem, getLinkEdit }) => {
   return (
-    <Box
-      component={Paper}
-      display="flex"
-      flexDirection="column"
-      height="100%"
-    >
+    <>
       {title &&
         <Box pt={2} pl={2}>
           <Typography
@@ -37,7 +31,7 @@ const Lista = ({ title, rows, deleteMethod, getTextItem, getLinkItem, getLinkEdi
           />
         ))}
       </List>
-    </Box>
+    </>
   );
 }
 
