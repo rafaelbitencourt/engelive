@@ -4,7 +4,7 @@ import { SelectTiposProjetos } from 'components/tiposprojetos';
 import * as Yup from 'yup';
 import { Cadastro } from 'components/cadastro'
 
-const Projeto = ({ idobra, idprojeto }) => {
+const CadastroProjeto = ({ idobra, idprojeto }) => {
     const getFields = ({
         errors,
         values,
@@ -36,4 +36,4 @@ const Projeto = ({ idobra, idprojeto }) => {
     );
 }
 
-export default Projeto;
+export default CadastroProjeto;

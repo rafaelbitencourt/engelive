@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet';
-import { ListaPlantas, Projeto, CadastroObra } from 'components/obras';
+import { ListaPlantas, CadastroProjeto, CadastroObra } from 'components/obras';
 import { useParams } from "react-router-dom";
 import { Container, Box } from '@material-ui/core';
 
@@ -9,13 +9,13 @@ const Plantas = () => {
     return (
         <>
             <Helmet>
-                <title>Plantas | Engelive</title>
+                <title>Projeto | Engelive</title>
             </Helmet>
             <Container>
                 <Box p={1} />
                 <CadastroObra idobra={idobra} />
                 <Box p={1} />
-                <Projeto idobra={idobra} idprojeto={idprojeto} />
+                <CadastroProjeto idobra={idobra} idprojeto={idprojeto} />
                 {idprojeto &&
                     <>
                         <Box p={1} />

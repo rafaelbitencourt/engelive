@@ -4,7 +4,7 @@ import { TextField } from '@material-ui/core';
 import * as Yup from 'yup';
 import { Cadastro } from 'components/cadastro'
 
-const Obra = ({ idobra }) => {
+const CadastroObra = ({ idobra }) => {
     const getFields = ({
         errors,
         handleBlur,
@@ -58,4 +58,4 @@ const Obra = ({ idobra }) => {
     );
 }
 
-export default Obra;
+export default CadastroObra;
