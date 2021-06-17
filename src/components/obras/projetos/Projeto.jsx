@@ -23,6 +23,10 @@ const Projeto = ({ idobra, idprojeto }) => {
             title="Projeto"
             controller="projetos"
             id={idprojeto}
+            defaultValues={{
+                idobra,
+                idtipoprojeto: ""
+            }}
             getFields={getFields}
             validationSchema={Yup.object().shape({
                 idtipoprojeto: Yup.number().required('Tipo de projeto é obrigatório')

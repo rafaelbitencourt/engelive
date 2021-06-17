@@ -44,6 +44,10 @@ const Obra = ({ idobra }) => {
             title="Obra"
             controller="obras"
             id={idobra}
+            defaultValues={{
+                nome: "",
+                previsao: ""
+            }}
             getFields={getFields}
             validationSchema={Yup.object().shape({
                 nome: Yup.string().max(255).required('Nome é obrigatório'),

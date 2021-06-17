@@ -18,7 +18,7 @@ import { Loading, Error } from 'components';
 import { ConfirmDialog } from 'components';
 import { Formik } from 'formik';
 
-const Cadastro = ({ title, controller, id, getFields, validationSchema, redirectAfterDelete }) => {
+const Cadastro = ({ title, controller, id, defaultValues, getFields, validationSchema, redirectAfterDelete }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
     const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
@@ -83,7 +83,7 @@ const Cadastro = ({ title, controller, id, getFields, validationSchema, redirect
                 :
                 <>
                     <Formik
-                        initialValues={data || {}}
+                        initialValues={{ ...defaultValues, ...data }}
                         validationSchema={validationSchema}
                         onSubmit={cbSubmit}
                     >

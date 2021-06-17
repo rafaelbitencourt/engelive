@@ -17,7 +17,6 @@ const SelectTiposProjetos = ({ value, setValue, errorField, helperTextField, nam
             getOptionLabel={(option) => option.nome}
             renderOption={(option) => option.nome}
             onChange={(e, value) => {
-                console.log(value);
                 setValue(value?.id);
               }}
             loading={loading}

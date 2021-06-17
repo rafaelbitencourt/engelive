@@ -12,10 +12,14 @@ const Plantas = () => {
                 <title>Plantas | Engelive</title>
             </Helmet>
             <Container>
-                <Box p={1}/>
-                <Projeto idobra={idobra} idprojeto={idprojeto}/>
                 <Box p={1} />
-                <ListaPlantas />
+                <Projeto idobra={idobra} idprojeto={idprojeto} />
+                {idprojeto &&
+                    <>
+                        <Box p={1} />
+                        <ListaPlantas idobra={idobra} idprojeto={idprojeto}/>
+                    </>
+                }
             </Container>
         </>
     );

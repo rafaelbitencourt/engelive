@@ -1,17 +1,31 @@
 import { Helmet } from 'react-helmet';
+import { Link } from "react-router-dom";
 import {
     Box,
     Container,
     Grid,
     Pagination,
     CircularProgress,
-    Typography
+    Typography,
+    makeStyles,
+    Tooltip,
+    IconButton
 } from '@material-ui/core';
+import { AddCircle } from '@material-ui/icons';
 import { ObraCard } from 'components/obras';
 import useAxios from 'axios-hooks';
 
+const useStyles = makeStyles({
+    add: {
+        position: "fixed",
+        bottom: 0,
+        right: 10
+    },
+});
+
 const Obras = () => {
     const [{ data, loading, error }, refetch] = useAxios("obras", { useCache: false });
+    const classes = useStyles();
 
     if (loading)
         return <Box
@@ -50,6 +64,13 @@ const Obras = () => {
             <Helmet>
                 <title>Obras | Engelive</title>
             </Helmet>
+            <Box className={classes.add}>
+                <Tooltip title="Novo" >
+                    <IconButton variant="contained" color="primary" component={Link} to="/app/obra">
+                        <AddCircle fontSize="large" />
+                    </IconButton>
+                </Tooltip>
+            </Box>
             <Box
                 sx={{
                     backgroundColor: 'background.default',
