@@ -28,48 +28,58 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
     const [{ data, loading, error }, refetch] = useAxios(getMethod, { useCache: false });
     const classes = useStyles();
 
-    if (loading) return <Loading />;
+    const getContent = () => {
+        if (loading) return <Loading />;
 
-    if (error) return <Error error={error} />
+        if (error) return <Error error={error} />
 
-    const novo = data?.length
-        ?
-        <Box className={classes.add}>
-            <Tooltip title="Novo" >
-                <IconButton variant="contained" color="primary" component={Link} to={linkNew}>
-                    <AddCircle fontSize="large" />
-                </IconButton>
-            </Tooltip>
-        </Box>
-        :
-        <Box
-            height='100%'
-            width='100%'
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'center'
-            }}
-        >
-            <Typography
-                align="center"
-                color="textPrimary"
-                variant="h3"
-            >
-                Não há registros
-            </Typography>
-            <Box p={1} />
-            <Button
-                variant="contained"
-                color="primary"
-                component={Link}
-                to={linkNew}
-            >
-                Novo
-            </Button>
-            <Box p={1} />
-        </Box>
+        if (!data?.length)
+            return <Box
+                height='100%'
+                width='100%'
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                }}
+                >
+                <Typography
+                    align="center"
+                    color="textPrimary"
+                    variant="h3"
+                >
+                    Não há registros
+                </Typography>
+                <Box p={1} />
+                <Button
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    to={linkNew}
+                >
+                    Novo
+                </Button>
+                <Box p={1} />
+            </Box>
+
+        return <>
+            <Box className={classes.add}>
+                <Tooltip title="Novo" >
+                    <IconButton variant="contained" color="primary" component={Link} to={linkNew}>
+                        <AddCircle fontSize="large" />
+                    </IconButton>
+                </Tooltip>
+            </Box>
+            <Lista
+                rows={data}
+                deleteMethod={deleteMethod}
+                getTextItem={getTextItem}
+                getLinkItem={getLinkItem}
+                getLinkEdit={getLinkEdit}
+            />
+        </>
+    }
 
     return (
         <Box
@@ -77,16 +87,18 @@ const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, g
             display="flex"
             flexDirection="column"
             height="100%"
+            pt={2}
+            pb={2}
         >
-            <Lista
-                rows={data}
-                title={title}
-                deleteMethod={deleteMethod}
-                getTextItem={getTextItem}
-                getLinkItem={getLinkItem}
-                getLinkEdit={getLinkEdit}
-            />
-            {novo}
+            <Box pl={2}>
+                <Typography
+                    color="textPrimary"
+                    variant="h3"
+                >
+                    {title}
+                </Typography>
+            </Box>
+            {getContent()}
         </Box>
     );
 }
