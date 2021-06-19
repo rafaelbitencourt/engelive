@@ -1,31 +1,32 @@
-import { Helmet } from 'react-helmet';
 import { ListaPlantas, CadastroProjeto, CadastroObra, ListaDetalhes } from 'components/obras';
 import { useParams } from "react-router-dom";
-import { Container, Box } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import { Pagina } from 'components';
 
 const Plantas = () => {
     const { idobra, idprojeto } = useParams();
 
     return (
-        <>
-            <Helmet>
-                <title>Projeto | Engelive</title>
-            </Helmet>
-            <Container>
-                <Box p={1} />
-                <CadastroObra idobra={idobra} />
-                <Box p={1} />
-                <CadastroProjeto idobra={idobra} idprojeto={idprojeto} />
-                {idprojeto &&
-                    <>
-                        <Box p={1} />
-                        <ListaPlantas idobra={idobra} idprojeto={idprojeto} />
-                        <Box p={1} />
-                        <ListaDetalhes idobra={idobra} idprojeto={idprojeto} />
-                    </>
-                }
-            </Container>
-        </>
+        <Pagina titulo="Projeto">
+            <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <CadastroObra idobra={idobra} />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <CadastroProjeto idobra={idobra} idprojeto={idprojeto} />
+                    </Grid>
+                    {idprojeto &&
+                        <Grid item xs={12}>
+                            <ListaPlantas idobra={idobra} idprojeto={idprojeto} />
+                        </Grid>
+                    }
+                    {idprojeto &&
+                        <Grid item xs={12}>
+                            <ListaDetalhes idobra={idobra} idprojeto={idprojeto} />
+                        </Grid>
+                    }
+                </Grid>
+        </Pagina>
     );
 }
 

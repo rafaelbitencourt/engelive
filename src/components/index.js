@@ -1,5 +1,6 @@
 import DashboardLayout from './dashboard/DashboardLayout';
 import MainLayout from './main/MainLayout';
+import Pagina from './pagina/Pagina';
 import GlobalStyles from './util/GlobalStyles';
 import ImageMapper from './util/ImageMapper';
 import Loading from './util/Loading';
@@ -15,6 +16,7 @@ import {
 export {
     DashboardLayout,
     MainLayout,
+    Pagina,
     GlobalStyles,
     ImageMapper,
     Loading,
