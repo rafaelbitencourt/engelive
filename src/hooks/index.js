@@ -1,7 +1,2 @@
-import useCrossTabState from './useCrossTabState';
-import usePreventWindowUnload from './usePreventWindowUnload';
-
-export {
-    useCrossTabState,
-    usePreventWindowUnload
-};
+export { default as useCrossTabState } from './useCrossTabState';
+export { default as usePreventWindowUnload } from './usePreventWindowUnload';

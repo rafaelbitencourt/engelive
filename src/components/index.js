@@ -1,34 +1,12 @@
-import DashboardLayout from './util/dashboard/DashboardLayout';
-import MainLayout from './util/main/MainLayout';
-import Pagina from './util/Pagina';
-import GlobalStyles from './util/GlobalStyles';
-import ImageMapper from './util/ImageMapper';
-import Loading from './util/Loading';
-import Error from './util/Error';
-import Logo from './util/Logo';
-import Cadastro from './util/cadastro/Cadastro';
-import ListaCadastro from './util/lista/ListaCadastro';
+export { default as DashboardLayout } from './util/dashboard/DashboardLayout';
+export { default as MainLayout } from './util/main/MainLayout';
+export { default as Pagina } from './util/Pagina';
+export { default as GlobalStyles } from './util/GlobalStyles';
+export { default as ImageMapper } from './util/ImageMapper';
+export { default as Loading } from './util/Loading';
+export { default as Error } from './util/Error';
+export { default as Logo } from './util/Logo';
+export { default as Cadastro } from './util/cadastro/Cadastro';
+export { default as ListaCadastro } from './util/lista/ListaCadastro';
 
-import {
-    SuccessDialog,
-    WarningDialog,
-    ErrorDialog,
-    ConfirmDialog
-} from './util/Dialog';
-
-export {
-    DashboardLayout,
-    MainLayout,
-    Pagina,
-    GlobalStyles,
-    ImageMapper,
-    Loading,
-    Error,
-    SuccessDialog,
-    WarningDialog,
-    ErrorDialog,
-    ConfirmDialog,
-    Logo,
-    Cadastro,
-    ListaCadastro
-};
+export * from './util/Dialog';

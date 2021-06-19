@@ -1,4 +1,5 @@
-import { ListaProjetos, CadastroObra } from 'components/obras';
+import { CadastroObra } from 'components/obras';
+import { ListaProjetos } from 'components/projetos';
 import { useParams } from "react-router-dom";
 import { Grid } from '@material-ui/core';
 import { Pagina } from 'components';
