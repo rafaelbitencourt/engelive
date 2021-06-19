@@ -62,7 +62,7 @@ const Home = () => (
                                     color="textPrimary"
                                     variant="engelive"
                                 >
-                                    EngeLive
+                                    Engelive
                                 </Typography>
                                 <Typography
                                     color="textSecondary"
