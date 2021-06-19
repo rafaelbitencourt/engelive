@@ -2,7 +2,7 @@ import React from 'react';
 import { SelectTiposProjetos } from 'components/tiposprojetos';
 
 import * as Yup from 'yup';
-import { Cadastro } from 'components/cadastro'
+import { Cadastro } from 'components'
 
 const CadastroProjeto = ({ idobra, idprojeto }) => {
     const getFields = ({

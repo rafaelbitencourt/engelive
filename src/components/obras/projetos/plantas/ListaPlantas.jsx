@@ -1,4 +1,4 @@
-import ListaCadastro from 'components/lista/ListaCadastro'
+import { ListaCadastro } from 'components';
 
 const ListaPlantas = ({ idobra, idprojeto }) => <ListaCadastro
     title="Plantas"

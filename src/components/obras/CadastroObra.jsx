@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 
 import * as Yup from 'yup';
-import { Cadastro } from 'components/cadastro'
+import { Cadastro } from 'components';
 
 const CadastroObra = ({ idobra }) => {
     const getFields = ({

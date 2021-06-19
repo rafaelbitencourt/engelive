@@ -11,8 +11,8 @@ import {
 
 import { AddCircle } from '@material-ui/icons';
 import useAxios from 'axios-hooks';
-import Lista from 'components/lista/Lista'
-import { Loading, Error } from 'components'
+import Lista from './Lista';
+import { Loading, Error } from 'components';
 
 const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, getLinkItem, getLinkEdit }) => {
     const [{ data, loading, error }] = useAxios(getMethod, { useCache: false });

@@ -13,7 +13,7 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
-import Logo from 'components/Logo';
+import { Logo } from 'components';
 
 const DashboardNavbar = ({ onMobileNavOpen, logOut, ...rest }) => {
   const [notifications] = useState([]);
