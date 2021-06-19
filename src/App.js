@@ -3,7 +3,7 @@ import { ThemeProvider } from '@material-ui/core';
 import { GlobalStyles } from 'components';
 import theme from 'theme';
 import Routes from 'Routes';
-import { AuthProvider, NotificationProvider } from 'context'
+import { AuthProvider, NotificationProvider } from 'context';
 
 const App = () =>
   <ThemeProvider theme={theme}>
