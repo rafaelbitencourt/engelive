@@ -15,7 +15,7 @@ import Lista from 'components/lista/Lista'
 import { Loading, Error } from 'components'
 
 const ListaCadastro = ({ title, getMethod, deleteMethod, linkNew, getTextItem, getLinkItem, getLinkEdit }) => {
-    const [{ data, loading, error }, refetch] = useAxios(getMethod, { useCache: false });
+    const [{ data, loading, error }] = useAxios(getMethod, { useCache: false });
 
     const getContent = () => {
         if (loading) return <Loading />;

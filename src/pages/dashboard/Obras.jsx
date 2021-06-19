@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import {
     Box,
-    Container,
     Grid,
-    Pagination,
     CircularProgress,
     Typography,
     makeStyles,
@@ -24,7 +22,7 @@ const useStyles = makeStyles({
 });
 
 const Obras = () => {
-    const [{ data, loading, error }, refetch] = useAxios("obras", { useCache: false });
+    const [{ data, loading, error }] = useAxios("obras", { useCache: false });
     const classes = useStyles();
 
     if (loading)

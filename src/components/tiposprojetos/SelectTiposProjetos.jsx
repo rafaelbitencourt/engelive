@@ -5,8 +5,8 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAxios from 'axios-hooks';
 
 const SelectTiposProjetos = ({ value, setValue, errorField, helperTextField, nameField }) => {
-    const [{ data, loading, error }, refetch] = useAxios('tipos_projetos', { useCache: false });
-    const [{ data: tipoProjeto }/*, refetch*/] = useAxios(`tipos_projetos/${value}`, { useCache: false });
+    const [{ data, loading }] = useAxios('tipos_projetos', { useCache: false });
+    const [{ data: tipoProjeto }] = useAxios(`tipos_projetos/${value}`, { useCache: false });
 
     return (
         <Autocomplete

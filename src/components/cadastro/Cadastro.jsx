@@ -28,7 +28,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
 
     const getUrlSave = () => id ? `${controller}/${id}` : controller;
 
-    const [{ loading: loadingSave, error: errorSave },
+    const [{ loading: loadingSave },
         executeSave
     ] = useAxios(
         {
@@ -39,7 +39,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
     );
 
     const [
-        { loading: loadingDelete, error: errorDelete, response: responseDelete },
+        { loading: loadingDelete, response: responseDelete },
         executeDelete
     ] = useAxios(
         {
@@ -55,7 +55,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
 
     useEffect(() => {
         if (id) refetch();
-    }, [id]);
+    }, [id, refetch]);
 
     if (responseDelete && responseDelete.status === 200) return <Navigate to={redirectAfterDelete} replace />;
 
