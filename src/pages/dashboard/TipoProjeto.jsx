@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import { Pagina } from 'components';
 
 const TipoProjeto = () => {
-    const { idtipoprojeto } = useParams();
+    const params = useParams();
 
     return <Pagina titulo="Tipo de projeto">
-        <CadastroTiposProjetos idtipoprojeto={idtipoprojeto} />
+        <CadastroTiposProjetos {...params} />
     </Pagina>;
 }
 

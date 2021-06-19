@@ -7,25 +7,25 @@ import { Grid } from '@material-ui/core';
 import { Pagina } from 'components';
 
 const Projeto = () => {
-    const { idobra, idprojeto } = useParams();
+    const params = useParams();
 
     return (
         <Pagina titulo="Projeto">
             <Grid container spacing={2}>
                 <Grid item xs={12}>
-                    <CadastroObra idobra={idobra} />
+                    <CadastroObra {...params} />
                 </Grid>
                 <Grid item xs={12}>
-                    <CadastroProjeto idobra={idobra} idprojeto={idprojeto} />
+                    <CadastroProjeto {...params} />
                 </Grid>
-                {idprojeto &&
+                {params.idprojeto &&
                     <Grid item xs={12}>
-                        <ListaPlantas idobra={idobra} idprojeto={idprojeto} />
+                        <ListaPlantas {...params} />
                     </Grid>
                 }
-                {idprojeto &&
+                {params.idprojeto &&
                     <Grid item xs={12}>
-                        <ListaDetalhes idobra={idobra} idprojeto={idprojeto} />
+                        <ListaDetalhes {...params} />
                     </Grid>
                 }
             </Grid>

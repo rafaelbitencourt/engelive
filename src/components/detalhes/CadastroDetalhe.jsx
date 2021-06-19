@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getDetalhe, saveDetalhe } from 'api/api.js';
 import {
@@ -47,15 +47,13 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const CadastroDetalhe = () => {
+const CadastroDetalhe = ({ idobra, idprojeto, iddetalhe }) => {
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [sucessOpen, setSucessOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
-
-    const { idobra, idprojeto, iddetalhe } = useParams();
     let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {

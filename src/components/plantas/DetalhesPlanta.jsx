@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState, useCallback, useReducer } from 'react';
-import { /*useHistory,*/ useParams } from 'react-router-dom';
 import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from 'api/api.js';
 import { ImageMapper } from 'components';
 import { MapInteraction } from 'react-map-interaction';
@@ -75,9 +74,8 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
     };
 };
 
-const DetalhesPlanta = () => {
+const DetalhesPlanta = ({ idprojeto, idplanta }) => {
     // let history = useHistory();
-    const { idprojeto, idplanta } = useParams();
     const [windowWidth, windowHeight] = useWindowSize();
     const targetRef = useRef();
     const [dimensions, setDimensions] = useState({ width: 0, height: 0 });

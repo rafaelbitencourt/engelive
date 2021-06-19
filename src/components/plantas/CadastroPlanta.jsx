@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import { getPlanta, savePlanta } from 'api/api.js';
 import {
@@ -47,15 +47,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Planta = () => {
+const Planta = ({ idobra, idprojeto, idplanta }) => {
     const [sucessOpen, setSucessOpen] = useState(false);
     const [warningOpen, setWarningOpen] = useState(false);
     const [errorOpen, setErrorOpen] = useState(false);
     const [mensagemErro, setMensagemErro] = useState("");
     const [imagem, setImagem] = useState(null);
     const classes = useStyles();
-
-    const { idobra, idprojeto, idplanta } = useParams();
+    
     let navigate = useNavigate();
 
     const cbSubmit = (inputs) => {
