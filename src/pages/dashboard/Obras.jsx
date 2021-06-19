@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet';
 import { Link } from "react-router-dom";
 import {
     Box,
@@ -14,6 +13,7 @@ import {
 import { AddCircle } from '@material-ui/icons';
 import { ObraCard } from 'components/obras';
 import useAxios from 'axios-hooks';
+import { Pagina } from 'components';
 
 const useStyles = makeStyles({
     add: {
@@ -60,10 +60,7 @@ const Obras = () => {
         </Box>;
 
     return (
-        <>
-            <Helmet>
-                <title>Obras | Engelive</title>
-            </Helmet>
+        <Pagina titulo="Obras">
             <Box className={classes.add}>
                 <Tooltip title="Novo" >
                     <IconButton variant="contained" color="primary" component={Link} to="/app/obra">
@@ -71,49 +68,23 @@ const Obras = () => {
                     </IconButton>
                 </Tooltip>
             </Box>
-            <Box
-                sx={{
-                    backgroundColor: 'background.default',
-                    minHeight: '100%',
-                    py: 3
-                }}
+            <Grid
+                container
+                spacing={3}
             >
-                <Container maxWidth={false}>
-                    {/* <ProductListToolbar /> */}
-                    <Box sx={{ pt: 3 }}>
-                        <Grid
-                            container
-                            spacing={3}
-                        >
-                            {data.map((obra) => (
-                                <Grid
-                                    item
-                                    key={obra.id}
-                                    lg={4}
-                                    md={6}
-                                    xs={12}
-                                >
-                                    <ObraCard obra={obra} />
-                                </Grid>
-                            ))}
-                        </Grid>
-                    </Box>
-                    {/* <Box
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            pt: 3
-                        }}
+                {data.map((obra) => (
+                    <Grid
+                        item
+                        key={obra.id}
+                        lg={4}
+                        md={6}
+                        xs={12}
                     >
-                        <Pagination
-                            color="primary"
-                            count={3}
-                            size="small"
-                        />
-                    </Box> */}
-                </Container>
-            </Box>
-        </>
+                        <ObraCard obra={obra} />
+                    </Grid>
+                ))}
+            </Grid>
+        </Pagina>
     )
 };
 

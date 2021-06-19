@@ -1,22 +1,13 @@
-import { Helmet } from 'react-helmet';
 import { CadastroTiposProjetos } from 'components/tiposprojetos';
 import { useParams } from "react-router-dom";
-import { Container, Box } from '@material-ui/core';
+import { Pagina } from 'components';
 
 const TipoProjeto = () => {
     const { idtipoprojeto } = useParams();
 
-    return (
-        <>
-            <Helmet>
-                <title>Tipo de projeto | Engelive</title>
-            </Helmet>
-            <Container>
-                <Box p={1} />
-                <CadastroTiposProjetos idtipoprojeto={idtipoprojeto} />
-            </Container>
-        </>
-    );
+    return <Pagina titulo="Tipo de projeto">
+        <CadastroTiposProjetos idtipoprojeto={idtipoprojeto} />
+    </Pagina>;
 }
 
 export default TipoProjeto;

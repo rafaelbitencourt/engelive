@@ -1,27 +1,24 @@
-import { Helmet } from 'react-helmet';
 import { ListaProjetos, CadastroObra } from 'components/obras';
 import { useParams } from "react-router-dom";
-import { Container, Box } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import { Pagina } from 'components';
 
 const Obra = () => {
     const { idobra } = useParams();
 
     return (
-        <>
-            <Helmet>
-                <title>Obra | Engelive</title>
-            </Helmet>
-            <Container>
-                <Box p={1} />
-                <CadastroObra idobra={idobra} />
+        <Pagina titulo="Obra">
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <CadastroObra idobra={idobra} />
+                </Grid>
                 {idobra &&
-                    <>
-                        <Box p={1} />
+                    <Grid item xs={12}>
                         <ListaProjetos idobra={idobra} />
-                    </>
+                    </Grid>
                 }
-            </Container>
-        </>
+            </Grid>
+        </Pagina>
     );
 }
 

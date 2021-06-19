@@ -9,23 +9,23 @@ const Plantas = () => {
     return (
         <Pagina titulo="Projeto">
             <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <CadastroObra idobra={idobra} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <CadastroProjeto idobra={idobra} idprojeto={idprojeto} />
-                    </Grid>
-                    {idprojeto &&
-                        <Grid item xs={12}>
-                            <ListaPlantas idobra={idobra} idprojeto={idprojeto} />
-                        </Grid>
-                    }
-                    {idprojeto &&
-                        <Grid item xs={12}>
-                            <ListaDetalhes idobra={idobra} idprojeto={idprojeto} />
-                        </Grid>
-                    }
+                <Grid item xs={12}>
+                    <CadastroObra idobra={idobra} />
                 </Grid>
+                <Grid item xs={12}>
+                    <CadastroProjeto idobra={idobra} idprojeto={idprojeto} />
+                </Grid>
+                {idprojeto &&
+                    <Grid item xs={12}>
+                        <ListaPlantas idobra={idobra} idprojeto={idprojeto} />
+                    </Grid>
+                }
+                {idprojeto &&
+                    <Grid item xs={12}>
+                        <ListaDetalhes idobra={idobra} idprojeto={idprojeto} />
+                    </Grid>
+                }
+            </Grid>
         </Pagina>
     );
 }

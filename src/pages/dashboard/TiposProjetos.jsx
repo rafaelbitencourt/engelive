@@ -1,19 +1,10 @@
-import { Helmet } from 'react-helmet';
 import { ListaTiposProjetos } from 'components/tiposprojetos';
-import { Container, Box } from '@material-ui/core';
+import { Pagina } from 'components';
 
-const TiposProjetos = () => {
-    return (
-        <>
-            <Helmet>
-                <title>Tipos de projetos | Engelive</title>
-            </Helmet>
-            <Container>
-                <Box p={1} />
-                <ListaTiposProjetos />
-            </Container>
-        </>
-    );
-}
+const TiposProjetos = () =>
+    <Pagina titulo="Tipos de projetos">
+        <ListaTiposProjetos />
+    </Pagina>;
+
 
 export default TiposProjetos;
