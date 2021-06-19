@@ -6,7 +6,7 @@ import { useParams } from "react-router-dom";
 import { Grid } from '@material-ui/core';
 import { Pagina } from 'components';
 
-const Plantas = () => {
+const Projeto = () => {
     const { idobra, idprojeto } = useParams();
 
     return (
@@ -33,4 +33,4 @@ const Plantas = () => {
     );
 }
 
-export default Plantas;
+export default Projeto;
