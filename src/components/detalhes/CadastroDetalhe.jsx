@@ -29,6 +29,7 @@ const CadastroDetalhe = ({ idobra, idprojeto, iddetalhe }) => {
             <ImagemField
                 value={values.imagem}
                 setValue={value => setFieldValue('imagem', value)}
+                helperText={touched.imagem && errors.imagem}
             />
         </>
     )
@@ -40,11 +41,13 @@ const CadastroDetalhe = ({ idobra, idprojeto, iddetalhe }) => {
             id={iddetalhe}
             defaultValues={{
                 idprojeto,
-                nome: ""
+                nome: "",
+                imagem: null
             }}
             getFields={getFields}
             validationSchema={Yup.object().shape({
-                nome: Yup.string().max(255).required('Nome é obrigatório')
+                nome: Yup.string().max(255).required('Nome é obrigatório'),
+                imagem: Yup.mixed().test("imagem", "Imagem é obrigatória", (value) => value instanceof File)
             })}
             redirectAfterDelete={`/app/obra/${idobra}/projeto/${idprojeto}`}
         />

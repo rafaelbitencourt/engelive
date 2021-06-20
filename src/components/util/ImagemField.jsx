@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 
+import { FormHelperText } from '@material-ui/core';
 import ImageUploader from 'react-images-upload';
 import Image from 'material-ui-image';
 
-const ImagemField = ({ value, setValue }) => {
+const ImagemField = ({ value, setValue, helperText }) => {
 
     const [imagemBase64, setImagemBase64] = useState(null);
 
@@ -33,6 +34,11 @@ const ImagemField = ({ value, setValue }) => {
                 withPreview={false}
                 singleImage
             />
+            {helperText &&
+                <FormHelperText error>
+                    {helperText}
+                </FormHelperText>
+            }
             {imagemBase64 &&
                 <Image
                     aspectRatio={(16 / 9)}
