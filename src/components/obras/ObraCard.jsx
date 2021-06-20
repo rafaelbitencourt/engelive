@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Box,
   Card,
   CardContent,
@@ -17,7 +16,7 @@ import { Link } from "react-router-dom";
 const ObraCard = ({ obra, ...rest }) => (
   <Card
     component={Link}
-    to={`/app/obra/${obra.id}/projetos`}
+    to={`/app/obra/${obra.id}`}
     sx={{
       display: 'flex',
       flexDirection: 'column',

@@ -1,36 +1,13 @@
-import Home from './main/Home'
-import Login from './main/Login'
-import NotFound from './main/NotFound'
-import Register from './main/Register'
+export { default as Home } from './main/Home'
+export { default as Login } from './main/Login'
+export { default as NotFound } from './main/NotFound'
+export { default as Register } from './main/Register'
 
-import Obras from './dashboard/Obras2';
-import Obra from './dashboard/Obra';
-import Projetos from './dashboard/Projetos';
-import Projeto from './dashboard/Projeto';
-import Detalhes from './dashboard/Detalhes';
-import Detalhe from './dashboard/Detalhe';
-import Plantas from './dashboard/Plantas';
-import Planta from './dashboard/Planta';
-import PlantaDetalhes from './dashboard/PlantaDetalhes';
-import TiposProjetos from './dashboard/TiposProjetos';
-import TipoProjeto from './dashboard/TipoProjeto';
-
-
-export {
-    Home,
-    Login,
-    NotFound,
-    Register,
-    Obras,
-    Obra,
-    Projetos,
-    Projeto,
-    Detalhes,
-    Detalhe,
-    Plantas,
-    Planta,
-    PlantaDetalhes,
-    TiposProjetos,
-    TipoProjeto
-};
-
+export { default as Obras } from './dashboard/Obras';
+export { default as Obra } from './dashboard/Obra';
+export { default as Projeto } from './dashboard/Projeto';
+export { default as Detalhe } from './dashboard/Detalhe';
+export { default as Planta } from './dashboard/Planta';
+export { default as PlantaDetalhes } from './dashboard/PlantaDetalhes';
+export { default as TiposProjetos } from './dashboard/TiposProjetos';
+export { default as TipoProjeto } from './dashboard/TipoProjeto';

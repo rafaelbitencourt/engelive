@@ -1,8 +1,2 @@
-import { setTokenApi, setInterceptorResponseApi } from './api'
-import authHeader from './auth-header'
-
-export {
-    setTokenApi,
-    setInterceptorResponseApi,
-    authHeader
-};
+export * from './api';
+export { default as authHeader } from './auth-header';

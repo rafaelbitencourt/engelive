@@ -3,14 +3,16 @@ import { ThemeProvider } from '@material-ui/core';
 import { GlobalStyles } from 'components';
 import theme from 'theme';
 import Routes from 'Routes';
-import { AuthProvider } from 'context'
+import { AuthProvider, NotificationProvider } from 'context';
 
-const App = () => 
-    <ThemeProvider theme={theme}>
-      <AuthProvider>
+const App = () =>
+  <ThemeProvider theme={theme}>
+    <AuthProvider>
+      <NotificationProvider>
         <GlobalStyles />
         <Routes />
-      </AuthProvider>
-    </ThemeProvider>
+      </NotificationProvider>
+    </AuthProvider>
+  </ThemeProvider>
 
 export default App;

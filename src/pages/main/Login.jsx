@@ -1,19 +1,18 @@
 import { useEffect } from "react";
-import { useAuth } from 'context'
-import { Link as RouterLink } from 'react-router-dom'
-import { Helmet } from 'react-helmet'
-import * as Yup from 'yup'
-import { Formik } from 'formik'
+import { useAuth } from 'context';
+import { Link as RouterLink } from 'react-router-dom';
+import * as Yup from 'yup';
+import { Formik } from 'formik';
 import {
   Box,
   Button,
-  Container,
   Link,
   TextField,
   Typography,
   FormHelperText
-} from '@material-ui/core'
+} from '@material-ui/core';
 import useAxios from 'axios-hooks';
+import { Pagina } from 'components';
 
 const Login = () => {
   const { setUser } = useAuth();
@@ -39,24 +38,23 @@ const Login = () => {
   };
 
   useEffect(() => {
-    setUser(data);
+    if (data)
+      setUser(data);
   }, [data, setUser]);
 
   return (
-    <>
-      <Helmet>
-        <title>Entrar | Engelive</title>
-      </Helmet>
+    <Pagina
+      titulo="Entrar"
+      propsContainer={{ height: 1, maxWidth:"sm" }}
+    >
       <Box
         sx={{
-          backgroundColor: 'background.default',
           display: 'flex',
           flexDirection: 'column',
-          height: '100%',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          height: 1
         }}
       >
-        <Container maxWidth="sm">
           <Formik
             initialValues={{
               user: '',
@@ -150,9 +148,8 @@ const Login = () => {
               </form>
             )}
           </Formik>
-        </Container>
       </Box>
-    </>
+    </Pagina>
   );
 };
 
