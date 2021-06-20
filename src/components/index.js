@@ -8,5 +8,6 @@ export { default as Error } from './util/Error';
 export { default as Logo } from './util/Logo';
 export { default as Cadastro } from './util/cadastro/Cadastro';
 export { default as ListaCadastro } from './util/lista/ListaCadastro';
+export { default as ImagemField } from './util/ImagemField';
 
 export * from './util/Dialog';

@@ -21,7 +21,7 @@ import { Formik } from 'formik';
 const Cadastro = ({ title, controller, id, defaultValues, getFields, validationSchema, redirectAfterDelete }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
 
-    const [{ data, loading, error }, refetch, cancel] = useAxios(`${controller}/${id}`, {
+    const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
         useCache: false,
         manual: true
     });
@@ -55,9 +55,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
 
     useEffect(() => {
         if (id) refetch();
-
-        return cancel();
-    }, [id, refetch, cancel]);
+    }, [id, refetch]);
 
     if (responseDelete && responseDelete.status === 200) return <Navigate to={redirectAfterDelete} replace />;
 
