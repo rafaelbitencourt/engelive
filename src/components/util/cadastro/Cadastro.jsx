@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     Box,
     Typography,
@@ -17,9 +17,12 @@ import useAxios from 'axios-hooks';
 import { Loading, Error } from 'components';
 import { ConfirmDialog } from 'components';
 import { Formik } from 'formik';
+import { useNotification } from 'context';
 
 const Cadastro = ({ title, controller, id, defaultValues, getFields, validationSchema, redirectAfterDelete }) => {
     const [confirmOpen, setConfirmOpen] = useState(false);
+    const { setSuccess } = useNotification();
+    let navigate = useNavigate();
 
     const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
         useCache: false,
@@ -28,7 +31,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
 
     const getUrlSave = () => id ? `${controller}/${id}` : controller;
 
-    const [{ loading: loadingSave },
+    const [{ loading: loadingSave, response: responseSave },
         executeSave
     ] = useAxios(
         {
@@ -57,7 +60,19 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
         if (id) refetch();
     }, [id, refetch]);
 
-    if (responseDelete && responseDelete.status === 200) return <Navigate to={redirectAfterDelete} replace />;
+    useEffect(() => {
+        if (responseSave && responseSave.status === 200) {
+            setSuccess("Registro salvo com sucesso.");
+            if(!id) navigate(`${responseSave.data.id}`, { replace: true });
+        }
+    }, [responseSave, setSuccess, id, navigate]);
+
+    useEffect(() => {
+        if (responseDelete && responseDelete.status === 200) {
+            setSuccess("Registro removido com sucesso.");
+            navigate(redirectAfterDelete, { replace: true });
+        }
+    }, [responseDelete, setSuccess, id, navigate]);
 
     if (error) return <Error error={error} />
 
