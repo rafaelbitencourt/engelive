@@ -1,10 +1,12 @@
-import { CadastroObra } from 'components/obras';
-import { CadastroProjeto } from 'components/projetos';
-import { ListaDetalhes } from 'components/detalhes';
-import { ListaPlantas } from 'components/plantas';
+import { 
+    Pagina, 
+    CadastroObra, 
+    CadastroProjeto, 
+    ListaDetalhes, 
+    ListaPlantas 
+} from 'components';
 import { useParams } from "react-router-dom";
 import { Grid } from '@material-ui/core';
-import { Pagina } from 'components';
 
 const Projeto = () => {
     const params = useParams();

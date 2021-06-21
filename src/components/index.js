@@ -10,4 +10,22 @@ export { default as Cadastro } from './util/cadastro/Cadastro';
 export { default as ListaCadastro } from './util/lista/ListaCadastro';
 export { default as ImagemField } from './util/ImagemField';
 
+export { default as ListaDetalhes } from './detalhes/ListaDetalhes';
+export { default as CadastroDetalhe } from './detalhes/CadastroDetalhe';
+
+export { default as ObraCard } from './obras/ObraCard';
+export { default as CadastroObra } from './obras/CadastroObra';
+export { default as ListaObras } from './obras/ListaObras';
+
+export { default as ListaPlantas } from './plantas/ListaPlantas';
+export { default as CadastroPlanta } from './plantas/CadastroPlanta';
+export { default as DetalhesPlanta } from './plantas/DetalhesPlanta';
+
+export { default as CadastroProjeto } from './projetos/CadastroProjeto';
+export { default as ListaProjetos } from './projetos/ListaProjetos';
+
+export { default as ListaTiposProjetos } from './tiposprojetos/ListaTiposProjetos';
+export { default as SelectTiposProjetos } from './tiposprojetos/SelectTiposProjetos';
+export { default as CadastroTiposProjetos } from './tiposprojetos/CadastroTiposProjetos';
+
 export * from './util/Dialog';

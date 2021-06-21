@@ -1,5 +1,4 @@
-import { DetalhesPlanta } from 'components/plantas';
-import { Pagina } from 'components';
+import { Pagina, DetalhesPlanta } from 'components';
 import { useParams } from "react-router-dom";
 
 const PlantaDetalhes = () => {

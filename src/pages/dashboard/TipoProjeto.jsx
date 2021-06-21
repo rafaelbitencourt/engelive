@@ -1,6 +1,5 @@
-import { CadastroTiposProjetos } from 'components/tiposprojetos';
+import { Pagina, CadastroTiposProjetos } from 'components';
 import { useParams } from "react-router-dom";
-import { Pagina } from 'components';
 
 const TipoProjeto = () => {
     const params = useParams();

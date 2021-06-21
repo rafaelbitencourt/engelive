@@ -1,5 +1,4 @@
-import { CadastroDetalhe } from 'components/detalhes';
-import { Pagina } from 'components';
+import { Pagina, CadastroDetalhe } from 'components';
 import { useParams } from "react-router-dom";
 
 const Detalhe = () => {

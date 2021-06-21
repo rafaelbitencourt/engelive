@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectTiposProjetos } from 'components/tiposprojetos';
+import { SelectTiposProjetos } from 'components';
 
 import * as Yup from 'yup';
 import { Cadastro } from 'components'

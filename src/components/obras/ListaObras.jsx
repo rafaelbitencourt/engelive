@@ -9,7 +9,7 @@ import {
     IconButton
 } from '@material-ui/core';
 import { AddCircle } from '@material-ui/icons';
-import { ObraCard } from 'components/obras';
+import { ObraCard } from 'components';
 import useAxios from 'axios-hooks';
 
 const useStyles = makeStyles({
