@@ -1,2 +1,2 @@
-export { useAuth, AuthProvider } from './AuthContext';
-export { useNotification, NotificationProvider } from './NotificationContext';
+export * from './AuthContext';
+export * from './NotificationContext';
