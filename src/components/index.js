@@ -9,6 +9,7 @@ export { default as Logo } from './util/Logo';
 export { default as Cadastro } from './util/cadastro/Cadastro';
 export { default as ListaCadastro } from './util/lista/ListaCadastro';
 export { default as ImagemField } from './util/ImagemField';
+export { default as DatePickerField } from './util/DatePickerField';
 
 export { default as ListaDetalhes } from './detalhes/ListaDetalhes';
 export { default as CadastroDetalhe } from './detalhes/CadastroDetalhe';

@@ -16,7 +16,7 @@ import {
 import useAxios from 'axios-hooks';
 import { Loading, Error } from 'components';
 import { ConfirmDialog } from 'components';
-import { Formik } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import { useNotification } from 'context';
 
 const Cadastro = ({ title, controller, id, defaultValues, getFields, validationSchema, redirectAfterDelete }) => {
@@ -102,16 +102,8 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
                         validationSchema={validationSchema}
                         onSubmit={cbSubmit}
                     >
-                        {({
-                            errors,
-                            handleBlur,
-                            handleChange,
-                            handleSubmit,
-                            touched,
-                            values,
-                            setFieldValue
-                        }) => (
-                            <form onSubmit={handleSubmit}>
+                        {(form) => (
+                            <Form onSubmit={form.handleSubmit}>
                                 <Box display="flex">
                                     <Typography
                                         color="textPrimary"
@@ -149,8 +141,8 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
                                         </>
                                     }
                                 </Box>
-                                {getFields({ errors, handleBlur, handleChange, touched, values, setFieldValue })}
-                            </form>
+                                {getFields({ ...form, Field})}
+                            </Form>
                         )}
                     </Formik>
                 </>
