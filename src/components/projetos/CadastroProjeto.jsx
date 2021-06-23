@@ -11,8 +11,8 @@ const CadastroProjeto = ({ idobra, idprojeto }) => {
         setFieldValue
     }) => (
         <SelectTiposProjetos
-            errorField={Boolean(errors.idtipoprojeto)}
-            helperTextField={errors.idtipoprojeto}
+            error={Boolean(errors.idtipoprojeto)}
+            helperText={errors.idtipoprojeto}
             value={values.idtipoprojeto}
             setValue={(value) => setFieldValue("idtipoprojeto", value)}
         />

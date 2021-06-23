@@ -1,15 +1,15 @@
 import {
-    TextField
+    TextField,
+    CircularProgress
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAxios from 'axios-hooks';
-import {Loading} from 'components';
 
-const Select = ({ value, setValue, errorField, helperTextField, nameField, controller, label, getOptionLabel }) => {
+const Select = ({ controller, getOptionLabel, value, setValue, error, helperText, label  }) => {
     const [{ data: options, loading }] = useAxios(`${controller}`, { useCache: false });
     const [{ data }] = useAxios(`${controller}/${value}`, { useCache: false });
 
-    if (loading) return <Loading/>;
+    if (loading) return <CircularProgress />;
 
     return (
         <Autocomplete
@@ -28,9 +28,8 @@ const Select = ({ value, setValue, errorField, helperTextField, nameField, contr
                     {...params}
                     label={label}
                     variant="outlined"
-                    name={nameField}
-                    error={errorField}
-                    helperText={helperTextField}
+                    error={error}
+                    helperText={helperText}
                     inputProps={{
                         ...params.inputProps,
                         autoComplete: 'new-password', // disable autocomplete and autofill
