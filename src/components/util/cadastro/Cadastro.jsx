@@ -16,7 +16,7 @@ import {
 import useAxios from 'axios-hooks';
 import { Loading, Error } from 'components';
 import { ConfirmDialog } from 'components';
-import { Formik, Form, Field } from 'formik';
+import { Formik } from 'formik';
 import { useNotification } from 'context';
 
 const Cadastro = ({ title, controller, id, defaultValues, getFields, validationSchema, redirectAfterDelete }) => {
@@ -72,7 +72,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
             setSuccess("Registro removido com sucesso.");
             navigate(redirectAfterDelete, { replace: true });
         }
-    }, [responseDelete, setSuccess, id, navigate]);
+    }, [responseDelete, setSuccess, id, navigate, redirectAfterDelete]);
 
     if (error) return <Error error={error} />
 
@@ -103,7 +103,7 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
                         onSubmit={cbSubmit}
                     >
                         {(form) => (
-                            <Form onSubmit={form.handleSubmit}>
+                            <form onSubmit={form.handleSubmit}>
                                 <Box display="flex">
                                     <Typography
                                         color="textPrimary"
@@ -141,8 +141,8 @@ const Cadastro = ({ title, controller, id, defaultValues, getFields, validationS
                                         </>
                                     }
                                 </Box>
-                                {getFields({ ...form, Field})}
-                            </Form>
+                                {getFields(form)}
+                            </form>
                         )}
                     </Formik>
                 </>

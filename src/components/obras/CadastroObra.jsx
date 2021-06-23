@@ -11,9 +11,7 @@ const CadastroObra = ({ idobra }) => {
         handleChange,
         touched,
         values,
-        setFieldValue,
-        setFieldError,
-        Field
+        setFieldValue
     }) => (
         <>
             <TextField
@@ -27,19 +25,13 @@ const CadastroObra = ({ idobra }) => {
                 type="text"
                 value={values.nome}
             />
-            <Field
-                component={DatePickerField}
-                fullWidth
+            <DatePickerField
                 label="Previsão"
                 name="previsao"
                 onBlur={handleBlur}
                 value={values.previsao}
                 helperText={errors.previsao}
                 error={Boolean(errors.previsao)}
-                onError={error => {
-                    if (error !== errors.previsao) 
-                        setFieldError("previsao", error);
-                }}
                 onChange={date => setFieldValue('previsao', date, false)}
             />
         </>
@@ -52,12 +44,12 @@ const CadastroObra = ({ idobra }) => {
             id={idobra}
             defaultValues={{
                 nome: "",
-                previsao: ""
+                previsao: null
             }}
             getFields={getFields}
             validationSchema={Yup.object().shape({
                 nome: Yup.string().max(255).required('Nome é obrigatório'),
-                previsao: Yup.mixed().required('Previsão é obrigatória')
+                previsao: Yup.date().typeError("Data inválida").required('Previsão é obrigatória').nullable()
             })}
             redirectAfterDelete="/app/obras"
         />
