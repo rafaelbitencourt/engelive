@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { positions } from '@material-ui/system';
 
-import { Tooltip, IconButton, Box, Button } from '@material-ui/core';
+import { Tooltip, IconButton, Box, Button, Fab } from '@material-ui/core';
 // import CircleIcon from '@material-ui/icons/Circle';
-import { AddCircle } from '@material-ui/icons';
+import { Add } from '@material-ui/icons';
 //Reescrito de https://github.com/coldiary/react-image-mapper/blob/master/src/ImageMapper.js (14/07/2020)
 
 const DetalhesPlantaMapper = (props) => {
@@ -260,13 +260,18 @@ const DetalhesPlantaMapper = (props) => {
 				<Box
 					key={area._id || index}
 					position="absolute"
-					top={scaledCoords[1]}
-					left={scaledCoords[0]}
+					top={scaledCoords[1] - 25}
+					left={scaledCoords[0] - 25}
 					zIndex="tooltip"
 				>
-					<IconButton onClick={() => console.log("DALE")} onTouchEnd={() => console.log("TESTE")}>
-						<AddCircle />
-					</IconButton>
+					<Tooltip
+						title={area.label}
+						placement="top"
+					>
+						<Fab onClick={() => console.log("DALE")} onTouchEnd={() => console.log("TESTE")}>
+							<Add />
+						</Fab>
+					</Tooltip>
 				</Box>
 			);
 		});
