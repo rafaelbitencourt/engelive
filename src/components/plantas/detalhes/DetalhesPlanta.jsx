@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useCallback, useReducer } from 'react';
 import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from 'api/api.js';
-import { ImageMapper } from 'components';
+import DetalhesPlantaMapper from './DetalhesPlantaMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
@@ -392,7 +392,7 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
                         ({ translation, scale }) => {
                             return <div style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden" }}>
                                 <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
-                                    <ImageMapper
+                                    <DetalhesPlantaMapper
                                         src={`data:image/jpeg;base64,${imagem}`}
                                         map={map}
                                         onLoad={load}
