@@ -1,29 +1,31 @@
 import React, { useState, useEffect } from "react";
+import { positions } from '@material-ui/system';
 
-import { Tooltip } from '@material-ui/core';
-
+import { Tooltip, IconButton, Box } from '@material-ui/core';
+// import CircleIcon from '@material-ui/icons/Circle';
+import { AddCircle } from '@material-ui/icons';
 //Reescrito de https://github.com/coldiary/react-image-mapper/blob/master/src/ImageMapper.js (14/07/2020)
 
 const ImageMapper = (props) => {
 	let absPos = { position: "absolute", top: 0, left: 0 };
-    const styles = {
-        container: { position: "relative" },
-        canvas: { ...absPos, pointerEvents: "none", zIndex: 2 },
-        img: { ...absPos, zIndex: 1, userSelect: "none" },
-        map: (props.onClick && { cursor: "pointer" }) || undefined
-    };
+	const styles = {
+		container: { position: "relative" },
+		canvas: { ...absPos, pointerEvents: "none", zIndex: 2 },
+		img: { ...absPos, zIndex: 1, userSelect: "none" },
+		map: (props.onClick && { cursor: "pointer" }) || undefined
+	};
 
-    const [map, setMap] = useState({
+	const [map, setMap] = useState({
 		areas: [],
 		name: "image-map-" + Math.random()
-    });
-    
-    var ctx = {};
-    var canvas = {};
-    var img = {};
-    var container = {};
+	});
 
-    const drawrect = (coords, fillColor, lineWidth, strokeColor) => {
+	var ctx = {};
+	var canvas = {};
+	var img = {};
+	var container = {};
+
+	const drawrect = (coords, fillColor, lineWidth, strokeColor) => {
 		let [left, top, right, bot] = coords;
 		ctx.fillStyle = fillColor;
 		ctx.lineWidth = lineWidth;
@@ -34,7 +36,7 @@ const ImageMapper = (props) => {
 	}
 
 	const drawcircle = (coords, fillColor, lineWidth, strokeColor) => {
-        ctx.fillStyle = fillColor;
+		ctx.fillStyle = fillColor;
 		ctx.beginPath();
 		ctx.lineWidth = lineWidth;
 		ctx.strokeStyle = strokeColor;
@@ -45,12 +47,12 @@ const ImageMapper = (props) => {
 		ctx.fillStyle = props.fillColor;
 	}
 
-	const  drawpoly = (coords, fillColor, lineWidth, strokeColor) => {
+	const drawpoly = (coords, fillColor, lineWidth, strokeColor) => {
 		coords = coords.reduce(
 			(a, v, i, s) => (i % 2 ? a : [...a, s.slice(i, i + 2)]),
 			[]
 		);
-		
+
 		ctx.fillStyle = fillColor;
 		ctx.beginPath();
 		ctx.lineWidth = lineWidth;
@@ -84,37 +86,37 @@ const ImageMapper = (props) => {
 	}
 
 	const hoverOn = (area, index, event) => {
-        const shape = event.target.getAttribute("shape");
+		const shape = event.target.getAttribute("shape");
 
-      	if (props.active) {
+		if (props.active) {
 			switch (shape) {
-                case "circle":
-                    drawcircle(
-                        event.target.getAttribute("coords").split(","),
-                        area.fillColor,
-                        area.lineWidth || props.lineWidth,
-                        area.strokeColor || props.strokeColor
-                    );
-                    break;
-                case "poly":
-                    drawpoly(
-                        event.target.getAttribute("coords").split(","),
-                        area.fillColor,
-                        area.lineWidth || props.lineWidth,
-                        area.strokeColor || props.strokeColor
-                    );
-                    break;
-                case "rect":
-                    drawrect(
-                        event.target.getAttribute("coords").split(","),
-                        area.fillColor,
-                        area.lineWidth || props.lineWidth,
-                        area.strokeColor || props.strokeColor
-                    );
+				case "circle":
+					drawcircle(
+						event.target.getAttribute("coords").split(","),
+						area.fillColor,
+						area.lineWidth || props.lineWidth,
+						area.strokeColor || props.strokeColor
+					);
+					break;
+				case "poly":
+					drawpoly(
+						event.target.getAttribute("coords").split(","),
+						area.fillColor,
+						area.lineWidth || props.lineWidth,
+						area.strokeColor || props.strokeColor
+					);
+					break;
+				case "rect":
+					drawrect(
+						event.target.getAttribute("coords").split(","),
+						area.fillColor,
+						area.lineWidth || props.lineWidth,
+						area.strokeColor || props.strokeColor
+					);
 					break;
 				default:
 					break;
-            }
+			}
 		}
 		if (props.onMouseEnter) props.onMouseEnter(area, index, event);
 	}
@@ -165,33 +167,33 @@ const ImageMapper = (props) => {
 		map.areas.forEach(area => {
 			if (!area.preFillColor) return;
 			switch (area.shape) {
-                case "circle":
-                    drawcircle(
-                        scaleCoords(area.coords),
-                        area.preFillColor,
-                        area.lineWidth || props.lineWidth,
-                        area.strokeColor || props.strokeColor
-                    );
-                    break;
-                case "poly":
-                    drawpoly(
-                        scaleCoords(area.coords),
-                        area.preFillColor,
-                        area.lineWidth || props.lineWidth,
-                        area.strokeColor || props.strokeColor
-                    );
-                    break;
-                case "rect":
-                    drawrect(
-                        scaleCoords(area.coords),
-                        area.preFillColor,
-                        area.lineWidth || props.lineWidth,
-                        area.strokeColor || props.strokeColor
-                    );
+				case "circle":
+					drawcircle(
+						scaleCoords(area.coords),
+						area.preFillColor,
+						area.lineWidth || props.lineWidth,
+						area.strokeColor || props.strokeColor
+					);
+					break;
+				case "poly":
+					drawpoly(
+						scaleCoords(area.coords),
+						area.preFillColor,
+						area.lineWidth || props.lineWidth,
+						area.strokeColor || props.strokeColor
+					);
+					break;
+				case "rect":
+					drawrect(
+						scaleCoords(area.coords),
+						area.preFillColor,
+						area.lineWidth || props.lineWidth,
+						area.strokeColor || props.strokeColor
+					);
 					break;
 				default:
 					break;
-            }
+			}
 		});
 	}
 
@@ -219,61 +221,84 @@ const ImageMapper = (props) => {
 		}
 	}
 
-	const renderAreas = () => {
+	// const renderAreas = () => {
+	// 	return map.areas.map((area, index) => {
+	// 		const scaledCoords = scaleCoords(area.coords);
+	// 		const center = computeCenter(area);
+	// 		const extendedArea = { ...area, scaledCoords, center };
+
+	// 		return (
+	// 			<Tooltip
+	// 				title={area.label}
+	// 				placement="top"
+	// 				key={"tooltip" + (area._id || index)}
+	// 			>
+	// 				<area
+	// 					key={area._id || index}
+	// 					shape={area.shape}
+	// 					coords={scaledCoords.join(",")}
+	// 					onMouseEnter={(event) => hoverOn(extendedArea, index, event)}
+	// 					onMouseLeave={(event) => hoverOff(extendedArea, index, event)}
+	// 					onMouseMove={(event) => mouseMove(extendedArea, index, event)}
+	// 					onClick={(event) => click(extendedArea, index, event)}
+	// 					href={area.href}
+	// 					alt=''
+	// 					style={{ position: 'absolute', display: 'block', top: `${extendedArea.center[1]}px`, left: `${extendedArea.center[0]}px` }}
+	// 				/>
+	// 			</Tooltip>
+	// 		);
+	// 	});
+	// }
+
+	const renderButtons = () => {
 		return map.areas.map((area, index) => {
 			const scaledCoords = scaleCoords(area.coords);
 			const center = computeCenter(area);
 			const extendedArea = { ...area, scaledCoords, center };
-			
+
 			return (
-				<Tooltip 
-					title={area.label}
-					placement="top"
-					key={"tooltip"+(area._id || index)}
+				<Box
+					key={area._id || index}
+					position="absolute"
+					top={scaledCoords[1]}
+					left={scaledCoords[0]}
+					zIndex="tooltip"
 				>
-					<area
-						key={area._id || index}
-						shape={area.shape}
-						coords={scaledCoords.join(",")}
-						onMouseEnter={(event) => hoverOn(extendedArea, index, event)}
-						onMouseLeave={(event) => hoverOff(extendedArea, index, event)}
-						onMouseMove={(event) => mouseMove(extendedArea, index, event)}
-						onClick={(event) => click(extendedArea, index, event)}
-						href={area.href}
-						alt=''
-						style={{ position: 'absolute', display: 'block', top: `${extendedArea.center[1]}px`, left: `${extendedArea.center[0]}px` }}
-					/>
-				</Tooltip>
+					<IconButton onClick={() => console.log("DALE")}>
+						<AddCircle />
+					</IconButton>
+				</Box>
 			);
 		});
 	}
 
 	useEffect(() => {
 		setMap(JSON.parse(JSON.stringify(props.map)));
-    }, [props.map]);
+	}, [props.map]);
 
-    useEffect(() => {
-        initCanvas();
-    }, [map]);
+	useEffect(() => {
+		// initCanvas();
+	}, [map]);
 
 	return (
-        <div style={styles.container} ref={node => (container = node)}>
-            <img
-                style={styles.img}
-                src={props.src}
-                useMap={`#${map.name}`}
-                alt=""
-                ref={node => (img = node)}
-                onLoad={initCanvas}
-                onClick={imageClick}
-                onMouseMove={imageMouseMove}
-            />
-            <canvas ref={node => (canvas = node)} style={styles.canvas} />
-            <map name={map.name} style={styles.map}>
-                {renderAreas()}
-            </map>
-        </div>
-    );
+		<div style={styles.container} ref={node => (container = node)}>
+			<img
+				style={styles.img}
+				src={props.src}
+				useMap={`#${map.name}`}
+				alt=""
+				ref={node => (img = node)}
+				// onLoad={initCanvas}
+				onClick={imageClick}
+				onMouseMove={imageMouseMove}
+			/>
+			{/* <canvas ref={node => (canvas = node)} style={styles.canvas} /> */}
+			{/* <map name={map.name} style={styles.map}>
+				{renderAreas()}
+			</map> */}
+			{renderButtons()}
+		</div>
+	);
 }
 
 ImageMapper.defaultProps = {

@@ -14,6 +14,7 @@ export { default as Select } from './util/Select';
 
 export { default as ListaDetalhes } from './detalhes/ListaDetalhes';
 export { default as CadastroDetalhe } from './detalhes/CadastroDetalhe';
+export { default as SelectDetalhes } from './detalhes/SelectDetalhes';
 
 export { default as ObraCard } from './obras/ObraCard';
 export { default as CadastroObra } from './obras/CadastroObra';

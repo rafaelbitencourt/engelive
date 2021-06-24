@@ -35,6 +35,7 @@ import { SuccessDialog, ConfirmDialog } from 'components';
 import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
+// import ChangeDetalhe from "./ChangeDetalhe";
 
 const minScale = 0.05;
 const maxScale = 2;
@@ -440,6 +441,13 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
                     </Hidden>
                 </>
             }
+            {/* <ChangeDetalhe
+                idprojeto, 
+                iddetalhe, 
+                setIddetalhe, 
+                open, 
+                setOpen
+            /> */}
             <Dialog
                 fullWidth
                 open={cadastroOpen && editando}
