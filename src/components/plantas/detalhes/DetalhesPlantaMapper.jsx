@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { positions } from '@material-ui/system';
 
-import { Tooltip, IconButton, Box, Button, Fab } from '@material-ui/core';
+import { Tooltip, IconButton, Box, Button, Fab, Popper } from '@material-ui/core';
 // import CircleIcon from '@material-ui/icons/Circle';
 import { Add } from '@material-ui/icons';
+import DetalhesPlantaMapperBotao from './DetalhesPlantaMapperBotao';
 //Reescrito de https://github.com/coldiary/react-image-mapper/blob/master/src/ImageMapper.js (14/07/2020)
 
 const DetalhesPlantaMapper = (props) => {
@@ -19,6 +20,7 @@ const DetalhesPlantaMapper = (props) => {
 		areas: [],
 		name: "image-map-" + Math.random()
 	});
+	const mapRef = useRef();
 
 	var ctx = {};
 	var canvas = {};
@@ -250,32 +252,76 @@ const DetalhesPlantaMapper = (props) => {
 	// 	});
 	// }
 
+	// const renderButtons = () => {
+	// 	return map.areas.map((area, index) => {
+	// 		const scaledCoords = scaleCoords(area.coords);
+	// 		const center = computeCenter(area);
+	// 		const extendedArea = { ...area, scaledCoords, center };
+	// 		const teste = img;
+	// 		mapRef
+
+	// 		const mark = (child) => <Box
+	// 			key={area._id || index}
+	// 			position="absolute"
+	// 			top={scaledCoords[1] - 25}
+	// 			left={scaledCoords[0] - 25}
+	// 			zIndex="tooltip"
+	// 		>
+	// 			<Tooltip
+	// 				title={area.label}
+	// 				placement="top"
+	// 			>
+	// 				<Popper open anchorEl={null}>
+	// 					<Fab onClick={() => console.log("DALE")} onTouchEnd={() => console.log("TESTE")}>
+	// 						<Add />
+	// 					</Fab>
+	// 				</Popper>
+	// 			</Tooltip>
+	// 		</Box>
+
+	// 		return (
+	// 			mark()
+	// 		);
+	// 	});
+	// }
+
 	const renderButtons = () => {
 		return map.areas.map((area, index) => {
 			const scaledCoords = scaleCoords(area.coords);
 			const center = computeCenter(area);
 			const extendedArea = { ...area, scaledCoords, center };
+			// const teste = img;
+			// mapRef
+
+			// const mark = (child) => <Box
+			// 	key={area._id || index}
+			// 	position="absolute"
+			// 	top={scaledCoords[1] - 25}
+			// 	left={scaledCoords[0] - 25}
+			// 	zIndex="tooltip"
+			// >
+			// 	<Tooltip
+			// 		title={area.label}
+			// 		placement="top"
+			// 	>
+			// 		<Popper open anchorEl={null}>
+			// 			<Fab onClick={() => console.log("DALE")} onTouchEnd={() => console.log("TESTE")}>
+			// 				<Add />
+			// 			</Fab>
+			// 		</Popper>
+			// 	</Tooltip>
+			// </Box>
 
 			return (
-				<Box
+				<DetalhesPlantaMapperBotao
 					key={area._id || index}
-					position="absolute"
-					top={scaledCoords[1] - 25}
-					left={scaledCoords[0] - 25}
-					zIndex="tooltip"
-				>
-					<Tooltip
-						title={area.label}
-						placement="top"
-					>
-						<Fab onClick={() => console.log("DALE")} onTouchEnd={() => console.log("TESTE")}>
-							<Add />
-						</Fab>
-					</Tooltip>
-				</Box>
+					refImg={mapRef.current}
+					scaledCoords={scaledCoords}
+				/>
 			);
 		});
 	}
+
 
 	useEffect(() => {
 		setMap(JSON.parse(JSON.stringify(props.map)));
@@ -292,8 +338,10 @@ const DetalhesPlantaMapper = (props) => {
 				src={props.src}
 				useMap={`#${map.name}`}
 				alt=""
-				ref={node => (img = node)}
+				// ref={node => (img = node)}
+				ref={mapRef}
 				// onLoad={initCanvas}
+				// onLoad={teste}
 				onClick={imageClick}
 				onMouseMove={imageMouseMove}
 			/>
