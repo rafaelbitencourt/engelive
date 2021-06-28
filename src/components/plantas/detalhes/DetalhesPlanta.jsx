@@ -402,6 +402,7 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
                                         onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
                                         onImageClick={evt => handleClickImagem(evt)}
                                         onImageMouseMove={evt => moveOnImage(evt)}
+                                        scale={scale}
                                     />
                                 </div>
                             </div>
