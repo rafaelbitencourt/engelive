@@ -131,14 +131,14 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
             });
     }, [idplanta]);
 
-    const handleClickImagem = (evt) => {
+    const handleClickImagem = (coords) => {
         if (!editando) return;
 
         setPlantaDetalhe({
             idplanta: idplanta,
             iddetalhe: null,
-            coordenadax: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
-            coordenaday: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
+            coordenadax: (coords.X - interacao.translation.x) / interacao.scale,
+            coordenaday: (coords.Y - interacao.translation.y) / interacao.scale
         });
         setDetalhe(null);
         setCadastroOpen(true);
@@ -184,10 +184,6 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
         }
     }
 
-    const load = (area) => {
-
-    }
-
     const clicked = (area) => {
         const plantaDetalhesEditar =
             plantaDetalhes.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
@@ -198,19 +194,6 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
             setPlantaDetalhe(plantaDetalhesEditar);
             setCadastroOpen(true);
         }
-    }
-    const enterArea = (area) => {
-
-    }
-    const leaveArea = (area) => {
-
-    }
-    const moveOnArea = (area, evt) => {
-
-    }
-
-    const moveOnImage = (evt) => {
-
     }
 
     const voltar = (sairSemSalvar) => {
@@ -395,13 +378,8 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
                                     <DetalhesPlantaMapper
                                         src={`data:image/jpeg;base64,${imagem}`}
                                         map={map}
-                                        onLoad={load}
                                         onClick={area => clicked(area)}
-                                        onMouseEnter={area => enterArea(area)}
-                                        onMouseLeave={area => leaveArea(area)}
-                                        onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
-                                        onImageClick={evt => handleClickImagem(evt)}
-                                        onImageMouseMove={evt => moveOnImage(evt)}
+                                        onImageClick={coords => handleClickImagem(coords)}
                                         scale={scale}
                                     />
                                 </div>

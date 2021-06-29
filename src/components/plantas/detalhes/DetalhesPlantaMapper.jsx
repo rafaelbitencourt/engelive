@@ -25,27 +25,40 @@ const DetalhesPlantaMapper = (props) => {
 	const imageClick = (event) => {
 		if (props.onImageClick && !event.defaultPrevented) {
 			event.preventDefault();
-			props.onImageClick(event);
+			props.onImageClick({
+				X: event.nativeEvent.layerX,
+				Y: event.nativeEvent.layerY
+			});
 		}
 	}
 
-	const mouseMove = (area, index, event) => {
-		if (props.onMouseMove) {
-			props.onMouseMove(area, index, event);
-		}
-	}
+	// const imageTouch = (event) => {
+	// 	if (props.onImageClick && !event.defaultPrevented) {
+	// 		event.preventDefault();
+	// 		debugger;
+	// 		// props.onImageClick({
+	// 		// 	X: event.nativeEvent.layerX,
+	// 		// 	Y: evt.nativeEvent.layerY
+	// 		// });
+	// 	}
+	// }
 
-	const imageMouseMove = (area, index, event) => {
-		if (props.onImageMouseMove) {
-			props.onImageMouseMove(area, index, event);
-		}
-	}
+	// const imageTouchStart = (event) => {
+	// 	if (props.onImageClick && !event.defaultPrevented) {
+	// 		event.preventDefault();
+	// 		debugger;
+	// 		// props.onImageClick({
+	// 		// 	X: event.nativeEvent.layerX,
+	// 		// 	Y: evt.nativeEvent.layerY
+	// 		// });
+	// 	}
+	// }
 
 	const renderButtons = () => {
 		return map.areas.map((area, index) => {
 			return (
 				<DetalhesPlantaMapperBotao
-					key={area._id || index}
+					key={index}
 					scaledCoords={area.coords}
 					label={area.label}
 					onClick={(event) => click(area, index, event)}
@@ -67,7 +80,8 @@ const DetalhesPlantaMapper = (props) => {
 				src={props.src}
 				alt=""
 				onClick={imageClick}
-				onMouseMove={imageMouseMove}
+				// onTouchEnd={imageTouch}
+				// onTouchStart={imageTouchStart}
 			/>
 			{renderButtons()}
 		</div>
