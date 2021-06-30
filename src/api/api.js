@@ -28,9 +28,9 @@ const urlApi = process.env.REACT_APP_URL_API;
 //     .get(urlApi + 'projeto/' + id + '/plantas', { headers: authHeader() })
 //     .then(({ data }) => data)
 
-export const getPlanta = (id) => axios
-    .get(urlApi + 'plantas/' + id, { headers: authHeader() })
-    .then(({ data }) => data)
+// export const getPlanta = (id) => axios
+//     .get(urlApi + 'plantas/' + id, { headers: authHeader() })
+//     .then(({ data }) => data)
 
 // export const savePlanta = (data) => {
 //     if (data.id) {
@@ -53,9 +53,9 @@ export const getPlanta = (id) => axios
 // export const deletePlanta = (id) => axios
 //     .delete(urlApi + 'plantas/' + id, { headers: authHeader() })
 
-export const getPlantasDetalhes = (idplanta) => axios
-    .get(urlApi + 'plantas_detalhes/' + idplanta, { headers: authHeader() })
-    .then(({ data }) => data)
+// export const getPlantasDetalhes = (idplanta) => axios
+//     .get(urlApi + 'plantas_detalhes/' + idplanta, { headers: authHeader() })
+//     .then(({ data }) => data)
 
 export const savePlantasDetalhes = (idplanta, data) => {
     var params = {
