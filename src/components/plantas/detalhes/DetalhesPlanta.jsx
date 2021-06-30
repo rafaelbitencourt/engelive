@@ -20,12 +20,11 @@ import Image from 'material-ui-image';
 import Lightbox from "react-image-lightbox";
 import 'react-image-lightbox/style.css';
 import {
-    Backspace,
     FilterCenterFocus,
     ZoomOutMap,
     ZoomOut,
     ZoomIn,
-    CheckCircle,
+    Save,
     Edit,
     Visibility
 } from '@material-ui/icons';
@@ -305,53 +304,47 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
     return (
         <Box height="100%" display="flex" flexDirection="column">
             <Box display="flex" padding="2px">
-                <Tooltip title="Voltar">
-                    <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => voltar(false)}>
-                        <Backspace />
+                <Box flexGrow={1} />
+                {editando ? (
+                    <Tooltip title="Modo visualização">
+                        <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
+                            <Visibility />
+                        </IconButton>
+                    </Tooltip>
+                ) : (
+                    <Tooltip title="Modo edição">
+                        <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
+                            <Edit />
+                        </IconButton>
+                    </Tooltip>
+                )}
+                <Tooltip title="Centralizar">
+                    <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
+                        <FilterCenterFocus />
                     </IconButton>
                 </Tooltip>
-                <Box flexGrow={1} display="flex" justifyContent="center">
-                    {editando ? (
-                        <Tooltip title="Modo visualização">
-                            <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
-                                <Visibility />
-                            </IconButton>
-                        </Tooltip>
-                    ) : (
-                        <Tooltip title="Modo edição">
-                            <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
-                                <Edit />
-                            </IconButton>
-                        </Tooltip>
-                    )}
-                    <Tooltip title="Centralizar">
-                        <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
-                            <FilterCenterFocus />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Ajustar">
-                        <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => setInteracao({ acao: 'ajustar' })}>
-                            <ZoomOutMap />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Zoom -">
-                        <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => setInteracao({ acao: 'menosZoom' })}>
-                            <ZoomOut />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Zoom +">
-                        <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => setInteracao({ acao: 'maisZoom' })}>
-                            <ZoomIn />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-                <Tooltip title="Salvar">
-                    <span>
-                        <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
-                            <CheckCircle fontSize="large" />
-                        </IconButton>
-                    </span>
+                <Tooltip title="Ajustar">
+                    <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => setInteracao({ acao: 'ajustar' })}>
+                        <ZoomOutMap />
+                    </IconButton>
                 </Tooltip>
+                <Tooltip title="Zoom -">
+                    <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => setInteracao({ acao: 'menosZoom' })}>
+                        <ZoomOut />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Zoom +">
+                    <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => setInteracao({ acao: 'maisZoom' })}>
+                        <ZoomIn />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Salvar">
+                    <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
+                        <Save />
+                    </IconButton>
+                </Tooltip>
+                <Box flexGrow={1} />
+
             </Box>
             <Container
                 ref={targetRef}
