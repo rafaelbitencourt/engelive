@@ -14,7 +14,7 @@ const DetalhesPlantaMapperBotao = ({ scaledCoords, onClick, label, scale }) => {
     useEffect(() => {
         setTop(scaledCoords[1] - refBox.current.offsetHeight / 2);
         setLeft(scaledCoords[0] - refBox.current.offsetWidth / 2);
-    }, [refBox.current, scaledCoords]);
+    }, [scaledCoords]);
 
     return <Box
         position="absolute"
