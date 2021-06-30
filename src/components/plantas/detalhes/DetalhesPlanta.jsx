@@ -137,8 +137,8 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
         setPlantaDetalhe({
             idplanta: idplanta,
             iddetalhe: null,
-            coordenadax: (coords.X - interacao.translation.x) / interacao.scale,
-            coordenaday: (coords.Y - interacao.translation.y) / interacao.scale
+            coordenadax: coords.x,
+            coordenaday: coords.y
         });
         setDetalhe(null);
         setCadastroOpen(true);

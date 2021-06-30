@@ -1,20 +1,13 @@
 import React, { useState, useEffect } from "react";
 
 import DetalhesPlantaMapperBotao from './DetalhesPlantaMapperBotao';
-//Reescrito de https://github.com/coldiary/react-image-mapper/blob/master/src/ImageMapper.js (14/07/2020)
 
 const DetalhesPlantaMapper = (props) => {
-	let absPos = { position: "absolute", top: 0, left: 0 };
-	const styles = {
-		container: { position: "relative" },
-		img: { ...absPos, zIndex: 1, userSelect: "none" }
-	};
-
 	const [map, setMap] = useState({
 		areas: [],
 		name: "image-map-" + Math.random()
 	});
-	
+
 	const click = (area, index, event) => {
 		if (props.onClick && !event.defaultPrevented) {
 			event.preventDefault();
@@ -25,34 +18,24 @@ const DetalhesPlantaMapper = (props) => {
 	const imageClick = (event) => {
 		if (props.onImageClick && !event.defaultPrevented) {
 			event.preventDefault();
-			props.onImageClick({
-				X: event.nativeEvent.layerX,
-				Y: event.nativeEvent.layerY
-			});
+			var bcr = event.target.getBoundingClientRect();
+			var x = (event.nativeEvent.clientX - bcr.x) / props.scale;
+			var y = (event.nativeEvent.clientY - bcr.y) / props.scale;
+			props.onImageClick({ x, y });
 		}
 	}
 
-	// const imageTouch = (event) => {
-	// 	if (props.onImageClick && !event.defaultPrevented) {
-	// 		event.preventDefault();
-	// 		debugger;
-	// 		// props.onImageClick({
-	// 		// 	X: event.nativeEvent.layerX,
-	// 		// 	Y: evt.nativeEvent.layerY
-	// 		// });
-	// 	}
-	// }
-
-	// const imageTouchStart = (event) => {
-	// 	if (props.onImageClick && !event.defaultPrevented) {
-	// 		event.preventDefault();
-	// 		debugger;
-	// 		// props.onImageClick({
-	// 		// 	X: event.nativeEvent.layerX,
-	// 		// 	Y: evt.nativeEvent.layerY
-	// 		// });
-	// 	}
-	// }
+	const imageTouch = (event) => {
+		if (props.onImageClick && !event.defaultPrevented) {
+			event.preventDefault();
+			if (event.changedTouches.length) {
+				var bcr = event.target.getBoundingClientRect();
+				var x = (event.changedTouches[0].clientX - bcr.x) / props.scale;
+				var y = (event.changedTouches[0].clientY - bcr.y) / props.scale;
+				props.onImageClick({ x, y });
+			}
+		}
+	}
 
 	const renderButtons = () => {
 		return map.areas.map((area, index) => {
@@ -74,17 +57,15 @@ const DetalhesPlantaMapper = (props) => {
 	}, [props.map]);
 
 	return (
-		<div style={styles.container}>
+		<>
 			<img
-				style={styles.img}
 				src={props.src}
 				alt=""
 				onClick={imageClick}
-				// onTouchEnd={imageTouch}
-				// onTouchStart={imageTouchStart}
+				onTouchEnd={imageTouch}
 			/>
 			{renderButtons()}
-		</div>
+		</>
 	);
 }
 
