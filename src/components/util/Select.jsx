@@ -5,11 +5,22 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useAxios from 'axios-hooks';
 
-const Select = ({ controller, getOptionLabel, value, setValue, error, helperText, label  }) => {
-    const [{ data: options, loading }] = useAxios(`${controller}`, { useCache: false });
-    const [{ data }] = useAxios(`${controller}/${value}`, { useCache: false });
+const Select = (props) => {
+    const { 
+        controller, 
+        controllerValue, 
+        getOptionLabel, 
+        value, 
+        setValue, 
+        error, 
+        helperText, 
+        label 
+    } = props;
 
-    if (loading) return <CircularProgress />;
+    const [{ data: options, loading: loadingOptions }] = useAxios(`${controller}`);
+    const [{ data }] = useAxios(`${controllerValue || controller}/${value}`);
+
+    if (loadingOptions) return <CircularProgress />;
 
     return (
         <Autocomplete
@@ -22,7 +33,7 @@ const Select = ({ controller, getOptionLabel, value, setValue, error, helperText
             onChange={(e, value) => {
                 setValue(value?.id);
               }}
-            loading={loading}
+            loading={loadingOptions}
             renderInput={(params) => (
                 <TextField
                     {...params}

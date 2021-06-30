@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useCallback, useReducer } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Dialog,
@@ -13,24 +13,27 @@ import Image from 'material-ui-image';
 import { SelectDetalhes } from 'components';
 import useAxios from 'axios-hooks';
 
-const ChangeDetalhe = ({ idprojeto, iddetalhe, setIddetalhe, open, setOpen }) => {
-    // const [{ data, loading, error }] = useAxios('projeto/' + idprojeto + '/detalhes', { useCache: false });
-    // const [detalhe, setDetalhe] = useState({});
+const DetalhesPlantaCadastro = ({ idprojeto, iddetalhe, setIddetalhe, open, onClose }) => {
+    const [{ data, loading, error }] = useAxios('detalhes', { useCache: false });
+    const [detalhe, setDetalhe] = useState(null);
+    const [imagemDetalhe, setImagemDetalhe] = useState(null);
+
 
     // const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
     //     useCache: false,
     //     manual: true
     // });
 
-    // useEffect(() => {
-    //     setInteracao({ acao: 'ajustar' });
-    // }, [iddetalhe]);
+    useEffect(() => {
+        if(detalhe)
+            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(detalhe.imagem, 'binary').toString('base64'));
+    }, [detalhe]);
 
     return (
         <Dialog
             fullWidth
-            open={open}//open={cadastroOpen && editando}
-            onClose={() => setOpen(false)}
+            open={open}
+            onClose={onClose}
             aria-labelledby="form-dialog-title">
             {/* <form onSubmit={(event) => handleSubmit(event)}> */}
                 <DialogTitle id="form-dialog-title">{(iddetalhe) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
@@ -41,33 +44,14 @@ const ChangeDetalhe = ({ idprojeto, iddetalhe, setIddetalhe, open, setOpen }) =>
                         // helperText={errors.idtipoprojeto}
                         value={iddetalhe}
                         setValue={(value) => setIddetalhe(value)}
+                        setSelected={(selected) => setDetalhe(selected)}
                     />
-                    {/* <SelectDetalhes
-                        value={detalhe}
-                        onChange={(event, newValue) => setDetalhe(newValue)}
-                        options={detalhes}
-                        autoHighlight
-                        getOptionLabel={(option) => option.nome}
-                        renderOption={(option) => option.nome}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Detalhe"
-                                variant="outlined"
-                                required
-                                inputProps={{
-                                    ...params.inputProps,
-                                    autoComplete: 'new-password', // disable autocomplete and autofill
-                                }}
-                            />
-                        )}
-                    /> */}
-                    {/* <Grid item xs={12}>
+                    <Grid item xs={12}>
                         <Image
                             aspectRatio={(16 / 9)}
                             src={imagemDetalhe || "/logo.png"}
                         />
-                    </Grid> */}
+                    </Grid>
                 </DialogContent>
                 {/* <DialogActions>
                     <Button disabled={!iddetalhe} onClick={handleClickRemover} variant="outlined">
@@ -85,4 +69,4 @@ const ChangeDetalhe = ({ idprojeto, iddetalhe, setIddetalhe, open, setOpen }) =>
     );
 }
 
-export default ChangeDetalhe;
+export default DetalhesPlantaCadastro;
