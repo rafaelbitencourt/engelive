@@ -3,13 +3,6 @@ import React, { useState, useEffect } from "react";
 import DetalhesPlantaMapperBotao from './DetalhesPlantaMapperBotao';
 
 const DetalhesPlantaMapper = (props) => {
-	// const click = (detalhe, event) => {
-	// 	if (props.onClick && !event.defaultPrevented) {
-	// 		event.preventDefault();
-	// 		props.onClick(detalhe);
-	// 	}
-	// }
-
 	const imageClick = (event) => {
 		if (props.onImageClick && !event.defaultPrevented) {
 			event.preventDefault();
@@ -46,7 +39,6 @@ const DetalhesPlantaMapper = (props) => {
 						key={index}
 						scaledCoords={detalhe.coords}
 						label={detalhe.label}
-						// onClick={(event) => click(detalhe, event)}
 						onClick={() => props.onClick(detalhe)}
 						scale={props.scale}
 					/>
