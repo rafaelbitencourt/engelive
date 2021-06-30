@@ -3,11 +3,6 @@ import React, { useState, useEffect } from "react";
 import DetalhesPlantaMapperBotao from './DetalhesPlantaMapperBotao';
 
 const DetalhesPlantaMapper = (props) => {
-	const [map, setMap] = useState({
-		areas: [],
-		name: "image-map-" + Math.random()
-	});
-
 	const click = (area, index, event) => {
 		if (props.onClick && !event.defaultPrevented) {
 			event.preventDefault();
@@ -37,25 +32,6 @@ const DetalhesPlantaMapper = (props) => {
 		}
 	}
 
-	const renderButtons = () => {
-		return map.areas.map((area, index) => {
-			return (
-				<DetalhesPlantaMapperBotao
-					key={index}
-					scaledCoords={area.coords}
-					label={area.label}
-					onClick={(event) => click(area, index, event)}
-					scale={props.scale}
-				/>
-			);
-		});
-	}
-
-
-	useEffect(() => {
-		setMap(JSON.parse(JSON.stringify(props.map)));
-	}, [props.map]);
-
 	return (
 		<>
 			<img
@@ -64,16 +40,19 @@ const DetalhesPlantaMapper = (props) => {
 				onClick={imageClick}
 				onTouchEnd={imageTouch}
 			/>
-			{renderButtons()}
+			{
+				props.map.map((detalhe, index) =>
+					<DetalhesPlantaMapperBotao
+						key={index}
+						scaledCoords={detalhe.coords}
+						label={detalhe.label}
+						onClick={(event) => click(detalhe, index, event)}
+						scale={props.scale}
+					/>
+				)
+			}
 		</>
 	);
 }
-
-DetalhesPlantaMapper.defaultProps = {
-	map: {
-		areas: [],
-		name: "image-map-" + Math.random()
-	}
-};
 
 export default DetalhesPlantaMapper;

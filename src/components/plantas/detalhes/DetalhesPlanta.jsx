@@ -109,10 +109,7 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
         translation: { x: 0, y: 0 }
     });
 
-    const [map, setMap] = useState({
-        name: "my-map",
-        areas: []
-    });
+    const [map, setMap] = useState([]);
     const [saindo, setSaindo] = useState(false);
     const [editando, setEditando] = useState(false);
     const [alteracoesPendentes, setAlteracoesPendentes] = useState(false);
@@ -272,10 +269,7 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
             });
         });
 
-        setMap({
-            name: "my-map",
-            areas: areas
-        });
+        setMap(areas);
     }, [plantaDetalhes, detalhes]);
 
     useEffect(() => {
