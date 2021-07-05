@@ -14,7 +14,7 @@ const Select = (props) => {
         setValue, 
         error, 
         helperText, 
-        label 
+        label
     } = props;
 
     const [{ data: options, loading: loadingOptions }] = useAxios(`${controller}`);

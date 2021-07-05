@@ -10,24 +10,26 @@ import {
 } from '@material-ui/core';
 import Image from 'material-ui-image';
 
-import { SelectDetalhes } from 'components';
+import { SelectDetalhes, ImagemView } from 'components';
 import useAxios from 'axios-hooks';
 
-const DetalhesPlantaCadastro = ({ idprojeto, iddetalhe, setIddetalhe, open, onClose }) => {
+const DetalhesPlantaCadastro = ({ idprojeto, detalhe, setDetalhe, open, onClose }) => {
     const [{ data, loading, error }] = useAxios('detalhes', { useCache: false });
-    const [detalhe, setDetalhe] = useState(null);
-    const [imagemDetalhe, setImagemDetalhe] = useState(null);
-
+    // const [detalhe, setDetalhe] = useState(null);
+    // const [imagemDetalhe, setImagemDetalhe] = useState(null);
+    // detalhe={detalhe}
+    // setDetalhe={setDetalhe}
 
     // const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
     //     useCache: false,
     //     manual: true
     // });
 
-    useEffect(() => {
-        if(detalhe)
-            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(detalhe.imagem, 'binary').toString('base64'));
-    }, [detalhe]);
+    // useEffect(() => {
+    //     debugger;
+    //     if(detalhe)
+    //         setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(detalhe.imagem, 'binary').toString('base64'));
+    // }, [detalhe]);
 
     return (
         <Dialog
@@ -42,29 +44,32 @@ const DetalhesPlantaCadastro = ({ idprojeto, iddetalhe, setIddetalhe, open, onCl
                         idprojeto={idprojeto}
                         // error={Boolean(errors.idtipoprojeto)}
                         // helperText={errors.idtipoprojeto}
-                        value={iddetalhe}
-                        setValue={(value) => setIddetalhe(value)}
-                        setSelected={(selected) => setDetalhe(selected)}
+                        value={detalhe?.id}
+                        setValue={(value) => setDetalhe({...detalhe, idvalue})}
                     />
                     <Grid item xs={12}>
-                        <Image
+                        <ImagemView
+                            url={`detalhes/${iddetalhe}`} 
+                            getImagem={(detalhe) => detalhe.imagem}
+                        />
+                        {/* <Image
                             aspectRatio={(16 / 9)}
                             src={imagemDetalhe || "/logo.png"}
-                        />
+                        /> */}
                     </Grid>
                 </DialogContent>
-                {/* <DialogActions>
-                    <Button disabled={!iddetalhe} onClick={handleClickRemover} variant="outlined">
+                <DialogActions>
+                    <Button disabled={!iddetalhe} /*onClick={handleClickRemover}*/ variant="outlined">
                         Remover
                     </Button>
-                    <Button onClick={() => setCadastroOpen(false)}>
+                    <Button onClick={onClose}>
                         Cancelar
                     </Button>
                     <Button type="submit" variant="contained">
                         {iddetalhe ? "Alterar" : "Inserir"}
                     </Button>
                 </DialogActions>
-            </form> */}
+            {/* </form>  */}
         </Dialog>
     );
 }

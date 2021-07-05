@@ -131,6 +131,10 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
         setCadastroOpen(true);
     }
 
+    // const insertPlantaDetalhes = (plantaDetalhe) => {
+    //     planta
+    // }
+
     const handleSubmit = (event) => {
 
         event.preventDefault();
@@ -392,14 +396,14 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
                     </Hidden>
                 </>
             }
-            {/* <DetalhesPlantaCadastro
+            <DetalhesPlantaCadastro
                 idprojeto={idprojeto}
-                iddetalhe={detalhe?.id}
-                setIddetalhe={() => {}}
+                detalhe={detalhe}
+                setDetalhe={setDetalhe}
                 open={cadastroOpen && editando}
                 onClose={() => setCadastroOpen(false)}
-            /> */}
-            <Dialog
+            />
+            {/* <Dialog
                 fullWidth
                 open={cadastroOpen && editando}
                 onClose={() => setCadastroOpen(false)}
@@ -446,7 +450,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
                         </Button>
                     </DialogActions>
                 </form>
-            </Dialog>
+            </Dialog> */}
         </Box>
     );
 }
