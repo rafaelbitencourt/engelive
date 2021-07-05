@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectTiposProjetos } from 'components/tiposprojetos';
+import { SelectTiposProjetos } from 'components';
 
 import * as Yup from 'yup';
 import { Cadastro } from 'components'
@@ -11,8 +11,8 @@ const CadastroProjeto = ({ idobra, idprojeto }) => {
         setFieldValue
     }) => (
         <SelectTiposProjetos
-            errorField={Boolean(errors.idtipoprojeto)}
-            helperTextField={errors.idtipoprojeto}
+            error={Boolean(errors.idtipoprojeto)}
+            helperText={errors.idtipoprojeto}
             value={values.idtipoprojeto}
             setValue={(value) => setFieldValue("idtipoprojeto", value)}
         />

@@ -1,5 +1,4 @@
-import { Pagina } from 'components';
-import { ListaObras } from 'components/obras';
+import { Pagina, ListaObras } from 'components';
 
 const Obras = () => (
     <Pagina titulo="Obras">

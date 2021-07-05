@@ -2,7 +2,7 @@ import React from 'react';
 import { TextField } from '@material-ui/core';
 
 import * as Yup from 'yup';
-import { Cadastro } from 'components';
+import { Cadastro, DatePickerField } from 'components';
 
 const CadastroObra = ({ idobra }) => {
     const getFields = ({
@@ -10,7 +10,8 @@ const CadastroObra = ({ idobra }) => {
         handleBlur,
         handleChange,
         touched,
-        values
+        values,
+        setFieldValue
     }) => (
         <>
             <TextField
@@ -24,17 +25,14 @@ const CadastroObra = ({ idobra }) => {
                 type="text"
                 value={values.nome}
             />
-            <TextField
-                error={Boolean(touched.previsao && errors.previsao)}
-                fullWidth
-                helperText={touched.previsao && errors.previsao}
+            <DatePickerField
                 label="Previsão"
-                margin="normal"
                 name="previsao"
                 onBlur={handleBlur}
-                onChange={handleChange}
-                type="date"
                 value={values.previsao}
+                helperText={errors.previsao}
+                error={Boolean(errors.previsao)}
+                onChange={date => setFieldValue('previsao', date, false)}
             />
         </>
     )
@@ -46,12 +44,12 @@ const CadastroObra = ({ idobra }) => {
             id={idobra}
             defaultValues={{
                 nome: "",
-                previsao: ""
+                previsao: null
             }}
             getFields={getFields}
             validationSchema={Yup.object().shape({
                 nome: Yup.string().max(255).required('Nome é obrigatório'),
-                previsao: Yup.date().required('Previsão é obrigatória')
+                previsao: Yup.date().typeError("Data inválida").required('Previsão é obrigatória').nullable()
             })}
             redirectAfterDelete="/app/obras"
         />

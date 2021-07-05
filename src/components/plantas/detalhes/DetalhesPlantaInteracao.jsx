@@ -1,6 +1,6 @@
-import React, { useRef, useEffect, useState, useCallback, useReducer } from 'react';
-import { listDetalhesPorProjeto, getPlanta, getPlantasDetalhes, savePlantasDetalhes, getDetalhe } from 'api/api.js';
-import { ImageMapper } from 'components';
+import React, { useRef, useEffect, useState, useReducer } from 'react';
+import { listDetalhesPorProjeto, savePlantasDetalhes, getDetalhe } from 'api/api.js';
+import DetalhesPlantaMapper from './DetalhesPlantaMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
@@ -20,12 +20,11 @@ import Image from 'material-ui-image';
 import Lightbox from "react-image-lightbox";
 import 'react-image-lightbox/style.css';
 import {
-    Backspace,
     FilterCenterFocus,
     ZoomOutMap,
     ZoomOut,
     ZoomIn,
-    CheckCircle,
+    Save,
     Edit,
     Visibility
 } from '@material-ui/icons';
@@ -35,6 +34,7 @@ import { SuccessDialog, ConfirmDialog } from 'components';
 import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
+import DetalhesPlantaCadastro from "./DetalhesPlantaCadastro";
 
 const minScale = 0.05;
 const maxScale = 2;
@@ -74,7 +74,7 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
     };
 };
 
-const DetalhesPlanta = ({ idprojeto, idplanta }) => {
+const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
     // let history = useHistory();
     const [windowWidth, windowHeight] = useWindowSize();
     const targetRef = useRef();
@@ -108,36 +108,24 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
         translation: { x: 0, y: 0 }
     });
 
-    const [map, setMap] = useState({
-        name: "my-map",
-        areas: []
-    });
+    const [map, setMap] = useState([]);
     const [saindo, setSaindo] = useState(false);
     const [editando, setEditando] = useState(false);
     const [alteracoesPendentes, setAlteracoesPendentes] = useState(false);
     usePreventWindowUnload(alteracoesPendentes);
-    const [plantaDetalhes, setPlantaDetalhes] = useState([]);
+    const [plantaDetalhes, setPlantaDetalhes] = useState(inicialPlantaDetalhes);
     const [plantaDetalhe, setPlantaDetalhe] = useState(null);
     const [detalhes, setDetalhes] = useState([]);
     const [detalhe, setDetalhe] = useState(null);
 
-    const carregarPlantaDetalhes = useCallback(() => {
-        getPlantasDetalhes(idplanta)
-            .then(data => {
-                setPlantaDetalhes(data);
-            }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
-            });
-    }, [idplanta]);
-
-    const handleClickImagem = (evt) => {
+    const handleClickImagem = (coords) => {
         if (!editando) return;
 
         setPlantaDetalhe({
             idplanta: idplanta,
             iddetalhe: null,
-            coordenadax: (evt.nativeEvent.layerX - interacao.translation.x) / interacao.scale,
-            coordenaday: (evt.nativeEvent.layerY - interacao.translation.y) / interacao.scale
+            coordenadax: coords.x,
+            coordenaday: coords.y
         });
         setDetalhe(null);
         setCadastroOpen(true);
@@ -183,10 +171,6 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
         }
     }
 
-    const load = (area) => {
-
-    }
-
     const clicked = (area) => {
         const plantaDetalhesEditar =
             plantaDetalhes.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
@@ -197,19 +181,6 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
             setPlantaDetalhe(plantaDetalhesEditar);
             setCadastroOpen(true);
         }
-    }
-    const enterArea = (area) => {
-
-    }
-    const leaveArea = (area) => {
-
-    }
-    const moveOnArea = (area, evt) => {
-
-    }
-
-    const moveOnImage = (evt) => {
-
     }
 
     const voltar = (sairSemSalvar) => {
@@ -223,7 +194,7 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
 
     const visualizar = (sairSemSalvar) => {
         if (sairSemSalvar || !alteracoesPendentes) {
-            carregarPlantaDetalhes();
+            refetchPlantaDetalhes();
             setEditando(false);
             setAlteracoesPendentes(false);
         } else {
@@ -257,18 +228,12 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
     }, [idprojeto]);
 
     useEffect(() => {
-        getPlanta(idplanta)
-            .then(data => {
-                if (data.imagem) {
-                    const bufferPlanta = Buffer.from(data.imagem, 'binary');
-                    setImagem(bufferPlanta.toString('base64'));
-                    setImagemSize(sizeOf(bufferPlanta));
-                    carregarPlantaDetalhes();
-                }
-            }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os dados da planta.');
-            });
-    }, [idplanta, setImagem, carregarPlantaDetalhes]);
+        if (planta.imagem) {
+            const bufferPlanta = Buffer.from(planta.imagem, 'binary');
+            setImagem(bufferPlanta.toString('base64'));
+            setImagemSize(sizeOf(bufferPlanta));
+        }
+    }, [planta, setImagem]);
 
     useEffect(() => {
         const areas = [];
@@ -288,10 +253,7 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
             });
         });
 
-        setMap({
-            name: "my-map",
-            areas: areas
-        });
+        setMap(areas);
     }, [plantaDetalhes, detalhes]);
 
     useEffect(() => {
@@ -327,53 +289,47 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
     return (
         <Box height="100%" display="flex" flexDirection="column">
             <Box display="flex" padding="2px">
-                <Tooltip title="Voltar">
-                    <IconButton variant="contained" color="primary" aria-label="Voltar" onClick={() => voltar(false)}>
-                        <Backspace />
-                    </IconButton>
-                </Tooltip>
-                <Box flexGrow={1} display="flex" justifyContent="center">
-                    {editando ? (
-                        <Tooltip title="Modo visualização">
-                            <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
-                                <Visibility />
-                            </IconButton>
-                        </Tooltip>
-                    ) : (
+                <Box flexGrow={1} />
+                {editando ? (
+                    <Tooltip title="Modo visualização">
+                        <IconButton variant="contained" color="primary" aria-label="Visualizar" onClick={() => visualizar(false)}>
+                            <Visibility />
+                        </IconButton>
+                    </Tooltip>
+                ) : (
                         <Tooltip title="Modo edição">
                             <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
                                 <Edit />
                             </IconButton>
                         </Tooltip>
                     )}
-                    <Tooltip title="Centralizar">
-                        <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
-                            <FilterCenterFocus />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Ajustar">
-                        <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => setInteracao({ acao: 'ajustar' })}>
-                            <ZoomOutMap />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Zoom -">
-                        <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => setInteracao({ acao: 'menosZoom' })}>
-                            <ZoomOut />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Zoom +">
-                        <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => setInteracao({ acao: 'maisZoom' })}>
-                            <ZoomIn />
-                        </IconButton>
-                    </Tooltip>
-                </Box>
-                <Tooltip title="Salvar">
-                    <span>
-                        <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
-                            <CheckCircle fontSize="large" />
-                        </IconButton>
-                    </span>
+                <Tooltip title="Centralizar">
+                    <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
+                        <FilterCenterFocus />
+                    </IconButton>
                 </Tooltip>
+                <Tooltip title="Ajustar">
+                    <IconButton variant="contained" color="primary" aria-label="Ajustar" onClick={() => setInteracao({ acao: 'ajustar' })}>
+                        <ZoomOutMap />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Zoom -">
+                    <IconButton disabled={interacao.scale === minScale} variant="contained" color="primary" aria-label="Menos zoom" onClick={() => setInteracao({ acao: 'menosZoom' })}>
+                        <ZoomOut />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Zoom +">
+                    <IconButton disabled={interacao.scale === maxScale} variant="contained" color="primary" aria-label="Mais zoom" onClick={() => setInteracao({ acao: 'maisZoom' })}>
+                        <ZoomIn />
+                    </IconButton>
+                </Tooltip>
+                <Tooltip title="Salvar">
+                    <IconButton disabled={!alteracoesPendentes} variant="contained" color="primary" aria-label="Salvar" onClick={salvar}>
+                        <Save />
+                    </IconButton>
+                </Tooltip>
+                <Box flexGrow={1} />
+
             </Box>
             <Container
                 ref={targetRef}
@@ -391,16 +347,12 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
                         ({ translation, scale }) => {
                             return <div style={{ height: "100%", width: "100%", position: "relative", overflow: "hidden" }}>
                                 <div style={{ display: 'inline-block', transform: `translate(${translation.x}px, ${translation.y}px) scale(${scale})`, transformOrigin: `0px 0px` }}>
-                                    <ImageMapper
+                                    <DetalhesPlantaMapper
                                         src={`data:image/jpeg;base64,${imagem}`}
                                         map={map}
-                                        onLoad={load}
                                         onClick={area => clicked(area)}
-                                        onMouseEnter={area => enterArea(area)}
-                                        onMouseLeave={area => leaveArea(area)}
-                                        onMouseMove={(area, _, evt) => moveOnArea(area, evt)}
-                                        onImageClick={evt => handleClickImagem(evt)}
-                                        onImageMouseMove={evt => moveOnImage(evt)}
+                                        onImageClick={coords => handleClickImagem(coords)}
+                                        scale={scale}
                                     />
                                 </div>
                             </div>
@@ -440,6 +392,13 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
                     </Hidden>
                 </>
             }
+            {/* <DetalhesPlantaCadastro
+                idprojeto={idprojeto}
+                iddetalhe={detalhe?.id}
+                setIddetalhe={() => {}}
+                open={cadastroOpen && editando}
+                onClose={() => setCadastroOpen(false)}
+            /> */}
             <Dialog
                 fullWidth
                 open={cadastroOpen && editando}
@@ -492,4 +451,4 @@ const DetalhesPlanta = ({ idprojeto, idplanta }) => {
     );
 }
 
-export default DetalhesPlanta;
+export default DetalhesPlantaInteracao;

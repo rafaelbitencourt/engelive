@@ -1,10 +1,10 @@
-import { useAuth } from 'context'
-import { useRoutes, useLocation } from "react-router-dom"
-import { Navigate } from 'react-router-dom'
+import { useAuth } from 'context';
+import { useRoutes, useLocation } from "react-router-dom";
+import { Navigate } from 'react-router-dom';
 import {
   DashboardLayout,
   MainLayout
-} from 'components'
+} from 'components';
 import {
   Home,
   Login,
@@ -18,7 +18,7 @@ import {
   PlantaDetalhes,
   TiposProjetos,
   TipoProjeto
-} from 'pages'
+} from 'pages';
 
 const Routes = () => {
   const location = useLocation();

@@ -6,6 +6,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
+    DialogContentText,
     DialogTitle
 } from '@material-ui/core';
 
@@ -80,14 +81,18 @@ const ConfirmDialog = (props) => {
             onClose={() => setOpen(false)}
         >
             <DialogTitle>{titulo}</DialogTitle>
-            <DialogContent>{mensagem}</DialogContent>
+            <DialogContent>
+                <DialogContentText>
+                    {mensagem}
+                </DialogContentText>
+            </DialogContent>
             <DialogActions>
                 <Button
                     variant="contained"
                     onClick={() => setOpen(false)}
                 >
                     Não
-          </Button>
+                </Button>
                 <Button
                     variant="contained"
                     onClick={() => {
@@ -97,7 +102,7 @@ const ConfirmDialog = (props) => {
                     color="primary"
                 >
                     Sim
-          </Button>
+                </Button>
             </DialogActions>
         </Dialog>
     );
