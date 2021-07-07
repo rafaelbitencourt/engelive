@@ -5,18 +5,10 @@ import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
     Tooltip,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
     Box,
-    Grid,
     Container,
     Hidden
 } from '@material-ui/core';
-import Image from 'material-ui-image';
 import Lightbox from "react-image-lightbox";
 import 'react-image-lightbox/style.css';
 import {
@@ -29,12 +21,12 @@ import {
     Visibility
 } from '@material-ui/icons';
 
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { SuccessDialog, ConfirmDialog } from 'components';
 import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
 import DetalhesPlantaCadastro from "./DetalhesPlantaCadastro";
+import useAxios from 'axios-hooks';
 
 const minScale = 0.05;
 const maxScale = 2;
@@ -73,6 +65,22 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
         }
     };
 };
+
+const DetalheView = ({ iddetalhe, onClose, modalStyle }) => {
+    const [{ data, loading }] = useAxios(`detalhes/${iddetalhe}`);
+    const [imagemDetalhe, setImagemDetalhe] = useState(null);
+
+    useEffect(() => {
+        if (data && data.imagem)
+            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(data.imagem, 'binary').toString('base64'));
+    }, [data, setImagemDetalhe]);
+
+    return <Lightbox
+        mainSrc={imagemDetalhe}
+        onCloseRequest={onClose}
+        reactModalStyle={modalStyle}
+    />;
+}
 
 const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
     // let history = useHistory();
@@ -116,7 +124,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     const [plantaDetalhes, setPlantaDetalhes] = useState(inicialPlantaDetalhes);
     const [plantaDetalhe, setPlantaDetalhe] = useState(null);
     const [detalhes, setDetalhes] = useState([]);
-    const [detalhe, setDetalhe] = useState(null);
 
     const handleClickImagem = (coords) => {
         if (!editando) return;
@@ -127,7 +134,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             coordenadax: coords.x,
             coordenaday: coords.y
         });
-        // setDetalhe(null);
         setCadastroOpen(true);
     }
 
@@ -135,7 +141,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
 
         event.preventDefault();
         setCadastroOpen(false);
-        debugger;
+        
         const indexPlantaDetalhesEditar =
             plantaDetalhes.findIndex(item => item.coordenadax === plantaDetalhe.coordenadax && item.coordenaday === plantaDetalhe.coordenaday);
 
@@ -174,8 +180,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             plantaDetalhes.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
 
         if (plantaDetalhesEditar) {
-            setDetalhe(detalhes.find(item => item.id === plantaDetalhesEditar.iddetalhe));
-
             setPlantaDetalhe(plantaDetalhesEditar);
             setCadastroOpen(true);
         }
@@ -255,21 +259,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     }, [plantaDetalhes, detalhes]);
 
     useEffect(() => {
-        setImagemDetalhe(null);
-        if (detalhe && detalhe.id)
-            getDetalhe(detalhe.id)
-                .then(
-                    (data) => {
-                        if (data.imagem)
-                            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(data.imagem, 'binary').toString('base64'));
-                    },
-                    (error) => {
-                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');
-                    }
-                );
-    }, [detalhe, setImagemDetalhe]);
-
-    useEffect(() => {
         if (targetRef.current) {
             setDimensions({
                 width: targetRef.current.offsetWidth,
@@ -278,10 +267,10 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
         }
     }, [windowWidth, windowHeight]);
 
-    const lightboxCustom = (modalStyle) => <Lightbox
-        mainSrc={imagemDetalhe}
-        onCloseRequest={() => setCadastroOpen(false)}
-        reactModalStyle={modalStyle}
+    const lightboxCustom = (modalStyle) => <DetalheView
+        iddetalhe={plantaDetalhe.iddetalhe}
+        onClose={() => setCadastroOpen(false)}
+        modalStyle={modalStyle}
     />
 
     return (
