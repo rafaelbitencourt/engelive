@@ -1,55 +1,34 @@
-import React, { useEffect, useState } from 'react';
 import {
     Button,
     Dialog,
     DialogActions,
     DialogContent,
     DialogTitle,
-    TextField,
     Grid,
 } from '@material-ui/core';
-import Image from 'material-ui-image';
 
 import { SelectDetalhes, ImagemView } from 'components';
-import useAxios from 'axios-hooks';
 
-const DetalhesPlantaCadastro = ({ idprojeto, detalhe, setDetalhe, open, onClose }) => {
-    const [{ data, loading, error }] = useAxios('detalhes', { useCache: false });
-    // const [detalhe, setDetalhe] = useState(null);
-    // const [imagemDetalhe, setImagemDetalhe] = useState(null);
-    // detalhe={detalhe}
-    // setDetalhe={setDetalhe}
-
-    // const [{ data, loading, error }, refetch] = useAxios(`${controller}/${id}`, {
-    //     useCache: false,
-    //     manual: true
-    // });
-
-    // useEffect(() => {
-    //     debugger;
-    //     if(detalhe)
-    //         setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(detalhe.imagem, 'binary').toString('base64'));
-    // }, [detalhe]);
-
+const DetalhesPlantaCadastro = ({ idprojeto, plantaDetalhe, setPlantaDetalhe, open, onClose, handleSubmit, handleClickRemover, }) => {
     return (
         <Dialog
             fullWidth
             open={open}
             onClose={onClose}
             aria-labelledby="form-dialog-title">
-            {/* <form onSubmit={(event) => handleSubmit(event)}> */}
-                <DialogTitle id="form-dialog-title">{(iddetalhe) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
+            <form onSubmit={(event) => handleSubmit(event)}>
+                <DialogTitle id="form-dialog-title">{(plantaDetalhe?.id) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
                 <DialogContent>
                     <SelectDetalhes
                         idprojeto={idprojeto}
                         // error={Boolean(errors.idtipoprojeto)}
                         // helperText={errors.idtipoprojeto}
-                        value={detalhe?.id}
-                        setValue={(value) => setDetalhe({...detalhe, idvalue})}
+                        value={plantaDetalhe?.iddetalhe}
+                        setValue={(value) => setPlantaDetalhe({...plantaDetalhe, iddetalhe: value})}
                     />
                     <Grid item xs={12}>
                         <ImagemView
-                            url={`detalhes/${iddetalhe}`} 
+                            url={`detalhes/${plantaDetalhe?.iddetalhe}`} 
                             getImagem={(detalhe) => detalhe.imagem}
                         />
                         {/* <Image
@@ -59,17 +38,17 @@ const DetalhesPlantaCadastro = ({ idprojeto, detalhe, setDetalhe, open, onClose 
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button disabled={!iddetalhe} /*onClick={handleClickRemover}*/ variant="outlined">
+                    <Button disabled={!plantaDetalhe?.iddetalhe} onClick={handleClickRemover} variant="outlined">
                         Remover
                     </Button>
                     <Button onClick={onClose}>
                         Cancelar
                     </Button>
                     <Button type="submit" variant="contained">
-                        {iddetalhe ? "Alterar" : "Inserir"}
+                        {plantaDetalhe?.id ? "Alterar" : "Inserir"}
                     </Button>
                 </DialogActions>
-            {/* </form>  */}
+            </form> 
         </Dialog>
     );
 }

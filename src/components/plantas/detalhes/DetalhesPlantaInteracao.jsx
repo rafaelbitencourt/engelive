@@ -127,23 +127,17 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             coordenadax: coords.x,
             coordenaday: coords.y
         });
-        setDetalhe(null);
+        // setDetalhe(null);
         setCadastroOpen(true);
     }
-
-    // const insertPlantaDetalhes = (plantaDetalhe) => {
-    //     planta
-    // }
 
     const handleSubmit = (event) => {
 
         event.preventDefault();
         setCadastroOpen(false);
-
+        debugger;
         const indexPlantaDetalhesEditar =
             plantaDetalhes.findIndex(item => item.coordenadax === plantaDetalhe.coordenadax && item.coordenaday === plantaDetalhe.coordenaday);
-
-        plantaDetalhe.iddetalhe = detalhe.id;
 
         var plantaDetalheAux = plantaDetalhes.concat(plantaDetalhe);
 
@@ -398,59 +392,13 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             }
             <DetalhesPlantaCadastro
                 idprojeto={idprojeto}
-                detalhe={detalhe}
-                setDetalhe={setDetalhe}
+                plantaDetalhe={plantaDetalhe}
+                setPlantaDetalhe={setPlantaDetalhe}
                 open={cadastroOpen && editando}
                 onClose={() => setCadastroOpen(false)}
+                handleSubmit={handleSubmit}
+                handleClickRemover={handleClickRemover}
             />
-            {/* <Dialog
-                fullWidth
-                open={cadastroOpen && editando}
-                onClose={() => setCadastroOpen(false)}
-                aria-labelledby="form-dialog-title">
-                <form onSubmit={(event) => handleSubmit(event)}>
-                    <DialogTitle id="form-dialog-title">{(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
-                    <DialogContent>
-                        <Autocomplete
-                            value={detalhe}
-                            onChange={(event, newValue) => setDetalhe(newValue)}
-                            options={detalhes}
-                            autoHighlight
-                            getOptionLabel={(option) => option.nome}
-                            renderOption={(option) => option.nome}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Detalhe"
-                                    variant="outlined"
-                                    required
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: 'new-password', // disable autocomplete and autofill
-                                    }}
-                                />
-                            )}
-                        />
-                        <Grid item xs={12}>
-                            <Image
-                                aspectRatio={(16 / 9)}
-                                src={imagemDetalhe || "/logo.png"}
-                            />
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="outlined">
-                            Remover
-                        </Button>
-                        <Button onClick={() => setCadastroOpen(false)}>
-                            Cancelar
-                        </Button>
-                        <Button disabled={!editando} type="submit" variant="contained">
-                            {(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar" : "Inserir"}
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog> */}
         </Box>
     );
 }
