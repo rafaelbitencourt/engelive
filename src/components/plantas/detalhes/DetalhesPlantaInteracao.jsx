@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { listDetalhesPorProjeto, savePlantasDetalhes, getDetalhe } from 'api/api.js';
+import { listDetalhesPorProjeto, savePlantasDetalhes } from 'api/api.js';
 import DetalhesPlantaMapper from './DetalhesPlantaMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {

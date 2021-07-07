@@ -96,9 +96,9 @@ export const listDetalhesPorProjeto = (id) => axios
 //     }
 // }
 
-export const getDetalhe = (id) => axios
-    .get(urlApi + 'detalhes/' + id, { headers: authHeader() })
-    .then(({ data }) => data)
+// export const getDetalhe = (id) => axios
+//     .get(urlApi + 'detalhes/' + id, { headers: authHeader() })
+//     .then(({ data }) => data)
 
 // export const listTiposProjetos = () => axios
 //     .get(urlApi + 'tipos_projetos', { headers: authHeader() })
