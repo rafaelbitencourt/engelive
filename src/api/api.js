@@ -70,9 +70,9 @@ export const savePlantasDetalhes = (idplanta, data) => {
 //     .get(urlApi + 'materiais', { headers: authHeader() })
 //     .then(({ data }) => data)
 
-export const listDetalhesPorProjeto = (id) => axios
-    .get(urlApi + 'projeto/' + id + '/detalhes', { headers: authHeader() })
-    .then(({ data }) => data)
+// export const listDetalhesPorProjeto = (id) => axios
+//     .get(urlApi + 'projeto/' + id + '/detalhes', { headers: authHeader() })
+//     .then(({ data }) => data)
 
 // export const deleteDetalhe = (id) => axios
 //     .delete(urlApi + 'detalhes/' + id, { headers: authHeader() })

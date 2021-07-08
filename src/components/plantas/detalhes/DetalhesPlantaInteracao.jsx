@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { listDetalhesPorProjeto, savePlantasDetalhes } from 'api/api.js';
+import { savePlantasDetalhes } from 'api/api.js';
 import DetalhesPlantaMapper from './DetalhesPlantaMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
@@ -83,6 +83,7 @@ const DetalheView = ({ iddetalhe, onClose, modalStyle }) => {
 }
 
 const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
+    const [{ data: detalhes }] = useAxios(`projeto/${idprojeto}/detalhes`);
     // let history = useHistory();
     const [windowWidth, windowHeight] = useWindowSize();
     const targetRef = useRef();
@@ -94,7 +95,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
 
     const [imagem, setImagem] = useState(null);
     const [imagemSize, setImagemSize] = useState({});
-    const [imagemDetalhe, setImagemDetalhe] = useState(null);
 
     const reducer = (state, dados) => {
         switch (dados.acao) {
@@ -123,8 +123,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     usePreventWindowUnload(alteracoesPendentes);
     const [plantaDetalhes, setPlantaDetalhes] = useState(inicialPlantaDetalhes);
     const [plantaDetalhe, setPlantaDetalhe] = useState(null);
-    const [detalhes, setDetalhes] = useState([]);
-
+    
     const handleClickImagem = (coords) => {
         if (!editando) return;
 
@@ -221,15 +220,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     }, [imagemSize]);
 
     useEffect(() => {
-        listDetalhesPorProjeto(idprojeto)
-            .then(data => {
-                setDetalhes(data);
-            }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
-            });
-    }, [idprojeto]);
-
-    useEffect(() => {
         if (planta.imagem) {
             const bufferPlanta = Buffer.from(planta.imagem, 'binary');
             setImagem(bufferPlanta.toString('base64'));
@@ -241,7 +231,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
         const areas = [];
 
         plantaDetalhes.forEach(function (item) {
-            var detalhe = detalhes.find(det => det.id === item.iddetalhe);
+            var detalhe = detalhes?.find(det => det.id === item.iddetalhe);
             areas.push({
                 label: detalhe ? detalhe.nome : 'Detalhe não cadastrado.',
                 shape: "circle",
