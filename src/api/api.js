@@ -57,14 +57,14 @@ const urlApi = process.env.REACT_APP_URL_API;
 //     .get(urlApi + 'plantas_detalhes/' + idplanta, { headers: authHeader() })
 //     .then(({ data }) => data)
 
-export const savePlantasDetalhes = (idplanta, data) => {
-    var params = {
-        idplanta: idplanta,
-        detalhes: data || []
-    }
-    return axios.post(urlApi + 'plantas_detalhes', params, { headers: authHeader() })
-        .then(({ data }) => data)
-}
+// export const savePlantasDetalhes = (idplanta, data) => {
+//     var params = {
+//         idplanta: idplanta,
+//         detalhes: data || []
+//     }
+//     return axios.post(urlApi + 'plantas_detalhes', params, { headers: authHeader() })
+//         .then(({ data }) => data)
+// }
 
 // export const listMateriais = () => axios
 //     .get(urlApi + 'materiais', { headers: authHeader() })

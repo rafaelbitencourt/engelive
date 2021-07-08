@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { savePlantasDetalhes } from 'api/api.js';
 import DetalhesPlantaMapper from './DetalhesPlantaMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
@@ -84,6 +83,15 @@ const DetalheView = ({ iddetalhe, onClose, modalStyle }) => {
 
 const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
     const [{ data: detalhes }] = useAxios(`projeto/${idprojeto}/detalhes`);
+    const [{ loading: loadingSave, response: responseSave },
+        executeSavePlantaDetalhes
+    ] = useAxios(
+        {
+            url: 'plantas_detalhes',
+            method: 'POST'
+        },
+        { manual: true }
+    );
     // let history = useHistory();
     const [windowWidth, windowHeight] = useWindowSize();
     const targetRef = useRef();
@@ -205,15 +213,20 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     }
 
     const salvar = () => {
-        savePlantasDetalhes(idplanta, plantaDetalhes)
-            .then(() => {
+        executeSavePlantaDetalhes({
+            data: {
+                idplanta,
+                detalhes: plantaDetalhes || []
+            }
+        });
+    }
+
+    useEffect(() => {
+        if (responseSave && responseSave.status === 200) {
                 setSucessOpen(true);
                 setAlteracoesPendentes(false);
-            })
-            .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao salvar os detalhes.');
-            });
-    }
+        }
+    }, [responseSave, setSucessOpen, setAlteracoesPendentes]);
 
     useEffect(() => {
         setInteracao({ acao: 'ajustar' });
