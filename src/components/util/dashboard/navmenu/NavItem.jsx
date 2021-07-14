@@ -25,13 +25,13 @@ const NavItem = ({
       component={RouterLink}
       sx={{
         color: 'text.secondary',
-        fontWeight: 'bold',
         justifyContent: 'flex-start',
         letterSpacing: 0,
         textTransform: 'none',
         width: '100%',
         ...(active && {
-          color: 'primary.main'
+          color: 'primary.main',
+          fontWeight: 'bold',
         }),
         '& svg': {
           mr: 1

@@ -1,6 +1,5 @@
 import { 
     Pagina, 
-    CadastroObra, 
     CadastroProjeto, 
     ListaDetalhes, 
     ListaPlantas 
@@ -14,9 +13,6 @@ const Projeto = () => {
     return (
         <Pagina titulo="Projeto">
             <Grid container spacing={2}>
-                <Grid item xs={12}>
-                    <CadastroObra {...params} />
-                </Grid>
                 <Grid item xs={12}>
                     <CadastroProjeto {...params} />
                 </Grid>

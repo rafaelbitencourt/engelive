@@ -1,24 +1,12 @@
 import React, { useRef, useEffect, useState, useReducer } from 'react';
-import { listDetalhesPorProjeto, savePlantasDetalhes, getDetalhe } from 'api/api.js';
 import DetalhesPlantaMapper from './DetalhesPlantaMapper';
 import { MapInteraction } from 'react-map-interaction';
 import {
     IconButton,
     Tooltip,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    TextField,
     Box,
-    Grid,
-    Container,
-    Hidden
+    Container
 } from '@material-ui/core';
-import Image from 'material-ui-image';
-import Lightbox from "react-image-lightbox";
-import 'react-image-lightbox/style.css';
 import {
     FilterCenterFocus,
     ZoomOutMap,
@@ -29,12 +17,13 @@ import {
     Visibility
 } from '@material-ui/icons';
 
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import { SuccessDialog, ConfirmDialog } from 'components';
 import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
 import DetalhesPlantaCadastro from "./DetalhesPlantaCadastro";
+import DetalhesPlantaView from "./DetalhesPlantaView";
+import useAxios from 'axios-hooks';
 
 const minScale = 0.05;
 const maxScale = 2;
@@ -75,6 +64,16 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
 };
 
 const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
+    const [{ data: detalhes }] = useAxios(`projeto/${idprojeto}/detalhes`);
+    const [{ response: responseSave },
+        executeSavePlantaDetalhes
+    ] = useAxios(
+        {
+            url: 'plantas_detalhes',
+            method: 'POST'
+        },
+        { manual: true }
+    );
     // let history = useHistory();
     const [windowWidth, windowHeight] = useWindowSize();
     const targetRef = useRef();
@@ -86,7 +85,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
 
     const [imagem, setImagem] = useState(null);
     const [imagemSize, setImagemSize] = useState({});
-    const [imagemDetalhe, setImagemDetalhe] = useState(null);
 
     const reducer = (state, dados) => {
         switch (dados.acao) {
@@ -115,8 +113,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     usePreventWindowUnload(alteracoesPendentes);
     const [plantaDetalhes, setPlantaDetalhes] = useState(inicialPlantaDetalhes);
     const [plantaDetalhe, setPlantaDetalhe] = useState(null);
-    const [detalhes, setDetalhes] = useState([]);
-    const [detalhe, setDetalhe] = useState(null);
 
     const handleClickImagem = (coords) => {
         if (!editando) return;
@@ -127,7 +123,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             coordenadax: coords.x,
             coordenaday: coords.y
         });
-        setDetalhe(null);
         setCadastroOpen(true);
     }
 
@@ -138,8 +133,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
 
         const indexPlantaDetalhesEditar =
             plantaDetalhes.findIndex(item => item.coordenadax === plantaDetalhe.coordenadax && item.coordenaday === plantaDetalhe.coordenaday);
-
-        plantaDetalhe.iddetalhe = detalhe.id;
 
         var plantaDetalheAux = plantaDetalhes.concat(plantaDetalhe);
 
@@ -176,8 +169,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             plantaDetalhes.find(item => item.coordenadax === area.coords[0] && item.coordenaday === area.coords[1]);
 
         if (plantaDetalhesEditar) {
-            setDetalhe(detalhes.find(item => item.id === plantaDetalhesEditar.iddetalhe));
-
             setPlantaDetalhe(plantaDetalhesEditar);
             setCadastroOpen(true);
         }
@@ -204,28 +195,24 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     }
 
     const salvar = () => {
-        savePlantasDetalhes(idplanta, plantaDetalhes)
-            .then(() => {
-                setSucessOpen(true);
-                setAlteracoesPendentes(false);
-            })
-            .catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao salvar os detalhes.');
-            });
+        executeSavePlantaDetalhes({
+            data: {
+                idplanta,
+                detalhes: plantaDetalhes || []
+            }
+        });
     }
+
+    useEffect(() => {
+        if (responseSave && responseSave.status === 200) {
+            setSucessOpen(true);
+            setAlteracoesPendentes(false);
+        }
+    }, [responseSave, setSucessOpen, setAlteracoesPendentes]);
 
     useEffect(() => {
         setInteracao({ acao: 'ajustar' });
     }, [imagemSize]);
-
-    useEffect(() => {
-        listDetalhesPorProjeto(idprojeto)
-            .then(data => {
-                setDetalhes(data);
-            }).catch(resp => {
-                alert(resp.message || 'Ocorreu um erro ao recuperar os detalhes.');
-            });
-    }, [idprojeto]);
 
     useEffect(() => {
         if (planta.imagem) {
@@ -239,7 +226,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
         const areas = [];
 
         plantaDetalhes.forEach(function (item) {
-            var detalhe = detalhes.find(det => det.id === item.iddetalhe);
+            var detalhe = detalhes?.find(det => det.id === item.iddetalhe);
             areas.push({
                 label: detalhe ? detalhe.nome : 'Detalhe não cadastrado.',
                 shape: "circle",
@@ -257,21 +244,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     }, [plantaDetalhes, detalhes]);
 
     useEffect(() => {
-        setImagemDetalhe(null);
-        if (detalhe && detalhe.id)
-            getDetalhe(detalhe.id)
-                .then(
-                    (data) => {
-                        if (data.imagem)
-                            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(data.imagem, 'binary').toString('base64'));
-                    },
-                    (error) => {
-                        alert(error.message || 'Ocorreu um erro ao recuperar os dados da planta.');
-                    }
-                );
-    }, [detalhe, setImagemDetalhe]);
-
-    useEffect(() => {
         if (targetRef.current) {
             setDimensions({
                 width: targetRef.current.offsetWidth,
@@ -279,12 +251,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
             });
         }
     }, [windowWidth, windowHeight]);
-
-    const lightboxCustom = (modalStyle) => <Lightbox
-        mainSrc={imagemDetalhe}
-        onCloseRequest={() => setCadastroOpen(false)}
-        reactModalStyle={modalStyle}
-    />
 
     return (
         <Box height="100%" display="flex" flexDirection="column">
@@ -297,12 +263,12 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
                         </IconButton>
                     </Tooltip>
                 ) : (
-                        <Tooltip title="Modo edição">
-                            <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
-                                <Edit />
-                            </IconButton>
-                        </Tooltip>
-                    )}
+                    <Tooltip title="Modo edição">
+                        <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
+                            <Edit />
+                        </IconButton>
+                    </Tooltip>
+                )}
                 <Tooltip title="Centralizar">
                     <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
                         <FilterCenterFocus />
@@ -373,80 +339,20 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
                 onConfirm={() => saindo ? voltar(true) : visualizar(true)}
             />
             {cadastroOpen && !editando &&
-                <>
-                    <Hidden lgUp>
-                        {lightboxCustom({
-                            content: {
-                                marginTop: 64
-                            }
-                        })}
-                    </Hidden>
-                    <Hidden lgDown>
-                        {lightboxCustom({
-                            content: {
-                                marginTop: 64,
-                                marginLeft: 128,
-                                paddingLeft: 128
-                            }
-                        })}
-                    </Hidden>
-                </>
+                <DetalhesPlantaView
+                    iddetalhe={plantaDetalhe.iddetalhe}
+                    onClose={() => setCadastroOpen(false)}
+                />
             }
-            {/* <DetalhesPlantaCadastro
+            <DetalhesPlantaCadastro
                 idprojeto={idprojeto}
-                iddetalhe={detalhe?.id}
-                setIddetalhe={() => {}}
+                plantaDetalhe={plantaDetalhe}
+                setPlantaDetalhe={setPlantaDetalhe}
                 open={cadastroOpen && editando}
                 onClose={() => setCadastroOpen(false)}
-            /> */}
-            <Dialog
-                fullWidth
-                open={cadastroOpen && editando}
-                onClose={() => setCadastroOpen(false)}
-                aria-labelledby="form-dialog-title">
-                <form onSubmit={(event) => handleSubmit(event)}>
-                    <DialogTitle id="form-dialog-title">{(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar detalhe" : "Inserir detalhe"}</DialogTitle>
-                    <DialogContent>
-                        <Autocomplete
-                            value={detalhe}
-                            onChange={(event, newValue) => setDetalhe(newValue)}
-                            options={detalhes}
-                            autoHighlight
-                            getOptionLabel={(option) => option.nome}
-                            renderOption={(option) => option.nome}
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Detalhe"
-                                    variant="outlined"
-                                    required
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: 'new-password', // disable autocomplete and autofill
-                                    }}
-                                />
-                            )}
-                        />
-                        <Grid item xs={12}>
-                            <Image
-                                aspectRatio={(16 / 9)}
-                                src={imagemDetalhe || "/logo.png"}
-                            />
-                        </Grid>
-                    </DialogContent>
-                    <DialogActions>
-                        <Button disabled={!(plantaDetalhe && plantaDetalhe.iddetalhe) || !editando} onClick={handleClickRemover} variant="outlined">
-                            Remover
-                        </Button>
-                        <Button onClick={() => setCadastroOpen(false)}>
-                            Cancelar
-                        </Button>
-                        <Button disabled={!editando} type="submit" variant="contained">
-                            {(plantaDetalhe && plantaDetalhe.iddetalhe) ? "Alterar" : "Inserir"}
-                        </Button>
-                    </DialogActions>
-                </form>
-            </Dialog>
+                handleSubmit={handleSubmit}
+                handleClickRemover={handleClickRemover}
+            />
         </Box>
     );
 }
