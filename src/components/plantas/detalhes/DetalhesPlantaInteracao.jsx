@@ -5,11 +5,8 @@ import {
     IconButton,
     Tooltip,
     Box,
-    Container,
-    Hidden
+    Container
 } from '@material-ui/core';
-import Lightbox from "react-image-lightbox";
-import 'react-image-lightbox/style.css';
 import {
     FilterCenterFocus,
     ZoomOutMap,
@@ -25,6 +22,7 @@ import { usePreventWindowUnload } from 'hooks';
 import { useWindowSize } from "@react-hook/window-size/";
 import sizeOf from "image-size";
 import DetalhesPlantaCadastro from "./DetalhesPlantaCadastro";
+import DetalhesPlantaView from "./DetalhesPlantaView";
 import useAxios from 'axios-hooks';
 
 const minScale = 0.05;
@@ -64,22 +62,6 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
         }
     };
 };
-
-const DetalheView = ({ iddetalhe, onClose, modalStyle }) => {
-    const [{ data }] = useAxios(`detalhes/${iddetalhe}`);
-    const [imagemDetalhe, setImagemDetalhe] = useState(null);
-
-    useEffect(() => {
-        if (data && data.imagem)
-            setImagemDetalhe("data:image/jpeg;base64," + Buffer.from(data.imagem, 'binary').toString('base64'));
-    }, [data, setImagemDetalhe]);
-
-    return <Lightbox
-        mainSrc={imagemDetalhe}
-        onCloseRequest={onClose}
-        reactModalStyle={modalStyle}
-    />;
-}
 
 const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
     const [{ data: detalhes }] = useAxios(`projeto/${idprojeto}/detalhes`);
@@ -131,7 +113,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
     usePreventWindowUnload(alteracoesPendentes);
     const [plantaDetalhes, setPlantaDetalhes] = useState(inicialPlantaDetalhes);
     const [plantaDetalhe, setPlantaDetalhe] = useState(null);
-    
+
     const handleClickImagem = (coords) => {
         if (!editando) return;
 
@@ -148,7 +130,7 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
 
         event.preventDefault();
         setCadastroOpen(false);
-        
+
         const indexPlantaDetalhesEditar =
             plantaDetalhes.findIndex(item => item.coordenadax === plantaDetalhe.coordenadax && item.coordenaday === plantaDetalhe.coordenaday);
 
@@ -223,8 +205,8 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
 
     useEffect(() => {
         if (responseSave && responseSave.status === 200) {
-                setSucessOpen(true);
-                setAlteracoesPendentes(false);
+            setSucessOpen(true);
+            setAlteracoesPendentes(false);
         }
     }, [responseSave, setSucessOpen, setAlteracoesPendentes]);
 
@@ -270,12 +252,6 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
         }
     }, [windowWidth, windowHeight]);
 
-    const lightboxCustom = (modalStyle) => <DetalheView
-        iddetalhe={plantaDetalhe.iddetalhe}
-        onClose={() => setCadastroOpen(false)}
-        modalStyle={modalStyle}
-    />
-
     return (
         <Box height="100%" display="flex" flexDirection="column">
             <Box display="flex" padding="2px">
@@ -287,12 +263,12 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
                         </IconButton>
                     </Tooltip>
                 ) : (
-                        <Tooltip title="Modo edição">
-                            <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
-                                <Edit />
-                            </IconButton>
-                        </Tooltip>
-                    )}
+                    <Tooltip title="Modo edição">
+                        <IconButton variant="contained" color="primary" aria-label="Editar" onClick={() => setEditando(true)}>
+                            <Edit />
+                        </IconButton>
+                    </Tooltip>
+                )}
                 <Tooltip title="Centralizar">
                     <IconButton variant="contained" color="primary" aria-label="Centralizar" onClick={() => setInteracao({ acao: 'centralizar' })}>
                         <FilterCenterFocus />
@@ -363,24 +339,10 @@ const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDet
                 onConfirm={() => saindo ? voltar(true) : visualizar(true)}
             />
             {cadastroOpen && !editando &&
-                <>
-                    <Hidden lgUp>
-                        {lightboxCustom({
-                            content: {
-                                marginTop: 64
-                            }
-                        })}
-                    </Hidden>
-                    <Hidden lgDown>
-                        {lightboxCustom({
-                            content: {
-                                marginTop: 64,
-                                marginLeft: 128,
-                                paddingLeft: 128
-                            }
-                        })}
-                    </Hidden>
-                </>
+                <DetalhesPlantaView
+                    iddetalhe={plantaDetalhe.iddetalhe}
+                    onClose={() => setCadastroOpen(false)}
+                />
             }
             <DetalhesPlantaCadastro
                 idprojeto={idprojeto}
