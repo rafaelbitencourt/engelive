@@ -66,7 +66,7 @@ const centralizar = (ajustar, interacao, imagemSize, windowWidth, windowHeight) 
 };
 
 const DetalheView = ({ iddetalhe, onClose, modalStyle }) => {
-    const [{ data, loading }] = useAxios(`detalhes/${iddetalhe}`);
+    const [{ data }] = useAxios(`detalhes/${iddetalhe}`);
     const [imagemDetalhe, setImagemDetalhe] = useState(null);
 
     useEffect(() => {
@@ -83,7 +83,7 @@ const DetalheView = ({ iddetalhe, onClose, modalStyle }) => {
 
 const DetalhesPlantaInteracao = ({ idprojeto, idplanta, planta, inicialPlantaDetalhes, refetchPlantaDetalhes }) => {
     const [{ data: detalhes }] = useAxios(`projeto/${idprojeto}/detalhes`);
-    const [{ loading: loadingSave, response: responseSave },
+    const [{ response: responseSave },
         executeSavePlantaDetalhes
     ] = useAxios(
         {

@@ -31,7 +31,7 @@ const CadastroProjeto = ({ idobra, idprojeto }) => {
             validationSchema={Yup.object().shape({
                 idtipoprojeto: Yup.number().required('Tipo de projeto é obrigatório')
             })}
-            redirectAfterDelete={`/app/obra/${idobra}/projetos`}
+            redirectAfterDelete={`/app/obra/${idobra}`}
         />
     );
 }

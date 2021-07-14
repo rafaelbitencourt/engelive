@@ -11,7 +11,7 @@ const ImagemView = ({ url, getImagem, propsImage }) => {
     useEffect(() => {
         if (data)
             setImagem("data:image/jpeg;base64," + Buffer.from(getImagem(data), 'binary').toString('base64'));
-    }, [data]);
+    }, [data, getImagem]);
 
     if (loading) return <CircularProgress />;
 
